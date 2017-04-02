@@ -73,10 +73,22 @@ import lombok.extern.slf4j.Slf4j;
 @Produces(MediaType.APPLICATION_JSON)
 public class JiraExportPluginResource extends JiraBaseResource {
 
+	private static final String START_WORKFLOW = "start";
+
 	/**
 	 * Plug-in key.
 	 */
 	public static final String EXPORT_URL = JiraBaseResource.URL + "/export";
+
+	/**
+	 * Simple processor returning the time from a date.
+	 */
+	private static final Processor<?> TIME_PROCESSOR = new Processor<Date>() {
+		@Override
+		public Object getValue(final Date context) {
+			return context.getTime();
+		}
+	};
 
 	@Autowired
 	private HolidayRepository holidayRepository;
@@ -100,7 +112,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 *            The subscription identifier.
 	 * @return the SLA configuration
 	 */
-	protected JiraSimpleExport getSimpleData(final int subscription) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	protected JiraSimpleExport getSimpleData(final int subscription) {
 
 		// Find the project corresponding to the given JIRA project
 		final long start = System.currentTimeMillis();
@@ -118,8 +130,8 @@ public class JiraExportPluginResource extends JiraBaseResource {
 		final Map<Integer, String> priorityText = jiraDao.getPriorities(dataSource);
 		final Map<Integer, String> resolutionText = jiraDao.getResolutions(dataSource);
 		final Map<Integer, String> typeText = jiraDao.getTypes(dataSource, jira);
-		log.info("Fetch done of {} for {} issues, {} status, {} priorities, {} types, {} resolutions", subscription, issues.size(), statusText.size(),
-				priorityText.size(), typeText.size(), resolutionText.size());
+		log.info("Fetch done of {} for {} issues, {} status, {} priorities, {} types, {} resolutions", subscription,
+				issues.size(), statusText.size(), priorityText.size(), typeText.size(), resolutionText.size());
 
 		final JiraSimpleExport jiraComputations = new JiraSimpleExport();
 		jiraComputations.setIssues(issues);
@@ -127,7 +139,8 @@ public class JiraExportPluginResource extends JiraBaseResource {
 		jiraComputations.setPriorityText(priorityText);
 		jiraComputations.setResolutionText(resolutionText);
 		jiraComputations.setTypeText(typeText);
-		log.info("End of simple export, took {}", DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - start));
+		log.info("End of simple export, took {}",
+				DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - start));
 		return jiraComputations;
 	}
 
@@ -138,13 +151,13 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 *            The subscription identifier.
 	 * @return the SLA configuration
 	 */
-	protected JiraSlaComputations getSlaComputations(final int subscription, final boolean timing)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	protected JiraSlaComputations getSlaComputations(final int subscription, final boolean timing) {
 
 		// Find the project corresponding to the given JIRA project
 		final long start = System.currentTimeMillis();
 		log.info("Get configuration of " + subscription);
-		final BugTrackerConfiguration btConfiguration = bugTrackerConfigurationRepository.findBySubscriptionFetch(subscription);
+		final BugTrackerConfiguration btConfiguration = bugTrackerConfigurationRepository
+				.findBySubscriptionFetch(subscription);
 		if (btConfiguration == null) {
 			throw new EntityNotFoundException(String.valueOf(subscription));
 		}
@@ -162,13 +175,14 @@ public class JiraExportPluginResource extends JiraBaseResource {
 		// Get SLA configuration
 		final List<Sla> slas = slaRepository.findBySubscription(subscription);
 		// Get attributes of issues
-		log.info("Get relevant status, priorities, resolutions, components and types of project {} subscription {}", pkey, subscription);
+		log.info("Get relevant status, priorities, resolutions, components and types of project {} subscription {}",
+				pkey, subscription);
 		final Map<Integer, String> statusText = updateIndentifierFromText(dataSource, slas, jira, changes);
 		final Map<Integer, String> priorityText = jiraDao.getPriorities(dataSource);
 		final Map<Integer, String> resolutionText = jiraDao.getResolutions(dataSource);
 		final Map<Integer, String> typeText = jiraDao.getTypes(dataSource, jira);
-		log.info("Fetch done of {} for {} changes, {} status, {} priorities, {} types, {} resolutions", subscription, changes.size(),
-				statusText.size(), priorityText.size(), typeText.size(), resolutionText.size());
+		log.info("Fetch done of {} for {} changes, {} status, {} priorities, {} types, {} resolutions", subscription,
+				changes.size(), statusText.size(), priorityText.size(), typeText.size(), resolutionText.size());
 
 		// Get relevant holidays and project configuration to compute SLA
 		log.info("Compute SLA of {}", subscription);
@@ -193,7 +207,8 @@ public class JiraExportPluginResource extends JiraBaseResource {
 		jiraComputations.setPriorityText(priorityText);
 		jiraComputations.setResolutionText(resolutionText);
 		jiraComputations.setTypeText(typeText);
-		log.info("End of SLA computation, took {}", DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - start));
+		log.info("End of SLA computation, took {}",
+				DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - start));
 		return jiraComputations;
 	}
 
@@ -202,16 +217,19 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * 
 	 * @param subscription
 	 *            The subscription identifier.
+	 * @param file
+	 *            The user file name to use in download response.
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
 	@Path("sla/{subscription:\\d+}/{file:.*-short.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getSlaComputationsCsv(@PathParam("subscription") final int subscription, @PathParam("file") final String file)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		log.info("SLA report requested by '{}' for subscription '{}'", SecurityContextHolder.getContext().getAuthentication().getName(),
-				subscription);
-		return AbstractToolPluginResource.download(new CsvStreamingOutput(getSlaComputations(subscription, false)), file).build();
+	public Response getSlaComputationsCsv(@PathParam("subscription") final int subscription,
+			@PathParam("file") final String file) {
+		log.info("SLA report requested by '{}' for subscription '{}'",
+				SecurityContextHolder.getContext().getAuthentication().getName(), subscription);
+		return AbstractToolPluginResource
+				.download(new CsvStreamingOutput(getSlaComputations(subscription, false)), file).build();
 	}
 
 	/**
@@ -219,15 +237,17 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * 
 	 * @param subscription
 	 *            The subscription identifier.
+	 * @param file
+	 *            The user file name to use in download response.
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
 	@Path("sla/{subscription:\\d+}/{file:.*-simple.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getSimpleCsv(@PathParam("subscription") final int subscription, @PathParam("file") final String file)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		log.info("Standard report requested by '{}' for subscription '{}'", SecurityContextHolder.getContext().getAuthentication().getName(),
-				subscription);
+	public Response getSimpleCsv(@PathParam("subscription") final int subscription,
+			@PathParam("file") final String file) {
+		log.info("Standard report requested by '{}' for subscription '{}'",
+				SecurityContextHolder.getContext().getAuthentication().getName(), subscription);
 		return AbstractToolPluginResource.download(new CsvSimpleOutput(getSimpleData(subscription)), file).build();
 	}
 
@@ -236,39 +256,44 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * 
 	 * @param subscription
 	 *            The subscription identifier.
+	 * @param file
+	 *            The user file name to use in download response.
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
 	@Path("sla/{subscription:\\d+}/{file:.*-full.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getSlaComputationsCsvWithCustomFields(@PathParam("subscription") final int subscription, @PathParam("file") final String file)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		log.info("SLA+ report requested by '{}' for subscription '{}'", SecurityContextHolder.getContext().getAuthentication().getName(),
-				subscription);
+	public Response getSlaComputationsCsvWithCustomFields(@PathParam("subscription") final int subscription,
+			@PathParam("file") final String file) {
+		log.info("SLA+ report requested by '{}' for subscription '{}'",
+				SecurityContextHolder.getContext().getAuthentication().getName(), subscription);
 		final long start = System.currentTimeMillis();
 		final JiraSlaComputations slaComputations = getSlaComputations(subscription, true);
 		final DataSource dataSource = slaComputations.getDataSource();
 
 		// Components
-		final Map<Integer, Collection<Integer>> componentAssociations = jiraDao.getComponentsAssociation(dataSource, slaComputations.getJira());
+		final Map<Integer, Collection<Integer>> componentAssociations = jiraDao.getComponentsAssociation(dataSource,
+				slaComputations.getJira());
 		log.info("Retrieved components associations : {}", componentAssociations.size());
 		final Map<Integer, String> components = jiraDao.getComponents(dataSource, slaComputations.getJira());
 		log.info("Retrieved components configurations : {}", components.size());
 
 		// Custom fields
-		final List<CustomFieldValue> customFieldValues = jiraDao.getCustomFieldValues(dataSource, slaComputations.getJira());
+		final List<CustomFieldValue> customFieldValues = jiraDao.getCustomFieldValues(dataSource,
+				slaComputations.getJira());
 		log.info("Retrieved custom fields : {}", customFieldValues.size());
-		final Map<Integer, CustomFieldEditor> customFields = getCustomFields(dataSource, customFieldValues, slaComputations.getJira());
+		final Map<Integer, CustomFieldEditor> customFields = getCustomFields(dataSource, customFieldValues,
+				slaComputations.getJira());
 		log.info("Retrieved custom field configurations : {}", customFields.size());
 
 		// Parent relationships
 		final Map<Integer, Integer> subTasks = jiraDao.getSubTasks(dataSource, slaComputations.getJira());
 		log.info("Retrieved parent relashionships : {}", subTasks.size());
 
-		log.info("End of full report data gathering, took {}", DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - start));
-		return AbstractToolPluginResource.download(
-				new CsvWithCustomFieldsStreamingOutput(slaComputations, customFieldValues, customFields, componentAssociations, components, subTasks),
-				file).build();
+		log.info("End of full report data gathering, took {}",
+				DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - start));
+		return AbstractToolPluginResource.download(new CsvWithCustomFieldsStreamingOutput(slaComputations,
+				customFieldValues, customFields, componentAssociations, components, subTasks), file).build();
 	}
 
 	/**
@@ -276,15 +301,17 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * 
 	 * @param subscription
 	 *            The subscription identifier.
+	 * @param file
+	 *            The user file name to use in download response.
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
 	@Path("sla/{subscription:\\d+}/{file:.*-status.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getStatusHistory(@PathParam("subscription") final int subscription, @PathParam("file") final String file)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		log.info("Status history report requested by '{}' for subscription '{}'", SecurityContextHolder.getContext().getAuthentication().getName(),
-				subscription);
+	public Response getStatusHistory(@PathParam("subscription") final int subscription,
+			@PathParam("file") final String file) {
+		log.info("Status history report requested by '{}' for subscription '{}'",
+				SecurityContextHolder.getContext().getAuthentication().getName(), subscription);
 		final long start = System.currentTimeMillis();
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final int jira = Integer.parseInt(parameters.get(JiraBaseResource.PARAMETER_PROJECT));
@@ -298,16 +325,18 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 		// Compute the identifiers from the texts
 		log.info("Get relevant text of project's statuses");
-		final Map<Integer, String> statusText = jiraDao.getStatuses(dataSource, getInvolvedStatuses(changes), new ArrayList<>());
-		log.info("End of status report data gathering, took {}", DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - start));
+		final Map<Integer, String> statusText = jiraDao.getStatuses(dataSource, getInvolvedStatuses(changes),
+				new ArrayList<>());
+		log.info("End of status report data gathering, took {}",
+				DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - start));
 		return AbstractToolPluginResource.download(new CsvStatusStreamingOutput(changes, statusText), file).build();
 	}
 
 	/**
 	 * Return ordered custom field identifiers.
 	 */
-	private Map<Integer, CustomFieldEditor> getCustomFields(final DataSource dataSource, final List<CustomFieldValue> customFieldValues,
-			final int project) {
+	private Map<Integer, CustomFieldEditor> getCustomFields(final DataSource dataSource,
+			final List<CustomFieldValue> customFieldValues, final int project) {
 		final java.util.Set<Integer> ids = new LinkedHashSet<>();
 		for (final CustomFieldValue cv : customFieldValues) {
 			ids.add(cv.getCustomField());
@@ -320,13 +349,15 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * 
 	 * @param subscription
 	 *            The subscription identifier.
+	 * @param file
+	 *            The user file name to use in download response.
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
 	@Path("sla/{subscription:\\d+}/{file:.*.xml}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getSlaComputationsXls(@PathParam("subscription") final int subscription, @PathParam("file") final String file)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public Response getSlaComputationsXls(@PathParam("subscription") final int subscription,
+			@PathParam("file") final String file) {
 		final JiraSlaComputations slaComputations = getSlaComputations(subscription, false);
 		final Map<String, Processor<?>> tags = mapTags(slaComputations);
 
@@ -335,7 +366,8 @@ public class JiraExportPluginResource extends JiraBaseResource {
 			final InputStream template = new ClassPathResource("csv/template/template-sla.xml").getInputStream();
 			try {
 				final PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
-				new Template<JiraSlaComputations>(IOUtils.toString(template, StandardCharsets.UTF_8)).write(writer, tags, slaComputations);
+				new Template<JiraSlaComputations>(IOUtils.toString(template, StandardCharsets.UTF_8)).write(writer,
+						tags, slaComputations);
 				writer.flush();
 			} finally {
 				IOUtils.closeQuietly(template);
@@ -406,7 +438,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 		tags.put("slaRevisedDueDate", new BeanProcessor<>(SlaData.class, "revisedDueDate"));
 		tags.put("slaRevisedDueDateV", formatProcessor);
 		tags.put("slaRevisedDueDateTimestampV", TIME_PROCESSOR);
-		tags.put("slaStart", new BeanProcessor<>(SlaData.class, "start"));
+		tags.put("slaStart", new BeanProcessor<>(SlaData.class, START_WORKFLOW));
 		tags.put("slaStartV", formatProcessor);
 		tags.put("slaStartTimestampV", TIME_PROCESSOR);
 		tags.put("slaStop", new BeanProcessor<>(SlaData.class, "stop"));
@@ -427,7 +459,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 		final List<BusinessHours> businessHours = slaComputations.getBtConfiguration().getBusinessHours();
 		tags.put("nbBusinessHours", new Processor<>(businessHours.size() + 2));
 		tags.put("businessHours", new Processor<>(businessHours));
-		tags.put("start", new MomentProcessor(new BeanProcessor<>(BusinessHours.class, "start")));
+		tags.put(START_WORKFLOW, new MomentProcessor(new BeanProcessor<>(BusinessHours.class, START_WORKFLOW)));
 		tags.put("end", new MomentProcessor(new BeanProcessor<>(BusinessHours.class, "end")));
 
 		// Statuses definitions
@@ -458,7 +490,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 		tags.put("slas", new Processor<>(slaComputations.getSlas()));
 		tags.put("nbSlas", new Processor<>(slaComputations.getSlas().size() + 2));
 		tags.put("name", new BeanProcessor<>(Sla.class, "name"));
-		tags.put("startStatuses", new NormalizedSortedProcessor<>(Sla.class, "start"));
+		tags.put("startStatuses", new NormalizedSortedProcessor<>(Sla.class, START_WORKFLOW));
 		tags.put("stopStatuses", new NormalizedSortedProcessor<>(Sla.class, "stop"));
 		tags.put("pauseStatuses", new NormalizedSortedProcessor<>(Sla.class, "pause"));
 		tags.put("types", new NormalizedSortedProcessor<>(Sla.class, "types"));
@@ -480,7 +512,8 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	/**
 	 * Return the style corresponding to the threshold value.
 	 */
-	protected Processor<SlaData> toStyleProcessor(final JiraSlaComputations slaComputations, final String styleNormal, final String styleOver) {
+	protected Processor<SlaData> toStyleProcessor(final JiraSlaComputations slaComputations, final String styleNormal,
+			final String styleOver) {
 		return new Processor<SlaData>() {
 			@Override
 			public Object getValue(final Deque<Object> contextData) {
@@ -535,17 +568,8 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 		@Override
 		public Object getValue(final T context) {
-			return StringUtils.join(identifierHelper.normalize(identifierHelper.asList((String) super.getValue(context))), ',');
+			return StringUtils
+					.join(identifierHelper.normalize(identifierHelper.asList((String) super.getValue(context))), ',');
 		}
 	}
-
-	/**
-	 * Simple processor returning the time from a date.
-	 */
-	private static final Processor<?> TIME_PROCESSOR = new Processor<Date>() {
-		@Override
-		public Object getValue(final Date context) {
-			return context.getTime();
-		}
-	};
 }

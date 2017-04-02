@@ -1,5 +1,6 @@
 package org.ligoj.app.plugin.bt.jira;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +41,8 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)
-public class JiraPluginResource extends JiraBaseResource implements BugTrackerServicePlugin, ToolPlugin, ActivitiesProvider {
+public class JiraPluginResource extends JiraBaseResource
+		implements BugTrackerServicePlugin, ToolPlugin, ActivitiesProvider {
 
 	@Autowired
 	private ImportStatusRepository importStatusRepository;
@@ -85,8 +87,8 @@ public class JiraPluginResource extends JiraBaseResource implements BugTrackerSe
 	@GET
 	@Path("{node:\\w+:.*}/{criteria}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<JiraProject> findAllByName(@PathParam("node") final String node, @PathParam("criteria") final String criteria)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public List<JiraProject> findAllByName(@PathParam("node") final String node,
+			@PathParam("criteria") final String criteria) {
 		return jiraDao.findProjectsByName(getDataSource(nodeResource.getParametersAsMap(node)), criteria);
 	}
 
@@ -103,7 +105,8 @@ public class JiraPluginResource extends JiraBaseResource implements BugTrackerSe
 		// Check there is no running import
 		final ImportStatus importStatus = importStatusRepository.findBySubscription(id);
 		if (importStatus != null && importStatus.getEnd() == null) {
-			throw new BusinessException("Running import not finished", importStatus.getAuthor(), importStatus.getStart());
+			throw new BusinessException("Running import not finished", importStatus.getAuthor(),
+					importStatus.getStart());
 		}
 	}
 
@@ -114,7 +117,7 @@ public class JiraPluginResource extends JiraBaseResource implements BugTrackerSe
 	}
 
 	@Override
-	public Set<String> getStatuses(final int subscription) throws Exception {
+	public Set<String> getStatuses(final int subscription) throws IOException {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final int jira = Integer.parseInt(parameters.get(JiraBaseResource.PARAMETER_PROJECT));
 		final DataSource dataSource = getDataSource(parameters);
@@ -134,7 +137,7 @@ public class JiraPluginResource extends JiraBaseResource implements BugTrackerSe
 	}
 
 	@Override
-	public Set<String> getTypes(final int subscription) throws Exception {
+	public Set<String> getTypes(final int subscription) {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final int jira = Integer.parseInt(parameters.get(JiraBaseResource.PARAMETER_PROJECT));
 		final DataSource dataSource = getDataSource(parameters);
@@ -144,7 +147,7 @@ public class JiraPluginResource extends JiraBaseResource implements BugTrackerSe
 	}
 
 	@Override
-	public Set<String> getPriorities(final int subscription) throws Exception {
+	public Set<String> getPriorities(final int subscription) {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final DataSource dataSource = getDataSource(parameters);
 
@@ -153,7 +156,7 @@ public class JiraPluginResource extends JiraBaseResource implements BugTrackerSe
 	}
 
 	@Override
-	public Set<String> getResolutions(final int subscription) throws Exception {
+	public Set<String> getResolutions(final int subscription) {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final DataSource dataSource = getDataSource(parameters);
 
@@ -170,21 +173,24 @@ public class JiraPluginResource extends JiraBaseResource implements BugTrackerSe
 
 	@Override
 	public boolean checkStatus(final String node, final Map<String, String> parameters) throws Exception {
-		// Status is UP <=> Database is UP and Administration access is UP (if defined)
+		// Status is UP <=> Database is UP and Administration access is UP (if
+		// defined)
 		final String version = validateDataBaseConnectivity(parameters);
 		parameters.put(PARAMETER_PKEY, version);
 		return !parameters.containsKey(PARAMETER_ADMIN_USER) || super.validateAdminConnectivity(parameters);
 	}
 
 	@Override
-	public SubscriptionStatusWithData checkSubscriptionStatus(final String node, final Map<String, String> parameters) throws Exception {
+	public SubscriptionStatusWithData checkSubscriptionStatus(final String node, final Map<String, String> parameters)
+			throws Exception {
 		final SubscriptionStatusWithData nodeStatusWithData = new SubscriptionStatusWithData();
 		nodeStatusWithData.put("project", validateProject(parameters));
 		return nodeStatusWithData;
 	}
 
 	@Override
-	public Map<String, Activity> getActivities(final int subscription, final Collection<String> users) throws Exception {
+	public Map<String, Activity> getActivities(final int subscription, final Collection<String> users)
+			throws Exception {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final DataSource dataSource = getDataSource(parameters);
 		return jiraDao.getActivities(dataSource, users);

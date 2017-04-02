@@ -636,6 +636,7 @@ public class JiraDao {
 	 * Query JIRA database to collect activities of given users. For now, only the last success connection is
 	 * registered.
 	 * 
+	 * @param dataSource The JIRA datasource to query the user activities.
 	 * @param users
 	 *            the users to query.
 	 * @return activities.
