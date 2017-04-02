@@ -1,0 +1,14 @@
+DROP TABLE changegroup;
+DROP TABLE changeitem;
+DROP TABLE component;
+DROP TABLE projectversion;
+DROP TABLE customfield;
+DROP TABLE customfieldoption;
+DROP TABLE jiraissue;
+DROP TABLE sequence_value_item;
+DROP TABLE os_currentstep;
+DROP TABLE os_wfentry;
+DROP TABLE jiraworkflows;
+DROP TABLE userassociation;
+DROP TABLE customfieldvalue;
+DROP TABLE label;

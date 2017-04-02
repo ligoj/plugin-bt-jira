@@ -1,0 +1,2 @@
+insert  into pluginversion(ID,pluginname,pluginkey,pluginversion,CREATED) values ('10075','Atlassian JIRA - Plugins - Shared Application Access Layer (SAL) Plugin','com.atlassian.jira.ext.rpc','4.4.1','2011-09-16 18:40:51');
+insert  into pluginversion(ID,pluginname,pluginkey,pluginversion,CREATED) values ('10170','Script Runner','com.onresolve.jira.groovy.groovyrunner','3.0.0','2014-07-11 12:26:41');

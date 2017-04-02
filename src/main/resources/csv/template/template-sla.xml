@@ -1,0 +1,318 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>Fabrice Daugan</Author>
+  <LastAuthor>Fabrice Daugan</LastAuthor>
+  <Created>2014-06-16T17:45:12Z</Created>
+  <LastSaved>2014-06-16T20:12:37Z</LastSaved>
+  <Version>15.00</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>12435</WindowHeight>
+  <WindowWidth>28800</WindowWidth>
+  <WindowTopX>0</WindowTopX>
+  <WindowTopY>0</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s62">
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#FFFFFF"/>
+   <Interior ss:Color="#1F4E78" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s63">
+   <Interior ss:Color="#DDEBF7" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s64" ss:Parent="s63">
+   <NumberFormat ss:Format="yyyy/mm/dd\ hh:mm:ss"/>
+  </Style>
+  <Style ss:ID="s66" ss:Parent="s63">
+   <NumberFormat ss:Format="[h]:mm:ss;@"/>
+  </Style>
+  <Style ss:ID="s67" ss:Parent="s63">
+   <NumberFormat ss:Format="0"/>
+  </Style>
+  <Style ss:ID="s71" ss:Parent="s66">
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#9C0006"/>
+   <Interior ss:Color="#FFC7CE" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s69" ss:Parent="s67">
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#9C0006"/>
+   <Interior ss:Color="#FFC7CE" ss:Pattern="Solid"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Issues">
+  <Table ss:ExpandedColumnCount="{{nbIssuesColumns/}}" ss:ExpandedRowCount="{{nbIssues/}}" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="60" ss:DefaultRowHeight="15">
+   <Column ss:AutoFitWidth="0" ss:Width="15"/>
+   <Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="100"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   <Column ss:Width="96.75" ss:Span="1"/>
+   <Row ss:AutoFitHeight="0"/>
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">id</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Issue</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Status</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Type</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Priority</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Resolution</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Created Date</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Created Timestamp</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Reporter</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Assignee</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Due Date</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Due Date Timestamp</Data></Cell>
+{{slaheaders}}
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (ms)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (h:m:s)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (Start Date)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (Start Timestamp)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (Stop Date)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (Stop Timestamp)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (Revised Due Date)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (Revised Due Timestamp)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (Revised Due Date distance ms)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">[SLA] {{slaheader/}} (Revised Due Date distance h:m:s)</Data></Cell>
+{{/slaheaders}}
+   </Row>
+{{issues}}
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s63"><Data ss:Type="Number">{{id/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{pkey/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{status/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{type/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{priority/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{resolution/}}</Data></Cell>
+	<Cell ss:StyleID="s64"><Data ss:Type="DateTime">{{createdDate/}}</Data></Cell>
+	<Cell ss:StyleID="s67"><Data ss:Type="Number">{{createdTimestamp/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{reporter/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{assignee/}}</Data></Cell>
+	<Cell ss:StyleID="s64">{{dueDate}}<Data ss:Type="DateTime">{{dueDateV/}}</Data>{{/dueDate}}</Cell>
+	<Cell ss:StyleID="s67">{{dueDate}}<Data ss:Type="Number">{{dueDateTimestampV/}}</Data>{{/dueDate}}</Cell>
+{{slaDurations}}
+	<Cell ss:StyleID="{{slaDurationStyleMS/}}">{{slaDuration}}<Data ss:Type="Number">{{slaDurationV/}}</Data>{{/slaDuration}}</Cell>
+	<Cell ss:StyleID="{{slaDurationStyleDate/}}"{{slaDuration}} ss:Formula="=RC[-1]/1000/60/60/24"><Data ss:Type="DateTime"></Data{{/slaDuration}}></Cell>
+	<Cell ss:StyleID="s64">{{slaStart}}<Data ss:Type="DateTime">{{slaStartV/}}</Data>{{/slaStart}}</Cell>
+	<Cell ss:StyleID="s67">{{slaStart}}<Data ss:Type="Number">{{slaStartTimestampV/}}</Data>{{/slaStart}}</Cell>
+	<Cell ss:StyleID="s64">{{slaStop}}<Data ss:Type="DateTime">{{slaStopV/}}</Data>{{/slaStop}}</Cell>
+	<Cell ss:StyleID="s67">{{slaStop}}<Data ss:Type="Number">{{slaStopTimestampV/}}</Data>{{/slaStop}}</Cell>
+	<Cell ss:StyleID="s64">{{slaRevisedDueDate}}<Data ss:Type="DateTime">{{slaRevisedDueDateV/}}</Data>{{/slaRevisedDueDate}}</Cell>
+	<Cell ss:StyleID="s67">{{slaRevisedDueDate}}<Data ss:Type="Number">{{slaRevisedDueDateTimestampV/}}</Data>{{/slaRevisedDueDate}}</Cell>
+	<Cell ss:StyleID="{{slaDistanceStyleMS/}}"{{slaDistance}}><Data ss:Type="Number">{{slaDistanceV/}}</Data{{/slaDistance}}></Cell>
+	<Cell ss:StyleID="{{slaDistanceStyleDate/}}"{{slaDistance}} ss:Formula="=ABS(RC[-1])/1000/60/60/24"><Data ss:Type="DateTime"></Data{{/slaDistance}}></Cell>
+{{/slaDurations}}
+   </Row>
+{{/issues}}
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+	<Header x:Margin="0.3"/>
+	<Footer x:Margin="0.3"/>
+	<PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Unsynced/>
+   <Selected/>
+   <Panes>
+	<Pane>
+	 <Number>3</Number>
+	 <ActiveRow>2</ActiveRow>
+	 <ActiveCol>2</ActiveCol>
+	</Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+ <Worksheet ss:Name="Calendar">
+  <Table ss:ExpandedColumnCount="3" ss:ExpandedRowCount="{{nbNonBusinessDays/}}" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="60" ss:DefaultRowHeight="15">
+   <Column ss:AutoFitWidth="0" ss:Width="15"/>
+   <Column ss:AutoFitWidth="0" ss:Width="135"/>
+   <Column ss:AutoFitWidth="0" ss:Width="135"/>
+   <Row ss:AutoFitHeight="0"/>
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">Non business day</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Non business day timestamp</Data></Cell>
+   </Row>
+{{nonBusinessDays}}
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s64"><Data ss:Type="DateTime">{{nonBusinessDate/}}</Data></Cell>
+	<Cell ss:StyleID="s67"><Data ss:Type="Number">{{nonBusinessTimestamp/}}</Data></Cell>
+   </Row>
+{{/nonBusinessDays}}
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+	<Header x:Margin="0.3"/>
+	<Footer x:Margin="0.3"/>
+	<PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Unsynced/>
+   <Print>
+	<ValidPrinterInfo/>
+	<PaperSizeIndex>0</PaperSizeIndex>
+	<HorizontalResolution>203</HorizontalResolution>
+	<VerticalResolution>203</VerticalResolution>
+   </Print>
+   <Panes>
+	<Pane>
+	 <Number>3</Number>
+	 <ActiveRow>2</ActiveRow>
+	 <ActiveCol>1</ActiveCol>
+	</Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+ <Worksheet ss:Name="Business hours">
+  <Table ss:ExpandedColumnCount="3" ss:ExpandedRowCount="{{nbBusinessHours/}}" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="60" ss:DefaultRowHeight="15">
+   <Column ss:AutoFitWidth="0" ss:Width="15"/>
+   <Row ss:AutoFitHeight="0"/>
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">Start</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">End</Data></Cell>
+   </Row>
+{{businessHours}}
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s66"><Data ss:Type="String">{{start/}}</Data></Cell>
+	<Cell ss:StyleID="s66"><Data ss:Type="String">{{end/}}</Data></Cell>
+   </Row>
+{{/businessHours}}
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+	<Header x:Margin="0.3"/>
+	<Footer x:Margin="0.3"/>
+	<PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Unsynced/>
+   <Panes>
+	<Pane>
+	 <Number>3</Number>
+	 <ActiveRow>1</ActiveRow>
+	 <ActiveCol>1</ActiveCol>
+	 <RangeSelection>R2C2:R2C3</RangeSelection>
+	</Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+ <Worksheet ss:Name="SLA">
+  <Table ss:ExpandedColumnCount="12" ss:ExpandedRowCount="{{nbSlas/}}" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="60" ss:DefaultRowHeight="15">
+   <Column ss:AutoFitWidth="0" ss:Width="15"/>
+   <Column ss:Index="3" ss:Width="78"/>
+   <Column ss:AutoFitWidth="0" ss:Width="102.75"/>
+   <Column ss:AutoFitWidth="0" ss:Width="63.75"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   <Row ss:AutoFitHeight="0"/>
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">Name</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Start</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Stop</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Pause</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Types</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Priorities</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Resolutions</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Threshold (ms)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Threshold (h:m:s)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Average (ms)</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Average (h:m:s)</Data></Cell>
+   </Row>
+{{slas}}
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s63"><Data ss:Type="String">{{name/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{startStatuses/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{stopStatuses/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{pauseStatuses/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{types/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{priorities/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{resolutions/}}</Data></Cell>
+	<Cell ss:StyleID="s67"><Data ss:Type="Number">{{threshold/}}</Data></Cell>
+	<Cell ss:StyleID="s66" ss:Formula="=RC[-1]/1000/60/60/24"><Data ss:Type="DateTime"></Data></Cell>
+	<Cell ss:StyleID="s63" ss:Formula="=AVERAGE(Issues!R3C{{slaIndex/}}:R[{{nbIssuesMinus1/}}]C{{slaIndex/}})"><Data ss:Type="Number"></Data></Cell>
+	<Cell ss:StyleID="s66" ss:Formula="=RC[-1]/1000/60/60/24"><Data ss:Type="DateTime"></Data></Cell>
+   </Row>
+{{/slas}}
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+	<Header x:Margin="0.3"/>
+	<Footer x:Margin="0.3"/>
+	<PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Unsynced/>
+   <Print>
+	<ValidPrinterInfo/>
+	<HorizontalResolution>203</HorizontalResolution>
+	<VerticalResolution>203</VerticalResolution>
+   </Print>
+   <Panes>
+	<Pane>
+	 <Number>3</Number>
+	 <ActiveRow>1</ActiveRow>
+	 <ActiveCol>1</ActiveCol>
+	</Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+ <Worksheet ss:Name="Status">
+  <Table ss:ExpandedColumnCount="4" ss:ExpandedRowCount="{{nbStatus/}}" x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="60" ss:DefaultRowHeight="15">
+   <Column ss:AutoFitWidth="0" ss:Width="15"/>
+   <Column ss:AutoFitWidth="0" ss:Width="51"/>
+   <Column ss:AutoFitWidth="0" ss:Width="91"/>
+   <Column ss:AutoFitWidth="0" ss:Width="91"/>
+   <Row ss:AutoFitHeight="0"/>
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s62"><Data ss:Type="String">Id</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Text</Data></Cell>
+	<Cell ss:StyleID="s62"><Data ss:Type="String">Normalized</Data></Cell>
+   </Row>
+{{allStatus}}
+   <Row ss:AutoFitHeight="0">
+	<Cell ss:Index="2" ss:StyleID="s63"><Data ss:Type="Number">{{statusId/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{statusText/}}</Data></Cell>
+	<Cell ss:StyleID="s63"><Data ss:Type="String">{{statusNormalizedText/}}</Data></Cell>
+   </Row>
+{{/allStatus}}
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+	<Header x:Margin="0.3"/>
+	<Footer x:Margin="0.3"/>
+	<PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Unsynced/>
+   <Selected/>
+   <Panes>
+	<Pane>
+	 <Number>3</Number>
+	 <ActiveRow>2</ActiveRow>
+	 <ActiveCol>2</ActiveCol>
+	</Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>

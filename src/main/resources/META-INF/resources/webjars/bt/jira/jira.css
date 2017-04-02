@@ -1,0 +1,40 @@
+#importPopup .form-group.step .control-label i {
+	margin-top: 0;
+}
+#importPopup .form-group.step .control-label {
+	margin-bottom: 0;
+	padding-top: 0;
+}
+#importPopup .form-group.step {
+	margin-bottom: 1px;
+}
+#importPopup .modal-body {
+	top: 5%;
+	max-height: inherit;
+}
+tr.service-bt-jira .features .details>span {
+	height: 16px;
+	width: 16px;
+}
+.masonry-container .node.node.service-bt-jira.mode-th-list table.subscriptions th.features {
+	width: 90px;
+}
+.masonry-container .node.node.service-bt-jira.mode-th-large table.subscriptions th.features {
+	width: 88px;
+}
+.masonry-container .node.node.service-bt-jira table.subscriptions th.features {
+	width: 86px;
+}
+.service-bt-jira .features .details canvas:hover {
+	cursor: pointer;
+}
+
+@media (min-width: 768px) {
+	.exploded .service-bt-jira .carousel-inner .item-2 {
+		text-align: right;
+	}
+}
+#slaPopup .control-label i {
+	position: relative;
+	right: -2px;
+}

@@ -1,0 +1,2 @@
+name;description;start;stop;pause;configuration.id!;threshold
+Livraison;Délais de fermeture;Open;Closed;Resolved;1;36000000

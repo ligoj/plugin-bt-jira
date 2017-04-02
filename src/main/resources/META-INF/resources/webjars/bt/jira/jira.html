@@ -1,0 +1,75 @@
+<form id="importPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importmodal-title" enctype="multipart/form-data" method="post">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="{{cancel}}">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="importmodal-title">CSV history import</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="form-group required">
+						<label class="control-label" for="csv-file">CSV File</label>
+						<div>
+							<div class="input-group">
+								<input type="text" class="form-control" readonly>
+								<span class="input-group-btn"><span class="btn btn-default btn-file">&hellip;
+										<input type="file" name="csv-file" id="csv-file" required>
+									</span></span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group required">
+						<label class="control-label" for="csv-upload-encoding">{{encoding}}</label>
+						<div>
+							<input type="text" id="csv-upload-encoding" maxlength="10" value="UTF-8" class="form-control">
+						</div>
+					</div>
+					<div class="form-group required">
+						<label class="control-label" for="csv-upload-mode">Mode</label>
+						<div>
+							<select id="csv-upload-mode" class="form-control">
+								<option value="SYNTAX">Syntaxe</option>
+								<option value="VALIDATION">Intégrité</option>
+								<option value="PREVIEW" selected>Pré-visualisation</option>
+								<option value="FULL">Complet</option>
+							</select>
+						</div>
+					</div>
+					<div class="alert fade hide static alert-dismissible" role="alert">
+						<button class="close" data-dismiss="alert" type="button" aria-label="{{close}}">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						L'import est terminé mais l'instance JIRA cible ne dispose pas
+						du plugin<a class="alert-link" id="scriptRunner" href="https://marketplace.atlassian.com/plugins/com.onresolve.jira.groovy.groovyrunner" target="_blank">Script Runner</a>
+
+						<br>
+						Cette instance doit être redémarrée pour voir apparaître les éléments
+						importés
+					</div>
+					<div class="alert fade hide static" role="alert">
+						<button class="close" data-dismiss="alert-jira-cache" type="button">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						L'import est terminé mais l'instance JIRA doit être redémarrée
+						puisque la synchronization du cache JIRA a échoué.
+					</div>
+					<div class="alert fade hide static" id="alert-jira-admin" role="alert">
+						<button class="close" data-dismiss="alert" type="button">
+							<span aria-hidden="true">&times;</span>
+						</button>L'import est terminé mais l'instance JIRA doit être redémarrée
+						puisque les accès administrateur n'ont pas été fournis au moment de la
+						souscription
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<input type="submit" class="btn btn-primary btn-raised" id="csv-upload" data-loading-text="{{upload-new}}..." value="{{upload-new}}" data-complete-text="{{upload-new}}">
+				<button class="btn btn-link" data-dismiss="modal" aria-hidden="true">
+					{{cancel}}
+				</button>
+			</div>
+		</div>
+	</div>
+</form>

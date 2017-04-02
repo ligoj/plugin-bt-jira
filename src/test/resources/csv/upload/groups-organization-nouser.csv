@@ -1,0 +1,437 @@
+Gfi France;Organization;;;;
+Gfi Europe;Organization;;;;
+Gfi International;Organization;;;;
+Operations;Organization;Gfi France;;;
+Belux;Organization;Gfi Europe;;;
+Spain;Organization;Gfi Europe;;;
+Morocco;Organization;Gfi International;;;
+Portugal;Organization;Gfi Europe;;;
+Switzerland;Organization;Gfi Europe;;;
+Branche Software;Organization;Operations;;;
+Branche BS;Organization;Operations;;;
+Branche AS;Organization;Operations;;;
+Gfi Belgium;Organization;Belux;;;
+Production;Organization;Operations;;;
+Consulting;Organization;Operations;;;
+Branche IS;Organization;Operations;;;
+Software (Branche Software);Organization;Branche Software;;;
+Offres Specialisees (Branche BS);Organization;Branche BS;;;
+AS Regions (Branche AS);Organization;Branche AS;;;
+Gfi Belgium (Gfi Belgium);Organization;Gfi Belgium;;;
+Morocco (Morocco);Organization;Morocco;;;
+AS IDF (Branche AS);Organization;Branche AS;;;
+Atp (Branche AS);Organization;Branche AS;;;
+Digital (Branche BS);Organization;Branche BS;;;
+ES (Branche BS);Organization;Branche BS;;;
+Business Transformation (Consulting);Organization;Consulting;;;
+Amoa BFA (Consulting);Organization;Consulting;;;
+Frais AS (Branche AS);Organization;Branche AS;;;
+IS (Branche IS);Organization;Branche IS;;;
+Management Conseil (Consulting);Organization;Consulting;;;
+Qsi (Consulting);Organization;Consulting;;;
+SAP (Consulting);Organization;Consulting;;;
+Suisse (Switzerland);Organization;Switzerland;;;
+Sante (Software/Branche Software);Organization;Software (Branche Software);;;
+BFI (Offres Specialisees/Branche BS);Organization;Offres Specialisees (Branche BS);;;
+Mediterranee (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
+Gfi Belgium (Gfi Belgium/Gfi Belgium);Organization;Gfi Belgium (Gfi Belgium);;;
+AS Centre (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
+AS Centre - Ouest (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
+Morocco (Morocco/Morocco);Organization;Morocco (Morocco);;;
+BFA (AS IDF/Branche AS);Organization;AS IDF (Branche AS);;;
+Sud Ouest (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
+Atp (Atp/Branche AS);Organization;Atp (Branche AS);;;
+Awakit (Digital/Branche BS);Organization;Digital (Branche BS);;;
+BPR (Production/Production);Organization;Production;;;
+Transverses (Software/Branche Software);Organization;Software (Branche Software);;;
+BI (ES/Branche BS);Organization;ES (Branche BS);;;
+BIg Data (Digital/Branche BS);Organization;Digital (Branche BS);;;
+Gfi Telecom (Offres Specialisees/Branche BS);Organization;Offres Specialisees (Branche BS);;;
+Amoa BFA (Amoa BFA/Consulting);Organization;Amoa BFA (Consulting);;;
+Oss (Offres Specialisees/Branche BS);Organization;Offres Specialisees (Branche BS);;;
+Temps & Activite (Software/Branche Software);Organization;Software (Branche Software);;;
+Management (Software/Branche Software);Organization;Software (Branche Software);;;
+Cis (ES/Branche BS);Organization;ES (Branche BS);;;
+IES (AS IDF/Branche AS);Organization;AS IDF (Branche AS);;;
+TP (AS IDF/Branche AS);Organization;AS IDF (Branche AS);;;
+AS Rhone-Alpes (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
+Digital (Digital/Branche BS);Organization;Digital (Branche BS);;;
+Nord Est (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
+Hybris (Digital/Branche BS);Organization;Digital (Branche BS);;;
+Divers (Software/Branche Software);Organization;Software (Branche Software);;;
+Finance (Software/Branche Software);Organization;Software (Branche Software);;;
+GIE ESas (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
+Outsourcing (Offres Specialisees/Branche BS);Organization;Offres Specialisees (Branche BS);;;
+IS Sud Ouest (IS/Branche IS);Organization;IS (Branche IS);;;
+IS Ouest (IS/Branche IS);Organization;IS (Branche IS);;;
+IDF IS (IS/Branche IS);Organization;IS (Branche IS);;;
+Nord IS (IS/Branche IS);Organization;IS (Branche IS);;;
+IS Mediterranee (IS/Branche IS);Organization;IS (Branche IS);;;
+IS Rhone-Alpes (IS/Branche IS);Organization;IS (Branche IS);;;
+Jde (ES/Branche BS);Organization;ES (Branche BS);;;
+Magento Open (Digital/Branche BS);Organization;Digital (Branche BS);;;
+Management Conseil (Management Conseil/Consulting);Organization;Management Conseil (Consulting);;;
+Management ES (ES/Branche BS);Organization;ES (Branche BS);;;
+Management IS (IS/Branche IS);Organization;IS (Branche IS);;;
+Microsoft (Digital/Branche BS);Organization;Digital (Branche BS);;;
+Newton Pil (AS IDF/Branche AS);Organization;AS IDF (Branche AS);;;
+Oracle Applications (ES/Branche BS);Organization;ES (Branche BS);;;
+Plm (Qsi/Consulting);Organization;Qsi (Consulting);;;
+SAP (SAP/Consulting);Organization;SAP (Consulting);;;
+BI (Digital/Branche BS);Organization;Digital (Branche BS);;;
+Transport (Software/Branche Software);Organization;Software (Branche Software);;;
+Qsi (Qsi/Consulting);Organization;Qsi (Consulting);;;
+Sage (ES/Branche BS);Organization;ES (Branche BS);;;
+Sirh (ES/Branche BS);Organization;ES (Branche BS);;;
+Suisse (Suisse/Switzerland);Organization;Suisse (Switzerland);;;
+Division Social (Sante/Software/Branche Software);Organization;Sante (Software/Branche Software);;;
+Addstones (BFI/Offres Specialisees/Branche BS);Organization;BFI (Offres Specialisees/Branche BS);;;
+PACA (Mediterranee/AS Regions/Branche AS);Organization;Mediterranee (AS Regions/Branche AS);;;
+Belgique (Gfi Belgium/Gfi Belgium/Gfi Belgium);Organization;Gfi Belgium (Gfi Belgium/Gfi Belgium);;;
+AS Centre (AS Centre/AS Regions/Branche AS);Organization;AS Centre (AS Regions/Branche AS);;;
+AS Ouest Direction (AS Centre - Ouest/AS Regions/Branche AS);Organization;AS Centre - Ouest (AS Regions/Branche AS);;;
+AS Spain (Spain);Organization;Spain;;;
+AS Morocco (Morocco/Morocco/Morocco);Organization;Morocco (Morocco/Morocco);;;
+Operations BFA (BFA/AS IDF/Branche AS);Organization;BFA (AS IDF/Branche AS);;;
+At SO (Sud Ouest/AS Regions/Branche AS);Organization;Sud Ouest (AS Regions/Branche AS);;;
+Atp (Atp/Atp/Branche AS);Organization;Atp (Atp/Branche AS);;;
+Awakit (Awakit/Digital/Branche BS);Organization;Awakit (Digital/Branche BS);;;
+BPR B2I (BPR/Production);Organization;BPR (Production);;;
+Division des Transverses (Transverses/Software/Branche Software);Organization;Transverses (Software/Branche Software);;;
+Vanilla (BFI/Offres Specialisees/Branche BS);Organization;BFI (Offres Specialisees/Branche BS);;;
+BI (BI/ES/Branche BS);Organization;BI (ES/Branche BS);;;
+BIg Data (BIg Data/Digital/Branche BS);Organization;BIg Data (Digital/Branche BS);;;
+Bretagne AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);Organization;AS Centre - Ouest (AS Regions/Branche AS);;;
+BSS (Gfi Telecom/Offres Specialisees/Branche BS);Organization;Gfi Telecom (Offres Specialisees/Branche BS);;;
+Amoa BFA (Amoa BFA/Amoa BFA/Consulting);Organization;Amoa BFA (Amoa BFA/Consulting);;;
+Oss (Oss/Offres Specialisees/Branche BS);Organization;Oss (Offres Specialisees/Branche BS);;;
+Division Temps & Activite (Temps & Activite/Software/Branche Software);Organization;Temps & Activite (Software/Branche Software);;;
+Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);Organization;Gfi Belgium (Gfi Belgium/Gfi Belgium);;;
+Software (Spain);Organization;Spain;;;
+DI Service & Support (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
+Cis (Cis/ES/Branche BS);Organization;Cis (ES/Branche BS);;;
+Gfi Cloud (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
+BPR D&O (BPR/Production);Organization;BPR (Production);;;
+Direction Industrielle IES (IES/AS IDF/Branche AS);Organization;IES (AS IDF/Branche AS);;;
+Delivery SO (Sud Ouest/AS Regions/Branche AS);Organization;Sud Ouest (AS Regions/Branche AS);;;
+Division Rh (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
+Direction Industrielle TP (TP/AS IDF/Branche AS);Organization;TP (AS IDF/Branche AS);;;
+DI Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche AS);Organization;AS Rhone-Alpes (AS Regions/Branche AS);;;
+Digital (Digital/Digital/Branche BS);Organization;Digital (Digital/Branche BS);;;
+Nord AS (Nord Est/AS Regions/Branche AS);Organization;Nord Est (AS Regions/Branche AS);;;
+DI-Pdl/Lm AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);Organization;AS Centre - Ouest (AS Regions/Branche AS);;;
+Direction IES (IES/AS IDF/Branche AS);Organization;IES (AS IDF/Branche AS);;;
+Direction Industrielle BFA (BFA/AS IDF/Branche AS);Organization;BFA (AS IDF/Branche AS);;;
+Direction Operation IES (IES/AS IDF/Branche AS);Organization;IES (AS IDF/Branche AS);;;
+DO Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche AS);Organization;AS Rhone-Alpes (AS Regions/Branche AS);;;
+Direction Operation TP (TP/AS IDF/Branche AS);Organization;TP (AS IDF/Branche AS);;;
+DO-Pdl/Lm AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);Organization;AS Centre - Ouest (AS Regions/Branche AS);;;
+Hybris (Hybris/Digital/Branche BS);Organization;Hybris (Digital/Branche BS);;;
+Luxembourg (Gfi Belgium/Gfi Belgium/Gfi Belgium);Organization;Gfi Belgium (Gfi Belgium/Gfi Belgium);;;
+ES Morocco (Morocco/Morocco/Morocco);Organization;Morocco (Morocco/Morocco);;;
+Division Offres Specialisees (Divers/Software/Branche Software);Organization;Divers (Software/Branche Software);;;
+Division Finance Publique (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
+Division Solutions Territoriales (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
+Division Assurance & Finance Prive (Finance/Software/Branche Software);Organization;Finance (Software/Branche Software);;;
+IS Spain (Spain);Organization;Spain;;;
+GIE ESas (GIE ESas/AS Regions/Branche AS);Organization;GIE ESas (AS Regions/Branche AS);;;
+Outsourcing (Outsourcing/Offres Specialisees/Branche BS);Organization;Outsourcing (Offres Specialisees/Branche BS);;;
+ES Spain (Spain);Organization;Spain;;;
+BPR Hbgt (BPR/Production);Organization;BPR (Production);;;
+BPR IS (BPR/Production);Organization;BPR (Production);;;
+IS Sud Ouest (IS Sud Ouest/IS/Branche IS);Organization;IS Sud Ouest (IS/Branche IS);;;
+IS Centre (IS Ouest/IS/Branche IS);Organization;IS Ouest (IS/Branche IS);;;
+IDF Direction Industrielle (IDF IS/IS/Branche IS);Organization;IDF IS (IS/Branche IS);;;
+IDF Direction Operationnelle (IDF IS/IS/Branche IS);Organization;IDF IS (IS/Branche IS);;;
+IDF Expertise Cie (IDF IS/IS/Branche IS);Organization;IDF IS (IS/Branche IS);;;
+IS Morocco (Morocco/Morocco/Morocco);Organization;Morocco (Morocco/Morocco);;;
+IS Nord Direction Industrielle (Nord IS/IS/Branche IS);Organization;Nord IS (IS/Branche IS);;;
+IS Nord Direction Operationnelle (Nord IS/IS/Branche IS);Organization;Nord IS (IS/Branche IS);;;
+Management IS Nord (Nord IS/IS/Branche IS);Organization;Nord IS (IS/Branche IS);;;
+IS Nord Sncf (Nord IS/IS/Branche IS);Organization;Nord IS (IS/Branche IS);;;
+Conseil Transformation (IS Ouest/IS/Branche IS);Organization;IS Ouest (IS/Branche IS);;;
+IS Ouest DI (IS Ouest/IS/Branche IS);Organization;IS Ouest (IS/Branche IS);;;
+IS Ouest DO (IS Ouest/IS/Branche IS);Organization;IS Ouest (IS/Branche IS);;;
+IS Ouest Structure (IS Ouest/IS/Branche IS);Organization;IS Ouest (IS/Branche IS);;;
+IS Mediterranee (IS Mediterranee/IS/Branche IS);Organization;IS Mediterranee (IS/Branche IS);;;
+IS Rha Sncf (IS Rhone-Alpes/IS/Branche IS);Organization;IS Rhone-Alpes (IS/Branche IS);;;
+Jde (Jde/ES/Branche BS);Organization;Jde (ES/Branche BS);;;
+IS Rhone-Alpes (IS Rhone-Alpes/IS/Branche IS);Organization;IS Rhone-Alpes (IS/Branche IS);;;
+Magento Open (Magento Open/Digital/Branche BS);Organization;Magento Open (Digital/Branche BS);;;
+Structure (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
+Autre Charges (Spain);Organization;Spain;;;
+Management SO (Sud Ouest/AS Regions/Branche AS);Organization;Sud Ouest (AS Regions/Branche AS);;;
+Management Conseil (Management Conseil/Management Conseil/Consulting);Organization;Management Conseil (Management Conseil/Consulting);;;
+Management ES (Management ES/ES/Branche BS);Organization;Management ES (ES/Branche BS);;;
+Management Gfi Telecom (Gfi Telecom/Offres Specialisees/Branche BS);Organization;Gfi Telecom (Offres Specialisees/Branche BS);;;
+IDF IS (IDF IS/IS/Branche IS);Organization;IDF IS (IS/Branche IS);;;
+Management IS (Management IS/IS/Branche IS);Organization;Management IS (IS/Branche IS);;;
+Structure Med (Mediterranee/AS Regions/Branche AS);Organization;Mediterranee (AS Regions/Branche AS);;;
+Management Rha (AS Rhone-Alpes/AS Regions/Branche AS);Organization;AS Rhone-Alpes (AS Regions/Branche AS);;;
+Management TP (TP/AS IDF/Branche AS);Organization;TP (AS IDF/Branche AS);;;
+Est (Nord Est/AS Regions/Branche AS);Organization;Nord Est (AS Regions/Branche AS);;;
+BPR Mgt (BPR/Production);Organization;BPR (Production);;;
+Microsoft (Microsoft/Digital/Branche BS);Organization;Microsoft (Digital/Branche BS);;;
+Montpellier (Mediterranee/AS Regions/Branche AS);Organization;Mediterranee (AS Regions/Branche AS);;;
+Software Morocco (Morocco/Morocco/Morocco);Organization;Morocco (Morocco/Morocco);;;
+BPR MVS (BPR/Production);Organization;BPR (Production);;;
+Newton Pil (Newton Pil/AS IDF/Branche AS);Organization;Newton Pil (AS IDF/Branche AS);;;
+Newton Thales NTIC (IES/AS IDF/Branche AS);Organization;IES (AS IDF/Branche AS);;;
+Newton Thales Oa (Oracle Applications/ES/Branche BS);Organization;Oracle Applications (ES/Branche BS);;;
+Newton Thales Plm (Plm/Qsi/Consulting);Organization;Plm (Qsi/Consulting);;;
+Newton Thales SAP (SAP/SAP/Consulting);Organization;SAP (SAP/Consulting);;;
+Newton Thales BI (BI/Digital/Branche BS);Organization;BI (Digital/Branche BS);;;
+Niort AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);Organization;AS Centre - Ouest (AS Regions/Branche AS);;;
+BPR NTIC2 (BPR/Production);Organization;BPR (Production);;;
+BPR Spain (Spain);Organization;Spain;;;
+BPR NTIC1 (BPR/Production);Organization;BPR (Production);;;
+Plm (Plm/Qsi/Consulting);Organization;Plm (Qsi/Consulting);;;
+Oracle Applications (Oracle Applications/ES/Branche BS);Organization;Oracle Applications (ES/Branche BS);;;
+Division Distribution et Transport (Transport/Software/Branche Software);Organization;Transport (Software/Branche Software);;;
+Infogen (Sage/ES/Branche BS);Organization;Sage (ES/Branche BS);;;
+Division Sante (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
+SAP (SAP/SAP/Consulting);Organization;SAP (SAP/Consulting);;;
+Sirh (Sirh/ES/Branche BS);Organization;Sirh (ES/Branche BS);;;
+Structure Banque Assurance (BFA/AS IDF/Branche AS);Organization;BFA (AS IDF/Branche AS);;;
+Suisse (Suisse/Suisse/Switzerland);Organization;Suisse (Suisse/Switzerland);;;
+BPR Testing (BPR/Production);Organization;BPR (Production);;;
+Valtech (Sud Ouest/AS Regions/Branche AS);Organization;Sud Ouest (AS Regions/Branche AS);;;
+Operational Portugal;Organization;Portugal;;;
+BPR Portugal (Operational Portugal);Organization;Operational Portugal;;;
+Marketing Portugal (Operational Portugal);Organization;Operational Portugal;;;
+Consulting Portugal (Operational Portugal);Organization;Operational Portugal;;;
+Software Portugal (Operational Portugal);Organization;Operational Portugal;;;
+ES Portugal (Operational Portugal);Organization;Operational Portugal;;;
+IS Portugal (Operational Portugal);Organization;Operational Portugal;;;
+AS Portugal (Operational Portugal);Organization;Operational Portugal;;;
+Management Portugal (Operational Portugal);Organization;Operational Portugal;;;
+Action Logement;Organization;Division Social (Sante/Software/Branche Software);;;475611
+Addstones;Organization;Addstones (BFI/Offres Specialisees/Branche BS);;;202633
+Aix;Organization;PACA (Mediterranee/AS Regions/Branche AS);;;338069
+AS;Organization;Belgique (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355509
+AS Centre;Organization;AS Centre (AS Centre/AS Regions/Branche AS);;;305704
+AS Centre - Ouest Direction;Organization;AS Ouest Direction (AS Centre - Ouest/AS Regions/Branche AS);;;341520
+AS Gfi Cataluna;Organization;AS Spain (Spain);;;555450
+AS Gfi Isban;Organization;AS Spain (Spain);;;555411
+AS Gfi Madrid;Organization;AS Spain (Spain);;;555410
+AS Gfi Norte;Organization;AS Spain (Spain);;;555430
+AS Gfi Sur;Organization;AS Spain (Spain);;;555470
+AS Morocco;Organization;AS Morocco (Morocco/Morocco/Morocco);;;458203
+ASd;Organization;Division Social (Sante/Software/Branche Software);;;475721
+Assurances;Organization;Operations BFA (BFA/AS IDF/Branche AS);;;303534
+At AS SO;Organization;At SO (Sud Ouest/AS Regions/Branche AS);;;311300
+Atp;Organization;Atp (Atp/Atp/Branche AS);;;303596
+Awakit;Organization;Awakit (Awakit/Digital/Branche BS);;;304070
+B2I - Maroc;Organization;BPR B2I (BPR/Production);;;873873
+B2I - Nord;Organization;BPR B2I (BPR/Production);;;314071
+B2I - Sud Ouest;Organization;BPR B2I (BPR/Production);;;873810
+B2I IDF1;Organization;BPR B2I (BPR/Production);;;372716
+Bdoc;Organization;Division des Transverses (Transverses/Software/Branche Software);;;475300
+BFI;Organization;Vanilla (BFI/Offres Specialisees/Branche BS);;;202623
+BFI Bus;Organization;Vanilla (BFI/Offres Specialisees/Branche BS);;;202625
+BI;Organization;BI (BI/ES/Branche BS);;;202622
+BIbliotheques;Organization;Division Social (Sante/Software/Branche Software);;;475610
+BIg Data;Organization;BIg Data (BIg Data/Digital/Branche BS);;;304090
+Bnpp;Organization;Operations BFA (BFA/AS IDF/Branche AS);;;303536
+Bretagne AS Ouest;Organization;Bretagne AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);;;341531
+BSS;Organization;BSS (Gfi Telecom/Offres Specialisees/Branche BS);;;304050
+Business Consulting;Organization;Business Transformation (Consulting);;;202610
+Business Consulting BFA;Organization;Amoa BFA (Amoa BFA/Amoa BFA/Consulting);;;202611
+Business Transformation;Organization;Business Transformation (Consulting);;;372700
+Casa-Irps;Organization;Operations BFA (BFA/AS IDF/Branche AS);;;303533
+Cem;Organization;Oss (Oss/Offres Specialisees/Branche BS);;;304061
+Chronogestor;Organization;Division Temps & Activite (Temps & Activite/Software/Branche Software);;;475115
+Chronotime;Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355514
+Chronotime Spain;Organization;Software (Spain);;;555483
+Ciceo;Organization;DI Service & Support (Management/Software/Branche Software);;;475607
+Cis;Organization;Cis (Cis/ES/Branche BS);;;207110
+Compant Hub Belux;Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355515
+Company Hub;Organization;Gfi Cloud (Management/Software/Branche Software);;;475933
+Company Hub Spain;Organization;Software (Spain);;;555482
+D&O - Maroc;Organization;BPR D&O (BPR/Production);;;873878
+D&O - Nord;Organization;BPR D&O (BPR/Production);;;873867
+Dbd IES;Organization;Direction Industrielle IES (IES/AS IDF/Branche AS);;;314010
+Delivery AS SO;Organization;Delivery SO (Sud Ouest/AS Regions/Branche AS);;;311311
+Demat & Connecticite;Organization;Division Rh (Management/Software/Branche Software);;;475606
+DI Avv;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314080
+DI Euc;Organization;Direction Industrielle IES (IES/AS IDF/Branche AS);;;305700,8738
+DI Grenoble;Organization;DI Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche AS);;;322045
+DI Lyon Clermont;Organization;DI Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche AS);;;322040
+DI PACA;Organization;PACA (Mediterranee/AS Regions/Branche AS);;;338062
+DI TP Orange;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314060
+DI TP Spu Airial;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314091
+DI TP Spu Gfi;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314090
+DI TP Telco Media;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314070
+Digital;Organization;Digital (Digital/Digital/Branche BS);;;304080
+DI-N;Organization;Nord AS (Nord Est/AS Regions/Branche AS);;;364076
+DI-Pdl/Lm AS Ouest;Organization;DI-Pdl/Lm AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);;;341530
+Direction IES;Organization;Direction IES (IES/AS IDF/Branche AS);;;304040
+Direction Industrielle BFA;Organization;Direction Industrielle BFA (BFA/AS IDF/Branche AS);;;873853
+DO Dse;Organization;Direction Operation IES (IES/AS IDF/Branche AS);;;304021
+DO Euc;Organization;Direction Operation IES (IES/AS IDF/Branche AS);;;304022
+DO Grenoble;Organization;DO Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche AS);;;322044
+DO Iat;Organization;Direction Operation IES (IES/AS IDF/Branche AS);;;304020
+DO Lyon Clermont;Organization;DO Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche AS);;;322030
+DO TP;Organization;Direction Operation TP (TP/AS IDF/Branche AS);;;314050
+DO-Pdl/Lm AS Ouest;Organization;DO-Pdl/Lm AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);;;341528
+Easy (Software);Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;455503
+Ecommercehybris;Organization;Hybris (Hybris/Digital/Branche BS);;;873801
+ES;Organization;Luxembourg (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355510
+ES Morocco;Organization;ES Morocco (Morocco/Morocco/Morocco);;;458200
+Etablissement Algerie;Organization;Division Offres Specialisees (Divers/Software/Branche Software);;;475150
+Finance;Organization;Division Finance Publique (Management/Software/Branche Software);;;475650
+Fiscalite;Organization;Division Solutions Territoriales (Management/Software/Branche Software);;;475612
+Foba;Organization;Division Assurance & Finance Prive (Finance/Software/Branche Software);;;202616
+Frais AS;Organization;Frais AS (Branche AS);;;303598
+Frais ES;Organization;Frais AS (Branche AS);;;303597
+Gce Technologies;Organization;Operations;;;873865
+Gestion & Facturation;Organization;Division Solutions Territoriales (Management/Software/Branche Software);;;475110
+Gestor,Net;Organization;Division Temps & Activite (Temps & Activite/Software/Branche Software);;;475117
+Gfi Levante IS;Organization;IS Spain (Spain);;;555510
+GIE ESas;Organization;GIE ESas (GIE ESas/AS Regions/Branche AS);;;311100
+Global Outsourcing DOsi 3Si;Organization;Outsourcing (Outsourcing/Offres Specialisees/Branche BS);;;510311
+Infrastructure Services Psf;Organization;Luxembourg (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355517
+I-Orga Spain;Organization;ES Spain (Spain);;;555495
+IS;Organization;Luxembourg (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355506
+IS - Hebergement;Organization;BPR Hbgt (BPR/Production);;;873875
+IS - Maroc;Organization;BPR IS (BPR/Production);;;873874
+IS - Nord;Organization;BPR IS (BPR/Production);;;873881
+IS - Ouest;Organization;BPR IS (BPR/Production);;;573710
+IS - Ouest Cnes;Organization;BPR IS (BPR/Production);;;873880
+IS - Ouest Hd;Organization;BPR IS (BPR/Production);;;873882
+IS - Ouest Pil;Organization;BPR IS (BPR/Production);;;873883
+IS - Sud Est;Organization;BPR IS (BPR/Production);;;873877
+IS Arcitel;Organization;IS Spain (Spain);;;555490
+IS Bordeaux;Organization;IS Sud Ouest (IS Sud Ouest/IS/Branche IS);;;311314
+IS Centre;Organization;IS Centre (IS Ouest/IS/Branche IS);;;305712
+IS Cnes;Organization;IS Sud Ouest (IS Sud Ouest/IS/Branche IS);;;573320
+IS Gfi Madrid;Organization;IS Spain (Spain);;;555420
+IS Gfi Norte;Organization;IS Spain (Spain);;;555440
+IS IDF Cit;Organization;IDF Direction Industrielle (IDF IS/IS/Branche IS);;;573323
+IS IDF DI BFA;Organization;IDF Direction Industrielle (IDF IS/IS/Branche IS);;;573309
+IS IDF DI Euci;Organization;IDF Direction Industrielle (IDF IS/IS/Branche IS);;;573322
+IS IDF DI Tssp;Organization;IDF Direction Industrielle (IDF IS/IS/Branche IS);;;573310
+IS IDF DO BFA;Organization;IDF Direction Operationnelle (IDF IS/IS/Branche IS);;;573305
+IS IDF DO Cot;Organization;IDF Direction Operationnelle (IDF IS/IS/Branche IS);;;573324
+IS IDF DO Euiat;Organization;IDF Direction Operationnelle (IDF IS/IS/Branche IS);;;573307
+IS IDF DO Tssp;Organization;IDF Direction Operationnelle (IDF IS/IS/Branche IS);;;573315
+IS IDF Expertise Cie;Organization;IDF Expertise Cie (IDF IS/IS/Branche IS);;;573707
+IS Morocco;Organization;IS Morocco (Morocco/Morocco/Morocco);;;458201
+IS Nord Di;Organization;IS Nord Direction Industrielle (Nord IS/IS/Branche IS);;;364078
+IS Nord DO;Organization;IS Nord Direction Operationnelle (Nord IS/IS/Branche IS);;;364077
+IS Nord Mgt;Organization;Management IS Nord (Nord IS/IS/Branche IS);;;364079
+IS Nord Sncf;Organization;IS Nord Sncf (Nord IS/IS/Branche IS);;;364080
+IS Ouest Cit;Organization;Conseil Transformation (IS Ouest/IS/Branche IS);;;573303
+IS Ouest Di;Organization;IS Ouest DI (IS Ouest/IS/Branche IS);;;573304
+IS Ouest DO Bretagne;Organization;IS Ouest DO (IS Ouest/IS/Branche IS);;;573302
+IS Ouest DO Pdl Pc;Organization;IS Ouest DO (IS Ouest/IS/Branche IS);;;573301
+IS Ouest Structure;Organization;IS Ouest Structure (IS Ouest/IS/Branche IS);;;573701
+IS- Ouest System;Organization;BPR IS (BPR/Production);;;873884
+IS PACA;Organization;IS Mediterranee (IS Mediterranee/IS/Branche IS);;;573319
+IS Pau;Organization;IS Sud Ouest (IS Sud Ouest/IS/Branche IS);;;305708
+IS Rha Sncf;Organization;IS Rha Sncf (IS Rhone-Alpes/IS/Branche IS);;;573321
+IS Toulouse;Organization;IS Sud Ouest (IS Sud Ouest/IS/Branche IS);;;573318
+IS-Ouest Bdd;Organization;BPR IS (BPR/Production);;;873885
+ITN;Organization;Division Assurance & Finance Prive (Finance/Software/Branche Software);;;475820
+ITN Belux;Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355513
+ITN Spain;Organization;Software (Spain);;;555481
+Jde;Organization;Jde (Jde/ES/Branche BS);;;207210
+Lyon IS;Organization;IS Rhone-Alpes (IS Rhone-Alpes/IS/Branche IS);;;573311
+Magento Open;Organization;Magento Open (Magento Open/Digital/Branche BS);;;322046
+Maintenance ASTre;Organization;Structure (Management/Software/Branche Software);;;475620
+Management;Organization;Autre Charges (Spain);;;555400
+Management AS SO;Organization;Management SO (Sud Ouest/AS Regions/Branche AS);;;311380
+Management Branche Conseil;Organization;Management Conseil (Management Conseil/Management Conseil/Consulting);;;202624
+Management Digital;Organization;Digital (Digital/Digital/Branche BS);;;201215
+Management ES;Organization;Management ES (Management ES/ES/Branche BS);;;201210
+Management Gfi Telecom;Organization;Management Gfi Telecom (Gfi Telecom/Offres Specialisees/Branche BS);;;304051
+Management IDF IS;Organization;IDF IS (IDF IS/IS/Branche IS);;;573317
+Management IS;Organization;Management IS (Management IS/IS/Branche IS);;;573700
+Management Mediterranee;Organization;Structure Med (Mediterranee/AS Regions/Branche AS);;;338063
+Management Nord;Organization;Nord AS (Nord Est/AS Regions/Branche AS);;;364071
+Management Rha;Organization;Management Rha (AS Rhone-Alpes/AS Regions/Branche AS);;;322000
+Management Transverses;Organization;Division des Transverses (Transverses/Software/Branche Software);;;475329
+Management TP;Organization;Management TP (TP/AS IDF/Branche AS);;;314000
+Metz;Organization;Est (Nord Est/AS Regions/Branche AS);;;381000
+Management - BPR;Organization;BPR Mgt (BPR/Production);;;873869
+Management - Maroc;Organization;BPR Mgt (BPR/Production);;;873870
+Management - Nord;Organization;BPR Mgt (BPR/Production);;;873868
+Microsoft;Organization;Microsoft (Microsoft/Digital/Branche BS);;;201201
+MOA;Organization;Amoa BFA (Amoa BFA/Amoa BFA/Consulting);;;202621
+Montpellier;Organization;Montpellier (Mediterranee/AS Regions/Branche AS);;;338067
+Morocco Sirh;Organization;Software Morocco (Morocco/Morocco/Morocco);;;458204
+Mpc;Organization;Division Solutions Territoriales (Management/Software/Branche Software);;;475931
+MVS - Maroc;Organization;BPR MVS (BPR/Production);;;873871
+MVS - Nord;Organization;BPR MVS (BPR/Production);;;873863
+MVS - Sud Est;Organization;BPR MVS (BPR/Production);;;873879
+New Activities;Organization;Direction Industrielle IES (IES/AS IDF/Branche AS);;;304036
+Newton Pil;Organization;Newton Pil (Newton Pil/AS IDF/Branche AS);;;372718
+Newton Thales NTIC;Organization;Newton Thales NTIC (IES/AS IDF/Branche AS);;;372714
+Newton Thales Oa;Organization;Newton Thales Oa (Oracle Applications/ES/Branche BS);;;372711
+Newton Thales Plm;Organization;Newton Thales Plm (Plm/Qsi/Consulting);;;372713
+Newton Thales SAP;Organization;Newton Thales SAP (SAP/SAP/Consulting);;;372712
+Newton Thales BI;Organization;Newton Thales BI (BI/Digital/Branche BS);;;372719
+Niort AS Ouest;Organization;Niort AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);;;341533
+Nord AS;Organization;Nord AS (Nord Est/AS Regions/Branche AS);;;364075
+NTIC - IDF1;Organization;BPR NTIC2 (BPR/Production);;;372717
+NTIC1 - Alicante;Organization;BPR Spain (Spain);;;555460
+NTIC1 - Maroc;Organization;BPR NTIC1 (BPR/Production);;;873872
+NTIC1 - Nord;Organization;BPR NTIC1 (BPR/Production);;;873852
+NTIC1 - Sud Est;Organization;BPR NTIC1 (BPR/Production);;;873814
+NTIC2 - IDF2;Organization;BPR NTIC2 (BPR/Production);;;873811
+Optiopt Plm;Organization;Plm (Plm/Qsi/Consulting);;;372703
+Oracle Applications;Organization;Oracle Applications (Oracle Applications/ES/Branche BS);;;475200
+Ordirope;Organization;Division Distribution et Transport (Transport/Software/Branche Software);;;475662
+Oss;Organization;Oss (Oss/Offres Specialisees/Branche BS);;;304060
+Other Charges;Organization;Direction Operation IES (IES/AS IDF/Branche AS);;;304035
+Outsourcing;Organization;Outsourcing (Outsourcing/Offres Specialisees/Branche BS);;;510310
+Patrimoine;Organization;Division des Transverses (Transverses/Software/Branche Software);;;475170
+Pit;Organization;DI Service & Support (Management/Software/Branche Software);;;475601
+Pm;Organization;Division Social (Sante/Software/Branche Software);;;475723
+Ppc;Organization;Oss (Oss/Offres Specialisees/Branche BS);;;304062
+Public Administration Logiciels;Organization;Software (Spain);;;555650
+Public Crm & Smart Cities;Organization;Gfi Cloud (Management/Software/Branche Software);;;475934
+Qsi;Organization;Qsi (Qsi/Consulting);;;202620
+Rh;Organization;Division Rh (Management/Software/Branche Software);;;475605
+Sage;Organization;Infogen (Sage/ES/Branche BS);;;475209
+Sage Resale;Organization;Infogen (Sage/ES/Branche BS);;;475211
+Sage X3;Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355516
+Sante;Organization;Division Sante (Management/Software/Branche Software);;;305710
+SAP;Organization;SAP (SAP/SAP/Consulting);;;304030
+Sepamail;Organization;Division Assurance & Finance Prive (Finance/Software/Branche Software);;;475644
+Sg-Bpce;Organization;Operations BFA (BFA/AS IDF/Branche AS);;;303531
+Sig;Organization;Division des Transverses (Transverses/Software/Branche Software);;;475100
+Sirh;Organization;Sirh (Sirh/ES/Branche BS);;;204500
+Software AST;Organization;Software (Spain);;;555480
+Software Morocco;Organization;Software Morocco (Morocco/Morocco/Morocco);;;458202
+Sophia At;Organization;PACA (Mediterranee/AS Regions/Branche AS);;;338061
+Strasbourg;Organization;Est (Nord Est/AS Regions/Branche AS);;;381001
+Structure Assurance;Organization;Division Assurance & Finance Prive (Finance/Software/Branche Software);;;475829
+Structure Banque Assurance;Organization;Structure Banque Assurance (BFA/AS IDF/Branche AS);;;303594
+Structure Gdt;Organization;Division Temps & Activite (Temps & Activite/Software/Branche Software);;;475119
+Structure Ssp;Organization;Structure (Management/Software/Branche Software);;;475629
+Suisse;Organization;Suisse (Suisse/Suisse/Switzerland);;;355304
+Techmind;Organization;Division Assurance & Finance Prive (Finance/Software/Branche Software);;;202650
+Territoire;Organization;Division Solutions Territoriales (Management/Software/Branche Software);;;475171
+Testing - Nord;Organization;BPR Testing (BPR/Production);;;873866
+Tikawa;Organization;Awakit (Awakit/Digital/Branche BS);;;304071
+Transports & Logistique;Organization;Division Distribution et Transport (Transport/Software/Branche Software);;;384050
+Transports Publics;Organization;Division Distribution et Transport (Transport/Software/Branche Software);;;475641
+Valtech;Organization;Valtech (Sud Ouest/AS Regions/Branche AS);;;311322
+Vigie Si;Organization;Division des Transverses (Transverses/Software/Branche Software);;;475400
+X7;Organization;Division Offres Specialisees (Divers/Software/Branche Software);;;475643
+Application Outsourcing;Organization;AS Portugal (Operational Portugal);;;558620
+Infrastructure Outsourcing;Organization;IS Portugal (Operational Portugal);;;558630
+Management Portugal;Organization;Management Portugal (Operational Portugal);;;558671
+Application Fixed Price;Organization;AS Portugal (Operational Portugal);;;558710
+Infrastructures Fixed Price;Organization;IS Portugal (Operational Portugal);;;558720
+ES Portugal;Organization;ES Portugal (Operational Portugal);;;558740
+Software Portugal;Organization;Software Portugal (Operational Portugal);;;558750
+Company Hub Portugal;Organization;Software Portugal (Operational Portugal);;;558751
+Consulting Portugal;Organization;Consulting Portugal (Operational Portugal);;;558760
+NTIC2 - Lisbonne;Organization;BPR Portugal (Operational Portugal);;;558770
+B2I - Lisbonne;Organization;BPR Portugal (Operational Portugal);;;558771
+D&O - Lisbonne;Organization;BPR Portugal (Operational Portugal);;;558772
+IS - Lisbonne;Organization;BPR Portugal (Operational Portugal);;;558773
+Sales Portugal;Organization;Marketing Portugal (Operational Portugal);;;558780
+Operations Speciales;Organization;Operations;;;700301

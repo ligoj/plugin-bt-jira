@@ -1,0 +1,1 @@
+CREATE TABLE pluginversion (  ID decimal(18,0) NOT NULL,  pluginname varchar(255) default NULL,  pluginkey varchar(255) default NULL,  pluginversion varchar(255) default NULL,  CREATED datetime default NULL,  PRIMARY KEY  (ID));

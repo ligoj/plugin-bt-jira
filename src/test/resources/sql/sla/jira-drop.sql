@@ -1,0 +1,9 @@
+DROP TABLE issuelink;
+DROP TABLE issuelinktype;
+DROP TABLE changegroup;
+DROP TABLE changeitem;
+DROP TABLE jiraissue;
+DROP TABLE component;
+DROP TABLE customfield;
+DROP TABLE customfieldoption;
+DROP TABLE customfieldvalue;
