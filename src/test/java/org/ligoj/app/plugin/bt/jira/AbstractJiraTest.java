@@ -81,15 +81,6 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 	}
 
 	/**
-	 * Return the subscription identifier of MDA. Assumes there is only one
-	 * subscription for a service.
-	 */
-	protected int getSubscription(final String project, final String service) {
-		return em.createQuery("SELECT id FROM Subscription s WHERE project.name = ?1 AND node.id LIKE CONCAT(?2,'%')",
-				Integer.class).setParameter(1, project).setParameter(2, service).getSingleResult();
-	}
-
-	/**
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
 	@BeforeClass
