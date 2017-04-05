@@ -504,7 +504,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 * Indicate the given status is a resolution step.
 	 */
 	protected boolean isResolutionStatus(final String status) {
-		return status.equals("Resolved") || status.equals("Closed");
+		return "Resolved".equals(status) || "Closed".equals(status);
 	}
 
 	/**
@@ -880,7 +880,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Prepare an authenticated connection to JIRA
 	 */
-	protected boolean authenticateAdmin(final ImportContext context, final CurlProcessor processor) throws Exception {
+	protected boolean authenticateAdmin(final ImportContext context, final CurlProcessor processor) {
 		return super.authenticateAdmin(context.parameters, processor);
 	}
 
