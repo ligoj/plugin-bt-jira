@@ -27,6 +27,15 @@ import org.ligoj.app.iam.Activity;
 import org.ligoj.app.plugin.bt.jira.JiraProject;
 import org.ligoj.app.plugin.bt.jira.editor.AbstractEditor;
 import org.ligoj.app.plugin.bt.jira.editor.CustomFieldEditor;
+import org.ligoj.app.plugin.bt.jira.editor.DateEditor;
+import org.ligoj.app.plugin.bt.jira.editor.DatePickerEditor;
+import org.ligoj.app.plugin.bt.jira.editor.FailsafeEditor;
+import org.ligoj.app.plugin.bt.jira.editor.FloatEditor;
+import org.ligoj.app.plugin.bt.jira.editor.IdEditor;
+import org.ligoj.app.plugin.bt.jira.editor.IdentityEditor;
+import org.ligoj.app.plugin.bt.jira.editor.MultipleIdEditor;
+import org.ligoj.app.plugin.bt.jira.editor.UrlEditor;
+import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
 import org.ligoj.app.plugin.bt.model.ChangeItem;
 import org.ligoj.app.plugin.bt.model.IssueDetails;
@@ -46,6 +55,52 @@ import org.springframework.stereotype.Component;
 public class JiraDao {
 
 	private static final String STATUS_OPEN = "1";
+
+	/**
+	 * Fail safe editor, non blocking export.
+	 */
+	public static final AbstractEditor FAILSAFE_TYPE = new FailsafeEditor();
+
+	/**
+	 * Well known types, but not yet implemented :
+	 * <ul>
+	 * <li>"com.atlassian.jira.plugin.system.customfieldtypes:grouppicker"</li>
+	 * <li>"com.atlassian.jira.plugin.system.customfieldtypes:userpicker"</li>
+	 * <li>"com.atlassian.jira.plugin.system.customfieldtypes:version"</li>
+	 * <li>"com.atlassian.jira.plugin.system.customfieldtypes:multiversion"</li>
+	 * </ul>
+	 * Well known types, and fully implemented
+	 */
+	public static final Map<String, AbstractEditor> MANAGED_TYPE = new HashMap<>();
+	static {
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:textarea", new IdentityEditor() {
+			@Override
+			public String getCustomColumn() {
+				return "TEXTVALUE";
+			}
+
+		});
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:url", new UrlEditor());
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:datepicker", new DatePickerEditor());
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:float", new FloatEditor());
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:textfield", new IdentityEditor());
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:datetime", new DateEditor());
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes", new MultipleIdEditor());
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:select", new IdEditor());
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons", new IdEditor());
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:multiselect", new MultipleIdEditor());
+
+		// Only id -> string support
+		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect", new IdEditor() {
+			@Override
+			public Object getValue(final CustomField customField, final String value) {
+				throw new ValidationJsonException("cf$" + customField.getName(),
+						"Custom field '" + customField.getName() + "' has a not yet managed type '" + customField.getFieldType() + "'");
+			}
+
+		});
+
+	}
 
 	/**
 	 * Return all status changes of issues of given project.
@@ -430,7 +485,7 @@ public class JiraDao {
 	private void buildEditor(final DataSource dataSource, final CustomFieldEditor customField, final int project) {
 		// Get editor for this custom field
 		updateCustomFieldEditor(dataSource, customField, project,
-				ObjectUtils.defaultIfNull(AbstractEditor.MANAGED_TYPE.get(customField.getFieldType()), AbstractEditor.FAILSAFE_TYPE));
+				ObjectUtils.defaultIfNull(MANAGED_TYPE.get(customField.getFieldType()), FAILSAFE_TYPE));
 	}
 
 	/**

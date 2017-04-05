@@ -5,7 +5,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ligoj.app.MatcherUtil;
-import org.ligoj.app.plugin.bt.jira.editor.AbstractEditor;
+import org.ligoj.app.plugin.bt.jira.dao.JiraDao;
 import org.ligoj.app.plugin.bt.jira.editor.DateEditor;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
@@ -85,6 +85,6 @@ public class DateEditorTest extends AbstractDataGeneratorTest {
 	}
 
 	private void assertDate(final Date date, final String key) {
-		Assert.assertEquals(date, AbstractEditor.MANAGED_TYPE.get(key).getValue(new CustomField(), D_20140521_154556));
+		Assert.assertEquals(date, JiraDao.MANAGED_TYPE.get(key).getValue(new CustomField(), D_20140521_154556));
 	}
 }

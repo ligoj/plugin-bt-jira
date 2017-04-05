@@ -2,7 +2,7 @@ package org.ligoj.app.plugin.bt.jira.dao.editor;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.ligoj.app.plugin.bt.jira.editor.AbstractEditor;
+import org.ligoj.app.plugin.bt.jira.dao.JiraDao;
 import org.ligoj.app.plugin.bt.jira.editor.IdentityEditor;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
@@ -37,14 +37,14 @@ public class IdentityEditorTest extends AbstractDataGeneratorTest {
 		final CustomField customField = new CustomField();
 		customField.setName("NAME");
 		Assert.assertEquals(4.3,
-				((Double) AbstractEditor.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:float").getValue(customField, "4.3"))
+				((Double) JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:float").getValue(customField, "4.3"))
 						.doubleValue(),
 				0.01);
 		Assert.assertEquals("http://any-path",
-				AbstractEditor.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:url").getValue(customField, "http://any-path"));
+				JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:url").getValue(customField, "http://any-path"));
 		Assert.assertEquals("any",
-				AbstractEditor.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:textfield").getValue(customField, "any"));
+				JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:textfield").getValue(customField, "any"));
 		Assert.assertEquals("any",
-				AbstractEditor.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:textarea").getValue(customField, "any"));
+				JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:textarea").getValue(customField, "any"));
 	}
 }

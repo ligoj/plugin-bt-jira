@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.ligoj.app.plugin.bt.jira.editor.AbstractEditor;
 import org.ligoj.app.plugin.bt.jira.editor.CustomFieldEditor;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.Workflow;
@@ -361,7 +360,7 @@ public class JiraUpdateDao {
 			final Object cfValue = entry.getValue();
 
 			// Determine the right 'customfieldvalue' column
-			final String column = AbstractEditor.MANAGED_TYPE.get(customField.getFieldType()).getCustomColumn();
+			final String column = JiraDao.MANAGED_TYPE.get(customField.getFieldType()).getCustomColumn();
 			final Collection<Object> values;
 			if (cfValue instanceof Collection) {
 				// Multi-values

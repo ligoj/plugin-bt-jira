@@ -1,6 +1,5 @@
 package org.ligoj.app.plugin.bt.jira.editor;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,52 +17,6 @@ import org.springframework.jdbc.core.RowCallbackHandler;
  * Custom field editor converting {@link String} to the expected value of a custom field.
  */
 public abstract class AbstractEditor {
-
-	/**
-	 * Well known types, but not yet implemented :
-	 * <ul>
-	 * <li>"com.atlassian.jira.plugin.system.customfieldtypes:grouppicker"</li>
-	 * <li>"com.atlassian.jira.plugin.system.customfieldtypes:userpicker"</li>
-	 * <li>"com.atlassian.jira.plugin.system.customfieldtypes:version"</li>
-	 * <li>"com.atlassian.jira.plugin.system.customfieldtypes:multiversion"</li>
-	 * </ul>
-	 * Well known types, and fully implemented
-	 */
-	public static final Map<String, AbstractEditor> MANAGED_TYPE = new HashMap<>();
-	static {
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:textarea", new IdentityEditor() {
-			@Override
-			public String getCustomColumn() {
-				return "TEXTVALUE";
-			}
-
-		});
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:url", new UrlEditor());
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:datepicker", new DatePickerEditor());
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:float", new FloatEditor());
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:textfield", new IdentityEditor());
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:datetime", new DateEditor());
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes", new MultipleIdEditor());
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:select", new IdEditor());
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons", new IdEditor());
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:multiselect", new MultipleIdEditor());
-
-		// Only id -> string support
-		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect", new IdEditor() {
-			@Override
-			public Object getValue(final CustomField customField, final String value) {
-				throw new ValidationJsonException("cf$" + customField.getName(),
-						"Custom field '" + customField.getName() + "' has a not yet managed type '" + customField.getFieldType() + "'");
-			}
-
-		});
-
-	}
-
-	/**
-	 * Fail safe editor, non blocking export.
-	 */
-	public static final AbstractEditor FAILSAFE_TYPE = new FailsafeEditor();
 
 	/**
 	 * Return a map with K is result identifier, and V is the string value. Assumes there is a 'id' and a 'pname'
