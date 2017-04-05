@@ -71,7 +71,7 @@ public class JiraDao {
 	 * </ul>
 	 * Well known types, and fully implemented
 	 */
-	public static final Map<String, AbstractEditor> MANAGED_TYPE = new HashMap<>();
+	protected static final Map<String, AbstractEditor> MANAGED_TYPE = new HashMap<>();
 	static {
 		MANAGED_TYPE.put("com.atlassian.jira.plugin.system.customfieldtypes:textarea", new IdentityEditor() {
 			@Override

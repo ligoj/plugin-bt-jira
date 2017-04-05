@@ -1,4 +1,4 @@
-package org.ligoj.app.plugin.bt.jira.dao.editor;
+package org.ligoj.app.plugin.bt.jira.editor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -6,10 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ligoj.app.MatcherUtil;
-import org.ligoj.app.plugin.bt.jira.AbstractJiraUploadTest;
-import org.ligoj.app.plugin.bt.jira.dao.JiraDao;
-import org.ligoj.app.plugin.bt.jira.editor.AbstractEditor;
-import org.ligoj.app.plugin.bt.jira.editor.IdEditor;
+import org.ligoj.app.plugin.bt.jira.dao.AbstractEditorUploadTest;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
@@ -17,7 +14,7 @@ import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 /**
  * test class of {@link IdEditor} and {@link AbstractEditor}
  */
-public class IdEditorTest extends AbstractJiraUploadTest {
+public class IdEditorTest extends AbstractEditorUploadTest {
 
 	@Test
 	public void testCustomColumn() {
@@ -99,7 +96,7 @@ public class IdEditorTest extends AbstractJiraUploadTest {
 		final CustomField customField = new CustomField();
 		customField.setName("NAME");
 		Assert.assertEquals(4.3,
-				((Double) JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:url").getValue(customField, "invalid"))
+				((Double) getEditor("com.atlassian.jira.plugin.system.customfieldtypes:url").getValue(customField, "invalid"))
 						.doubleValue(),
 				0.01);
 	}
@@ -117,7 +114,7 @@ public class IdEditorTest extends AbstractJiraUploadTest {
 
 		// Provides project where the context is not valid for this custom field
 		new IdEditor().populateValues(datasource, customField, 1);
-		JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP1");
+		getEditor("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP1");
 	}
 
 	@Test(expected = ValidationJsonException.class)
@@ -128,7 +125,7 @@ public class IdEditorTest extends AbstractJiraUploadTest {
 
 		// Provides project where the context is not valid for this custom field
 		new IdEditor().populateValues(datasource, customField, 1);
-		JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP");
+		getEditor("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP");
 	}
 
 	@Test
@@ -139,7 +136,7 @@ public class IdEditorTest extends AbstractJiraUploadTest {
 
 		// Provides project where the context is not valid for this custom field
 		new IdEditor().populateValues(datasource, customField, 10074);
-		JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP");
+		getEditor("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP");
 	}
 
 	/**
@@ -151,7 +148,7 @@ public class IdEditorTest extends AbstractJiraUploadTest {
 		customField.setName("cf-cascading");
 		customField.setId(19003);
 		new IdEditor().populateValues(datasource, customField, 10074);
-		JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect").getValue(customField, "any");
+		getEditor("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect").getValue(customField, "any");
 	}
 
 	@Test
@@ -161,7 +158,7 @@ public class IdEditorTest extends AbstractJiraUploadTest {
 		customField.setId(19003);
 		final CustomFieldValue value = new CustomFieldValue();
 		value.setStringValue("10204");
-		final AbstractEditor editor = JiraDao.MANAGED_TYPE.get("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect");
+		final AbstractEditor editor = getEditor("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect");
 		editor.populateValues(datasource, customField, 10074);
 		Assert.assertEquals("CValue", editor.getValue(customField, value));
 	}

@@ -30,6 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JiraUpdateDao {
 
+	/**
+	 * Jira Node names for associations
+	 */
+	private static final String COMPONENT_NODE = "Component";
+	private static final String VERSION_NODE = "Version";
+	private static final String ISSUE_NODE = "Issue";
+	
 	@Autowired
 	private JiraDao jiraDao;
 
@@ -44,10 +51,11 @@ public class JiraUpdateDao {
 	 *            the component names to add
 	 * @return the {@link Map} where value is the created component identifier.
 	 */
-	public Map<String, Integer> addComponents(final DataSource dataSource, final int jira, final Collection<String> components) {
+	public Map<String, Integer> addComponents(final DataSource dataSource, final int jira,
+			final Collection<String> components) {
 		final Map<String, Integer> result = new HashMap<>();
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		int nextId = prepareForNextId(dataSource, "Component", components.size());
+		int nextId = prepareForNextId(dataSource, COMPONENT_NODE, components.size());
 		for (final String component : components) {
 			jdbcTemplate.update("INSERT INTO component (ID,PROJECT,cname) values(?,?,?)", nextId, jira, component);
 			result.put(component, nextId);
@@ -67,13 +75,15 @@ public class JiraUpdateDao {
 	 *            the version names to add
 	 * @return the {@link Map} where value is the created version identifier.
 	 */
-	public Map<String, Integer> addVersions(final DataSource dataSource, final int jira, final Collection<String> versions) {
+	public Map<String, Integer> addVersions(final DataSource dataSource, final int jira,
+			final Collection<String> versions) {
 		final Map<String, Integer> result = new HashMap<>();
 		final JdbcOperations jdbcTemplate = new JdbcTemplate(dataSource);
-		int nextId = prepareForNextId(dataSource, "Version", versions.size());
+		int nextId = prepareForNextId(dataSource, VERSION_NODE, versions.size());
 		int nextSequence = getNextVersionSequence(jira, jdbcTemplate);
 		for (final String version : versions) {
-			jdbcTemplate.update("INSERT INTO projectversion (ID,PROJECT,vname,SEQUENCE) values(?,?,?,?)", nextId, jira, version, nextSequence);
+			jdbcTemplate.update("INSERT INTO projectversion (ID,PROJECT,vname,SEQUENCE) values(?,?,?,?)", nextId, jira,
+					version, nextSequence);
 			result.put(version, nextId);
 			nextId++;
 			nextSequence++;
@@ -85,7 +95,8 @@ public class JiraUpdateDao {
 	 * Return the next sequence of versions of given project.
 	 */
 	private int getNextVersionSequence(final int jira, final JdbcOperations jdbcTemplate) {
-		final Long sequence = jdbcTemplate.queryForObject("SELECT MAX(SEQUENCE) FROM projectversion WHERE PROJECT = ?", Long.class, jira);
+		final Long sequence = jdbcTemplate.queryForObject("SELECT MAX(SEQUENCE) FROM projectversion WHERE PROJECT = ?",
+				Long.class, jira);
 		final int nextSequence;
 		if (sequence == null) {
 			// First version
@@ -123,8 +134,8 @@ public class JiraUpdateDao {
 			// Set the next sequence
 			final int nextSequence = (currentSequence / 100) * 100 + ((int) Math.signum(currentSequence % 100)) * 100
 					+ (amount / 100 + (int) Math.signum(amount % 100)) * 100;
-			updated = jdbcTemplate.update("UPDATE SEQUENCE_VALUE_ITEM SET SEQ_ID = ? WHERE SEQ_NAME = ? AND SEQ_ID = ?", nextSequence, sequenceName,
-					currentSequence);
+			updated = jdbcTemplate.update("UPDATE SEQUENCE_VALUE_ITEM SET SEQ_ID = ? WHERE SEQ_NAME = ? AND SEQ_ID = ?",
+					nextSequence, sequenceName, currentSequence);
 		} while (updated == 0);
 
 		return currentSequence;
@@ -161,11 +172,14 @@ public class JiraUpdateDao {
 	 */
 	protected int getCurrentSequence(final String sequenceName, final JdbcOperations jdbcTemplate) {
 		final Long currentSequence;
-		final List<Long> sequence = jdbcTemplate.queryForList("SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME = ?", Long.class, sequenceName);
+		final List<Long> sequence = jdbcTemplate
+				.queryForList("SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME = ?", Long.class, sequenceName);
 		if (sequence.isEmpty()) {
-			// New sequence, start from an arbitrary sequence to be sure JIRA does not fill it
+			// New sequence, start from an arbitrary sequence to be sure JIRA
+			// does not fill it
 			currentSequence = 10000L;
-			jdbcTemplate.update("INSERT INTO SEQUENCE_VALUE_ITEM (SEQ_NAME,SEQ_ID) values(?,?)", sequenceName, currentSequence);
+			jdbcTemplate.update("INSERT INTO SEQUENCE_VALUE_ITEM (SEQ_NAME,SEQ_ID) values(?,?)", sequenceName,
+					currentSequence);
 		} else {
 			currentSequence = sequence.get(0);
 		}
@@ -178,7 +192,8 @@ public class JiraUpdateDao {
 	 * @param dataSource
 	 *            The data source of JIRA database.
 	 * @param issues
-	 *            The issues to add. The ID property of each inserted issue is also updated in these objects.
+	 *            The issues to add. The ID property of each inserted issue is
+	 *            also updated in these objects.
 	 */
 	public void addLabels(final DataSource dataSource, final List<JiraIssueRow> issues) {
 		// Compute required amount of labels
@@ -203,7 +218,8 @@ public class JiraUpdateDao {
 	private int addLabels(final JdbcOperations jdbcTemplate, final int nextId, final JiraIssueRow issue) {
 		int nextIdl = nextId;
 		// Remove previous labels
-		jdbcTemplate.update("DELETE FROM label WHERE ISSUE = ? AND LABEL NOT IN (" + jiraDao.newIn(issue.getLabels()) + ")",
+		jdbcTemplate.update(
+				"DELETE FROM label WHERE ISSUE = ? AND LABEL NOT IN (" + jiraDao.newIn(issue.getLabels()) + ")",
 				ArrayUtils.addAll(new Object[] { issue.getId() }, issue.getLabels().toArray()));
 
 		// Add missing labels
@@ -222,21 +238,24 @@ public class JiraUpdateDao {
 	 * @param jira
 	 *            the JIRA project identifier.
 	 * @param issues
-	 *            The issues to add. The ID property of each inserted issue is also updated in these objects.
+	 *            The issues to add. The ID property of each inserted issue is
+	 *            also updated in these objects.
 	 * @param workflowStepMapping
-	 *            the {@link Map} linking type identifier to a {@link Map} linking status name to steps.
+	 *            the {@link Map} linking type identifier to a {@link Map}
+	 *            linking status name to steps.
 	 */
 	public void addIssues(final DataSource dataSource, final int jira, final List<JiraIssueRow> issues,
 			final Map<Integer, Workflow> workflowStepMapping) {
 		final JdbcOperations jdbcTemplate = new JdbcTemplate(dataSource);
-		int nextId = prepareForNextId(dataSource, "Issue", issues.size());
+		int nextId = prepareForNextId(dataSource, ISSUE_NODE, issues.size());
 		reserveProjectCounter(dataSource, jira, issues);
 		int nextCurrentStepId = prepareForNextId(dataSource, "OSCurrentStep", issues.size());
 		int nextWfEntryId = prepareForNextId(dataSource, "OSWorkflowEntry", issues.size());
 		int counter = 0;
 		for (final JiraIssueRow issueRow : issues) {
 			issueRow.setId(nextId);
-			log.info("Inserting issue {}-{}({}) {}/{}", issueRow.getPkey(), issueRow.getIssueNum(), issueRow.getId(), counter, issues.size());
+			log.info("Inserting issue {}-{}({}) {}/{}", issueRow.getPkey(), issueRow.getIssueNum(), issueRow.getId(),
+					counter, issues.size());
 			Workflow workflow = workflowStepMapping.get(issueRow.getType());
 			if (workflow == null) {
 				workflow = workflowStepMapping.get(0);
@@ -251,34 +270,41 @@ public class JiraUpdateDao {
 	}
 
 	/**
-	 * Add an issue, workflow entry, corresponding step of current status and link author to this issue (user activity
-	 * dashboard)
+	 * Add an issue, workflow entry, corresponding step of current status and
+	 * link author to this issue (user activity dashboard)
 	 */
-	private void addIssue(final int jira, final JdbcOperations jdbcTemplate, final int nextId, final int nextCurrentStepId, final int nextWfEntryId,
-			final JiraIssueRow issueRow, final Workflow workflow) {
+	private void addIssue(final int jira, final JdbcOperations jdbcTemplate, final int nextId,
+			final int nextCurrentStepId, final int nextWfEntryId, final JiraIssueRow issueRow,
+			final Workflow workflow) {
 		final INamableBean<Integer> workflowStep = workflow.getStatusToSteps().get(issueRow.getStatusText());
 
 		// Insert workflow activity
-		jdbcTemplate.update("INSERT INTO OS_WFENTRY (ID,NAME,STATE) values(?,?,?)", nextWfEntryId, workflow.getName(), 1);
-		jdbcTemplate.update("INSERT INTO OS_CURRENTSTEP (ID,ENTRY_ID,STEP_ID,ACTION_ID,START_DATE,STATUS) values(?,?,?,?,?,?)", nextCurrentStepId,
-				nextWfEntryId, workflowStep.getId(), 0, issueRow.getCreated(), workflowStep.getName());
+		jdbcTemplate.update("INSERT INTO OS_WFENTRY (ID,NAME,STATE) values(?,?,?)", nextWfEntryId, workflow.getName(),
+				1);
+		jdbcTemplate.update(
+				"INSERT INTO OS_CURRENTSTEP (ID,ENTRY_ID,STEP_ID,ACTION_ID,START_DATE,STATUS) values(?,?,?,?,?,?)",
+				nextCurrentStepId, nextWfEntryId, workflowStep.getId(), 0, issueRow.getCreated(),
+				workflowStep.getName());
 
 		// Insert issue
 		jdbcTemplate.update(
 				"INSERT INTO jiraissue"
 						+ " (ID,issuenum,WATCHES,VOTES,PROJECT,REPORTER,ASSIGNEE,CREATOR,issuetype,SUMMARY,DESCRIPTION,PRIORITY,RESOLUTION,RESOLUTIONDATE,"
 						+ "issuestatus,CREATED,UPDATED,WORKFLOW_ID,DUEDATE) values(?,?,1,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-				nextId, issueRow.getIssueNum(), jira, issueRow.getReporter(), issueRow.getAssignee(), issueRow.getAuthor(), issueRow.getType(),
-				issueRow.getSummary(), issueRow.getDescription(), issueRow.getPriority(), issueRow.getResolution(), issueRow.getResolutionDate(),
-				issueRow.getStatus(), issueRow.getCreated(), issueRow.getUpdated(), nextWfEntryId, issueRow.getDueDate());
+				nextId, issueRow.getIssueNum(), jira, issueRow.getReporter(), issueRow.getAssignee(),
+				issueRow.getAuthor(), issueRow.getType(), issueRow.getSummary(), issueRow.getDescription(),
+				issueRow.getPriority(), issueRow.getResolution(), issueRow.getResolutionDate(), issueRow.getStatus(),
+				issueRow.getCreated(), issueRow.getUpdated(), nextWfEntryId, issueRow.getDueDate());
 
 		// Add user relation
-		jdbcTemplate.update("INSERT INTO userassociation (SOURCE_NAME,SINK_NODE_ID,SINK_NODE_ENTITY,ASSOCIATION_TYPE,CREATED) values(?,?,?,?,?)",
-				issueRow.getAuthor(), nextId, "Issue", "WatchIssue", issueRow.getUpdated());
+		jdbcTemplate.update(
+				"INSERT INTO userassociation (SOURCE_NAME,SINK_NODE_ID,SINK_NODE_ENTITY,ASSOCIATION_TYPE,CREATED) values(?,?,?,?,?)",
+				issueRow.getAuthor(), nextId, ISSUE_NODE, "WatchIssue", issueRow.getUpdated());
 	}
 
 	/**
-	 * Associate issue to components and versions. All related entries must exist.
+	 * Associate issue to components and versions. All related entries must
+	 * exist.
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
@@ -289,20 +315,21 @@ public class JiraUpdateDao {
 		final JdbcOperations jdbcTemplate = new JdbcTemplate(dataSource);
 		for (final JiraIssueRow issueRow : issues) {
 			final int issueId = issueRow.getId();
-			associatedItems(jdbcTemplate, issueId, issueRow.getComponents(), "Component", "IssueComponent");
-			associatedItems(jdbcTemplate, issueId, issueRow.getVersions(), "Version", "IssueVersion");
-			associatedItems(jdbcTemplate, issueId, issueRow.getFixedVersions(), "Version", "IssueFixVersion");
+			associatedItems(jdbcTemplate, issueId, issueRow.getComponents(), COMPONENT_NODE, "IssueComponent");
+			associatedItems(jdbcTemplate, issueId, issueRow.getVersions(), VERSION_NODE, "IssueVersion");
+			associatedItems(jdbcTemplate, issueId, issueRow.getFixedVersions(), VERSION_NODE, "IssueFixVersion");
 		}
 	}
 
 	/**
 	 * Associate an issue to a set of items;
 	 */
-	private void associatedItems(final JdbcOperations jdbcTemplate, final int issueId, final Collection<Integer> items, final String nodetype,
-			final String associationType) {
+	private void associatedItems(final JdbcOperations jdbcTemplate, final int issueId, final Collection<Integer> items,
+			final String nodetype, final String associationType) {
 		for (final Integer item : items) {
-			jdbcTemplate.update("INSERT INTO nodeassociation (SOURCE_NODE_ID,SOURCE_NODE_ENTITY,SINK_NODE_ID,SINK_NODE_ENTITY,ASSOCIATION_TYPE)"
-					+ " values(?,?,?,?,?)", issueId, "Issue", item, nodetype, associationType);
+			jdbcTemplate
+					.update("INSERT INTO nodeassociation (SOURCE_NODE_ID,SOURCE_NODE_ENTITY,SINK_NODE_ID,SINK_NODE_ENTITY,ASSOCIATION_TYPE)"
+							+ " values(?,?,?,?,?)", issueId, ISSUE_NODE, item, nodetype, associationType);
 		}
 	}
 
@@ -350,8 +377,8 @@ public class JiraUpdateDao {
 	 * Associate custom field values to a given issue.
 	 */
 	@SuppressWarnings("unchecked")
-	private int associateCutomFieldValues(final Map<String, CustomFieldEditor> customFields, final JdbcOperations jdbcTemplate, final int nextId,
-			final JiraIssueRow issueRow) {
+	private int associateCutomFieldValues(final Map<String, CustomFieldEditor> customFields,
+			final JdbcOperations jdbcTemplate, final int nextId, final JiraIssueRow issueRow) {
 		int nextIdl = nextId;
 		for (final Entry<String, Object> entry : issueRow.getCustomFields().entrySet()) {
 			final String cfName = entry.getKey();
@@ -379,12 +406,13 @@ public class JiraUpdateDao {
 	/**
 	 * Associate a single custom field values to a given issue.
 	 */
-	private int associateCustomFieldValue(final JdbcOperations jdbcTemplate, final int issueId, final int nextId, final int cfId, final String column,
-			final Iterable<Object> values) {
+	private int associateCustomFieldValue(final JdbcOperations jdbcTemplate, final int issueId, final int nextId,
+			final int cfId, final String column, final Iterable<Object> values) {
 		int nextIdl = nextId;
 		// Persist single/multiple values
 		for (final Object value : values) {
-			jdbcTemplate.update("INSERT INTO customfieldvalue (ID,ISSUE,CUSTOMFIELD," + column + ") values(?,?,?,?)", nextIdl, issueId, cfId, value);
+			jdbcTemplate.update("INSERT INTO customfieldvalue (ID,ISSUE,CUSTOMFIELD," + column + ") values(?,?,?,?)",
+					nextIdl, issueId, cfId, value);
 			nextIdl++;
 		}
 		return nextIdl;
@@ -413,14 +441,14 @@ public class JiraUpdateDao {
 			for (final JiraChangeRow change : changes.getValue()) {
 
 				// Add 'changegroup'
-				jdbcTemplate.update("INSERT INTO changegroup (ID,issueid,AUTHOR,CREATED) values(?,?,?,?)", nextChangeGroupId, change.getId(),
-						change.getAuthor(), change.getDate());
+				jdbcTemplate.update("INSERT INTO changegroup (ID,issueid,AUTHOR,CREATED) values(?,?,?,?)",
+						nextChangeGroupId, change.getId(), change.getAuthor(), change.getDate());
 
 				// Add 'changeitem'
 				jdbcTemplate.update(
 						"INSERT INTO changeitem (ID,groupId,FIELDTYPE,FIELD,OLDVALUE,OLDSTRING,NEWVALUE,NEWSTRING) values(?,?,?,?,?,?,?,?)",
-						nextChangeItemId, nextChangeGroupId, "jira", "status", change.getFromStatus(), change.getFromStatusText(),
-						change.getToStatus(), change.getToStatusText());
+						nextChangeItemId, nextChangeGroupId, "jira", "status", change.getFromStatus(),
+						change.getFromStatusText(), change.getToStatus(), change.getToStatusText());
 
 				nextChangeItemId++;
 				nextChangeGroupId++;

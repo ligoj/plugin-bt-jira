@@ -1,4 +1,4 @@
-package org.ligoj.app.plugin.bt.jira.dao.editor;
+package org.ligoj.app.plugin.bt.jira.editor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,16 +9,13 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ligoj.app.MatcherUtil;
-import org.ligoj.app.plugin.bt.jira.AbstractJiraUploadTest;
-import org.ligoj.app.plugin.bt.jira.dao.JiraDao;
-import org.ligoj.app.plugin.bt.jira.editor.IdEditor;
-import org.ligoj.app.plugin.bt.jira.editor.MultipleIdEditor;
+import org.ligoj.app.plugin.bt.jira.dao.AbstractEditorUploadTest;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 
 /**
  * test class of {@link MultipleIdEditor}
  */
-public class MultipleIdEditorTest extends AbstractJiraUploadTest {
+public class MultipleIdEditorTest extends AbstractEditorUploadTest {
 
 	@Test
 	public void testCustomColumn() {
@@ -46,7 +43,8 @@ public class MultipleIdEditorTest extends AbstractJiraUploadTest {
 		values.put("keyC", 3);
 		customField.setInvertValues(values);
 		@SuppressWarnings("unchecked")
-		final List<Integer> ids = new ArrayList<>((Collection<Integer>) new MultipleIdEditor().getValue(customField, "keyA, keyC, ,"));
+		final List<Integer> ids = new ArrayList<>(
+				(Collection<Integer>) new MultipleIdEditor().getValue(customField, "keyA, keyC, ,"));
 		Assert.assertEquals(2, ids.size());
 		Assert.assertEquals(1, ids.get(0).intValue());
 		Assert.assertEquals(3, ids.get(1).intValue());
@@ -70,7 +68,7 @@ public class MultipleIdEditorTest extends AbstractJiraUploadTest {
 
 		@SuppressWarnings("unchecked")
 		final List<Integer> ids = new ArrayList<>(
-				(Collection<Integer>) JiraDao.MANAGED_TYPE.get(key).getValue(customField, "Décalage planning , Demande révisée"));
+				(Collection<Integer>) getEditor(key).getValue(customField, "Décalage planning , Demande révisée"));
 		Assert.assertEquals(2, ids.size());
 		Assert.assertEquals(10048, ids.get(0).intValue());
 		Assert.assertEquals(10049, ids.get(1).intValue());

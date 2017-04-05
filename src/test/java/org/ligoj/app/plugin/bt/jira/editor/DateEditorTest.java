@@ -1,20 +1,18 @@
-package org.ligoj.app.plugin.bt.jira.dao.editor;
+package org.ligoj.app.plugin.bt.jira.editor;
 
 import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.ligoj.app.MatcherUtil;
-import org.ligoj.app.plugin.bt.jira.dao.JiraDao;
-import org.ligoj.app.plugin.bt.jira.editor.DateEditor;
+import org.ligoj.app.plugin.bt.jira.dao.AbstractEditorTest;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
-import org.ligoj.bootstrap.AbstractDataGeneratorTest;
 
 /**
  * test class of {@link DateEditor}
  */
-public class DateEditorTest extends AbstractDataGeneratorTest {
+public class DateEditorTest extends AbstractEditorTest {
 
 	private static final String D_20140521_1545 = "2014-05-21 15:45";
 	private static final String D_20140521_154556 = D_20140521_1545 + ":56";
@@ -85,6 +83,6 @@ public class DateEditorTest extends AbstractDataGeneratorTest {
 	}
 
 	private void assertDate(final Date date, final String key) {
-		Assert.assertEquals(date, JiraDao.MANAGED_TYPE.get(key).getValue(new CustomField(), D_20140521_154556));
+		Assert.assertEquals(date, getEditor(key).getValue(new CustomField(), D_20140521_154556));
 	}
 }

@@ -62,8 +62,8 @@ import lombok.extern.slf4j.Slf4j;
 @Produces(MediaType.APPLICATION_JSON)
 public class JiraImportPluginResource extends JiraBaseResource {
 
+	private static final String FIELD_ISSUE = "issue";
 	private static final String FIELD_STATUS = "status";
-
 	private static final String FIELD_RESOLUTION = "resolution";
 
 	/**
@@ -115,8 +115,9 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	@POST
 	@Path("{subscription:\\d+}/{mode}/{encoding}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ImportStatus upload(@Multipart("csv-file") final InputStream csvInput, @PathParam("encoding") final String encoding,
-			@PathParam("subscription") final int subscription, @PathParam("mode") final UploadMode mode) throws Exception {
+	public ImportStatus upload(@Multipart("csv-file") final InputStream csvInput,
+			@PathParam("encoding") final String encoding, @PathParam("subscription") final int subscription,
+			@PathParam("mode") final UploadMode mode) throws Exception {
 		boolean failed = true;
 		try {
 			final ImportStatus importStatus = resource.checkAndLockImport(subscription, mode);
@@ -195,8 +196,9 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	/**
-	 * Build status changes of all issues. Issues without changes will not be in this result, and VALUE of this
-	 * {@link Map} is never an empty list. KEY is the issueNum.
+	 * Build status changes of all issues. Issues without changes will not be in
+	 * this result, and VALUE of this {@link Map} is never an empty list. KEY is
+	 * the issueNum.
 	 */
 	private Map<Integer, List<JiraChangeRow>> buildStatusChanges(final ImportContext context, final ImportStatus result,
 			final List<JiraIssueRow> issues) {
@@ -213,7 +215,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Build status changes of one issue.
 	 */
-	private int buildStatusChanges(final ImportContext context, final Map<Integer, List<JiraChangeRow>> statusChanges, final JiraIssueRow issue) {
+	private int buildStatusChanges(final ImportContext context, final Map<Integer, List<JiraChangeRow>> statusChanges,
+			final JiraIssueRow issue) {
 		int nbStatusChanges = 0;
 		final List<ImportEntry> changes = context.changes.get(issue.getIssueNum());
 		final List<JiraChangeRow> issueStatusChanges = new ArrayList<>();
@@ -221,8 +224,9 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		for (final ImportEntry change : changes) {
 			if (change.getStatusId() != lastChange.getStatusId()) {
 				// Add the status change
-				final JiraChangeRow changeRow = new JiraChangeRow(lastChange.getStatusId(), context.statuses.get(lastChange.getStatusId()),
-						change.getStatusId(), context.statuses.get(change.getStatusId()), change.getAuthor(), change.getDateValid());
+				final JiraChangeRow changeRow = new JiraChangeRow(lastChange.getStatusId(),
+						context.statuses.get(lastChange.getStatusId()), change.getStatusId(),
+						context.statuses.get(change.getStatusId()), change.getAuthor(), change.getDateValid());
 				changeRow.setId(issue.getId());
 				issueStatusChanges.add(changeRow);
 				lastChange = change;
@@ -234,7 +238,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	/**
-	 * Convert text to identifier. Return the identifier list, in the same order of given texts.
+	 * Convert text to identifier. Return the identifier list, in the same order
+	 * of given texts.
 	 */
 	private List<Integer> convertTextToId(final Map<String, Integer> allItems, final Collection<String> itemsAsText) {
 		return itemsAsText.stream().map(allItems::get).collect(Collectors.toList());
@@ -261,7 +266,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		resource.moveForwardImportStep(result);
 	}
 
-	private void validateSyntax(final ImportContext context, final ImportStatus result, final Reader csvInput) throws IOException {
+	private void validateSyntax(final ImportContext context, final ImportStatus result, final Reader csvInput)
+			throws IOException {
 
 		// Read all entries, may need extra memory at this moment ...
 		log.info("Read changes to import");
@@ -277,7 +283,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		validatorBean.validateCheck(rawEntries);
 		resource.moveForwardImportStep(result);
 
-		// Collect of foreign keys to validate/complete and initialize the business objects
+		// Collect of foreign keys to validate/complete and initialize the
+		// business objects
 		log.info("Validate chronology and PKEY constant");
 		final String pkey = context.parameters.get(PARAMETER_PKEY);
 		context.issues = checkChronologyAndPkey(rawEntries, pkey);
@@ -289,7 +296,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	private void validateRequiredData(final ImportStatus result, final ImportContext context) {
-		// Collect of foreign keys to validate/complete and initialize the business objects
+		// Collect of foreign keys to validate/complete and initialize the
+		// business objects
 		log.info("Collect required data for the {} issues", context.issues.size());
 		final List<ImportEntry> rawEntries = result.getRawEntries();
 		completeContext(result, rawEntries, context);
@@ -386,12 +394,15 @@ public class JiraImportPluginResource extends JiraBaseResource {
 
 	private void checkNewIssues(final ImportContext context, final ImportStatus result, final int jira) {
 		log.info("Get existing issues to update");
-		context.issuesToUdate = jiraDao.getIssues(context.dataSource, jira, result.getMinIssue(), result.getMaxIssue(), context.issues);
+		context.issuesToUdate = jiraDao.getIssues(context.dataSource, jira, result.getMinIssue(), result.getMaxIssue(),
+				context.issues);
 		result.setNewIssues(context.issues.size() - context.issuesToUdate.size());
 		if (!context.issuesToUdate.isEmpty()) {
 			final IssueWithCollections first = context.issuesToUdate.values().iterator().next();
-			throw new ValidationJsonException("issue", "Updating issues is not yet implemented. " + context.issuesToUdate.size()
-					+ " issues are concerned. First one is issue " + first.getIssue() + " (id=" + first.getId() + ")");
+			throw new ValidationJsonException(FIELD_ISSUE,
+					"Updating issues is not yet implemented. " + context.issuesToUdate.size()
+							+ " issues are concerned. First one is issue " + first.getIssue() + " (id=" + first.getId()
+							+ ")");
 		}
 	}
 
@@ -422,15 +433,17 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		result.setNewComponents(result.getNewComponentsAsSet().size());
 	}
 
-	private void persistData(final ImportContext context, final ImportStatus result) throws Exception {
+	private void persistData(final ImportContext context, final ImportStatus result) {
 
 		// Add components and versions
 		log.info("Create new components");
-		context.existingComponents.putAll(jiraUpdateDao.addComponents(context.dataSource, result.getJira(), result.getNewComponentsAsSet()));
+		context.existingComponents.putAll(
+				jiraUpdateDao.addComponents(context.dataSource, result.getJira(), result.getNewComponentsAsSet()));
 		resource.moveForwardImportStep(result);
 
 		log.info("Create new versions");
-		context.existingVersions.putAll(jiraUpdateDao.addVersions(context.dataSource, result.getJira(), result.getNewVersionsAsSet()));
+		context.existingVersions
+				.putAll(jiraUpdateDao.addVersions(context.dataSource, result.getJira(), result.getNewVersionsAsSet()));
 		resource.moveForwardImportStep(result);
 
 		// Add issues, final state
@@ -571,7 +584,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		copyOfRequired.removeAll(knowStatus);
 		if (!copyOfRequired.isEmpty()) {
 			throw new ValidationJsonException(FIELD_STATUS,
-					"At least one specified status exists but is not managed in the workflow : " + StringUtils.join(copyOfRequired, ','));
+					"At least one specified status exists but is not managed in the workflow : "
+							+ StringUtils.join(copyOfRequired, ','));
 		}
 	}
 
@@ -591,8 +605,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	private void checkTypesAgainstWorkflow(final ImportContext context) {
 		for (final String type : context.requiredTypes) {
 			if (!context.typeToStatusToStep.containsKey(context.types.get(type))) {
-				throw new ValidationJsonException("type",
-						"Specified type '" + type + "' exists but is not mapped to a workflow and there is no default association");
+				throw new ValidationJsonException("type", "Specified type '" + type
+						+ "' exists but is not mapped to a workflow and there is no default association");
 			}
 		}
 	}
@@ -625,7 +639,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Complete context : required date and data to complete during the import.
 	 */
-	private void completeContext(final ImportStatus result, final List<ImportEntry> rawEntries, final ImportContext context) {
+	private void completeContext(final ImportStatus result, final List<ImportEntry> rawEntries,
+			final ImportContext context) {
 		final Set<String> requiredStatuses = context.requiredStatuses;
 		final Set<String> requiredPriorities = context.requiredPriorities;
 		final Set<String> requiredTypes = context.requiredTypes;
@@ -710,9 +725,10 @@ public class JiraImportPluginResource extends JiraBaseResource {
 			rawEntry.setDueDateValid(DateEditor.toDate(rawEntry.getDueDate()));
 
 			// Check the due date against creation
-			if (first.containsKey(rawEntry.getIssueNum())
-					&& rawEntry.getDueDateValid().getTime() < first.get(rawEntry.getIssueNum()).getDateValid().getTime()) {
-				throw new ValidationJsonException("dueDate", "Due date must be greater or equals to the creation date for issue " + toLog(rawEntry));
+			if (first.containsKey(rawEntry.getIssueNum()) && rawEntry.getDueDateValid().getTime() < first
+					.get(rawEntry.getIssueNum()).getDateValid().getTime()) {
+				throw new ValidationJsonException("dueDate",
+						"Due date must be greater or equals to the creation date for issue " + toLog(rawEntry));
 			}
 		}
 
@@ -724,14 +740,15 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	private String checkJiraVersion(final DataSource dataSource) {
 		final String jiraVersion = jiraDao.getJiraVersion(dataSource);
 		if (jiraVersion.compareTo("6.0.0") < 0) {
-			throw new ValidationJsonException("jira", "Required JIRA version is 6.0.0, and the current version is " + jiraVersion);
+			throw new ValidationJsonException("jira",
+					"Required JIRA version is 6.0.0, and the current version is " + jiraVersion);
 		}
 		return jiraVersion;
 	}
 
 	/**
-	 * Check custom fields. During this call, {@link String} custom fields values are replaced with the formatted and
-	 * typed ones.
+	 * Check custom fields. During this call, {@link String} custom fields
+	 * values are replaced with the formatted and typed ones.
 	 */
 	private void checkCustomFields(final List<ImportEntry> rawEntries, final Set<String> requiredCustomFields,
 			final Map<String, CustomFieldEditor> customFields) {
@@ -752,7 +769,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	private void checkUsers(final DataSource dataSource, final Set<String> requiredUsers) {
 		final List<String> existingUsers = jiraDao.getUsers(dataSource, requiredUsers);
 		checkRequired("assignee", "assignee/reporters/authors",
-				existingUsers.stream().collect(Collectors.toMap(Function.identity(), Function.identity())), requiredUsers);
+				existingUsers.stream().collect(Collectors.toMap(Function.identity(), Function.identity())),
+				requiredUsers);
 	}
 
 	/**
@@ -789,8 +807,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 			issues.put(entry.getIssueNum(), changes);
 		} else if (isEquals(changes.get(changes.size() - 1), entry)) {
 			// No change means an history issue this the last line is useless
-			throw new ValidationJsonException("issue", "No change detected detected for issue " + toLog(entry) + " for changes between "
-					+ changes.get(changes.size() - 1).getDate() + " and " + entry.getDate());
+			throw new ValidationJsonException(FIELD_ISSUE, "No change detected detected for issue " + toLog(entry)
+					+ " for changes between " + changes.get(changes.size() - 1).getDate() + " and " + entry.getDate());
 		}
 		changes.add(entry);
 	}
@@ -800,15 +818,21 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 */
 	private boolean isEquals(final ImportEntry lastEntry, final ImportEntry entry) {
 		// CHECKSTYLE:OFF
-		return isEquals(lastEntry.getAssignee(), entry.getAssignee()) && isEquals(lastEntry.getAuthor(), entry.getAuthor())
-				&& isEquals(lastEntry.getReporter(), entry.getReporter()) && isEquals(lastEntry.getDescription(), entry.getDescription())
-				&& isEquals(lastEntry.getFixedVersionText(), entry.getFixedVersionText()) && lastEntry.getPriorityId() == entry.getPriorityId()
+		return isEquals(lastEntry.getAssignee(), entry.getAssignee())
+				&& isEquals(lastEntry.getAuthor(), entry.getAuthor())
+				&& isEquals(lastEntry.getReporter(), entry.getReporter())
+				&& isEquals(lastEntry.getDescription(), entry.getDescription())
+				&& isEquals(lastEntry.getFixedVersionText(), entry.getFixedVersionText())
+				&& lastEntry.getPriorityId() == entry.getPriorityId()
 				&& isEquals(lastEntry.getResolutionId(), entry.getResolutionId())
 				&& isEquals(lastEntry.getResolutionDateValid(), entry.getResolutionDateValid())
-				&& isEquals(lastEntry.getDueDateValid(), entry.getDueDateValid()) && lastEntry.getStatusId() == entry.getStatusId()
+				&& isEquals(lastEntry.getDueDateValid(), entry.getDueDateValid())
+				&& lastEntry.getStatusId() == entry.getStatusId()
 				&& isEquals(lastEntry.getSummary(), entry.getSummary()) && isEquals(lastEntry.getCf(), entry.getCf())
-				&& isEquals(lastEntry.getLabelsText(), entry.getLabelsText()) && isEquals(lastEntry.getComponentsText(), entry.getComponentsText())
-				&& lastEntry.getTypeId() == entry.getTypeId() && isEquals(lastEntry.getVersionText(), entry.getVersionText());
+				&& isEquals(lastEntry.getLabelsText(), entry.getLabelsText())
+				&& isEquals(lastEntry.getComponentsText(), entry.getComponentsText())
+				&& lastEntry.getTypeId() == entry.getTypeId()
+				&& isEquals(lastEntry.getVersionText(), entry.getVersionText());
 		// CHECKSTYLE:ON
 	}
 
@@ -822,12 +846,14 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Compare and check the required and the actual elements.
 	 */
-	private void checkRequired(final String field, final String errorString, final Map<String, ?> existing, final Set<String> required) {
+	private void checkRequired(final String field, final String errorString, final Map<String, ?> existing,
+			final Set<String> required) {
 		final Set<String> copy = new HashSet<>(required);
 		copy.removeAll(existing.keySet());
 		if (!copy.isEmpty()) {
 			// Not existing priorities have been found during the import
-			throw new ValidationJsonException(field, "Some " + errorString + " (" + copy.size() + ") do not exist : " + StringUtils.join(copy, ','));
+			throw new ValidationJsonException(field,
+					"Some " + errorString + " (" + copy.size() + ") do not exist : " + StringUtils.join(copy, ','));
 		}
 	}
 
@@ -838,14 +864,15 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		final Date date = DateEditor.toDate(entry.getDate());
 		if (previousDate != null && date.before(previousDate)) {
 			// Chronology issue
-			throw new ValidationJsonException("date", "Broken history for issue " + toLog(entry) + " " + previousDate + " and " + entry.getDate());
+			throw new ValidationJsonException("date",
+					"Broken history for issue " + toLog(entry) + " " + previousDate + " and " + entry.getDate());
 		}
 		return date;
 	}
 
 	/**
-	 * Separate the PKEY from the issue number, update the entry, validate the PKEY is the same than the expected one,
-	 * otherwise, throws an exception.
+	 * Separate the PKEY from the issue number, update the entry, validate the
+	 * PKEY is the same than the expected one, otherwise, throws an exception.
 	 */
 	private void checkPKey(final String pkey, final ImportEntry entry) {
 		final String issue = entry.getIssue();
@@ -858,8 +885,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 			// Check the PKEY (subscription and import)
 			final String pkeyIssue = issue.substring(0, index);
 			if (!pkeyIssue.equals(pkey)) {
-				throw new ValidationJsonException("issue", "Used issue prefix in import is " + pkeyIssue + ", but associated project is " + pkey
-						+ ", are you importing the correct file?");
+				throw new ValidationJsonException(FIELD_ISSUE, "Used issue prefix in import is " + pkeyIssue
+						+ ", but associated project is " + pkey + ", are you importing the correct file?");
 			}
 		}
 	}
@@ -867,12 +894,12 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Synchronize JIRA
 	 */
-	protected void synchronizeJira(final ImportContext context, final ImportStatus result) throws Exception {
+	protected void synchronizeJira(final ImportContext context, final ImportStatus result) {
 		if (result.getCanSynchronizeJira()) {
 			// Administration account has been provided
 			final CurlProcessor processor = new JiraCurlProcessor();
-			result.setSynchronizedJira(authenticateAdmin(context, processor) && clearJiraCache(context, result, processor)
-					&& reIndexProject(context, result, processor));
+			result.setSynchronizedJira(authenticateAdmin(context, processor)
+					&& clearJiraCache(context, result, processor) && reIndexProject(context, result, processor));
 			processor.close();
 		}
 	}
@@ -890,16 +917,19 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 * @see "http://localhost:6080/plugins/servlet/scriptrunner/builtin?section=builtin_scripts#"
 	 * @see "https://marketplace.atlassian.com/plugins/com.onresolve.jira.groovy.groovyrunner"
 	 */
-	protected boolean clearJiraCache(final ImportContext context, final ImportStatus result, final CurlProcessor processor) {
+	protected boolean clearJiraCache(final ImportContext context, final ImportStatus result,
+			final CurlProcessor processor) {
 		if (result.getScriptRunner()) {
 			final List<CurlRequest> requests = new ArrayList<>();
 			final String url = context.parameters.get(PARAMETER_URL) + "/secure/admin/groovy/CannedScriptRunner.jspa";
 			requests.add(new CurlRequest(HttpMethod.POST, url,
-					"cannedScript=com.onresolve.jira.groovy.canned.admin.ClearCaches" + "&cannedScriptArgs_FIELD_WHICH_CACHE=jira"
-							+ "&cannedScriptArgs_Hidden_FIELD_WHICH_CACHE=jira" + "&cannedScriptArgs_Hidden_output=Cache+cleared."
+					"cannedScript=com.onresolve.jira.groovy.canned.admin.ClearCaches"
+							+ "&cannedScriptArgs_FIELD_WHICH_CACHE=jira"
+							+ "&cannedScriptArgs_Hidden_FIELD_WHICH_CACHE=jira"
+							+ "&cannedScriptArgs_Hidden_output=Cache+cleared."
 							+ "&cannedScript=com.onresolve.jira.groovy.canned.admin.ClearCaches&id="
-							+ "&atl_token=B3WY-Y7OK-4J8S-4GH4%7Ca2a4f45ffb53fcf8fbb12453e587949470377ec7%7Clin" + "&RunCanned=Run"
-							+ "&webSudoIsPost=true&os_cookie=true",
+							+ "&atl_token=B3WY-Y7OK-4J8S-4GH4%7Ca2a4f45ffb53fcf8fbb12453e587949470377ec7%7Clin"
+							+ "&RunCanned=Run" + "&webSudoIsPost=true&os_cookie=true",
 					"Accept:application/json, text/javascript, */*; q=0.01"));
 			return processor.process(requests);
 		}
@@ -912,7 +942,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 * @see "http://localhost:6080/secure/admin/IndexProject.jspa?pid=10000"
 	 * @see "http://localhost:6080/secure/admin/jira/IndexReIndex.jspa"
 	 */
-	protected boolean reIndexProject(final ImportContext context, final ImportStatus result, final CurlProcessor processor) {
+	protected boolean reIndexProject(final ImportContext context, final ImportStatus result,
+			final CurlProcessor processor) {
 		final List<CurlRequest> requests = new ArrayList<>();
 		final String url = context.parameters.get(PARAMETER_URL) + "/secure/admin/IndexProject.jspa";
 		requests.add(new CurlRequest(HttpMethod.GET, url + "?pid=" + result.getJira(), null));

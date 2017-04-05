@@ -1,4 +1,4 @@
-package org.ligoj.app.plugin.bt.jira.dao.editor;
+package org.ligoj.app.plugin.bt.jira.editor;
 
 import org.junit.Assert;
 import org.junit.Test;
