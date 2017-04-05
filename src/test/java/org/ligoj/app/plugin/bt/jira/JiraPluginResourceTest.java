@@ -36,6 +36,7 @@ import org.ligoj.app.resource.plugin.CurlProcessor;
 import org.ligoj.app.resource.subscription.SubscriptionResource;
 import org.ligoj.bootstrap.core.IDescribableBean;
 import org.ligoj.bootstrap.core.resource.BusinessException;
+import org.ligoj.bootstrap.core.resource.TechnicalException;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -203,7 +204,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		Assert.assertEquals("4.4.1", version);
 	}
 
-	@Test(expected = ClassNotFoundException.class)
+	@Test(expected = TechnicalException.class)
 	public void validateDataBaseConnectivityFailed() throws Exception {
 		final Map<String, String> parameters = new HashMap<>();
 		addJdbcParameter(parameters);
