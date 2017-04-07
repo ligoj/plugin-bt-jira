@@ -111,13 +111,14 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 * @param mode
 	 *            the upload mode.
 	 * @return the the import result.
+	 * @throws IOException
 	 */
 	@POST
 	@Path("{subscription:\\d+}/{mode}/{encoding}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public ImportStatus upload(@Multipart("csv-file") final InputStream csvInput,
 			@PathParam("encoding") final String encoding, @PathParam("subscription") final int subscription,
-			@PathParam("mode") final UploadMode mode) throws Exception {
+			@PathParam("mode") final UploadMode mode) throws IOException {
 		boolean failed = true;
 		try {
 			final ImportStatus importStatus = resource.checkAndLockImport(subscription, mode);
