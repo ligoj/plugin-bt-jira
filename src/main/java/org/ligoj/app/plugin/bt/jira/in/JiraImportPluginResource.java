@@ -176,7 +176,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 * @param csvInput
 	 *            the CSV to import.
 	 */
-	private void uploadPriv(final ImportStatus result, final Reader csvInput) throws Exception {
+	private void uploadPriv(final ImportStatus result, final Reader csvInput) throws IOException {
 		final ImportContext context = new ImportContext();
 		validateSubscription(context, result);
 		validateSyntax(context, result, csvInput);
@@ -248,8 +248,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Validate subscription and JIRA compatibility.
 	 */
-	private void validateSubscription(final ImportContext context, final ImportStatus result)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private void validateSubscription(final ImportContext context, final ImportStatus result) {
 		// Check the subscription exists and there is no running import
 		log.info("Validate subscription settings");
 		context.parameters = subscriptionResource.getParameters(result.getSubscription().getId());

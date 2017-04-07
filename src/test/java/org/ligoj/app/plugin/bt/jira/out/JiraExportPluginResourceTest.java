@@ -63,7 +63,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	private SlaRepository slaRepository;
 
 	@Test
-	public void getSlaComputationsNoChangeJira6() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void getSlaComputationsNoChangeJira6() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
@@ -74,7 +74,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsNoChange() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void getSlaComputationsNoChange() {
 		final int subscription = getSubscription("gStack");
 		final SlaComputations computations = resource.getSlaComputations(subscription, false);
 		Assert.assertNotNull(computations);
@@ -375,7 +375,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaConfigurations() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void getSlaConfigurations() {
 		final int subscription = getSubscription("MDA");
 		final JiraSlaComputations computations = resource.getSlaComputations(subscription, true);
 		Assert.assertNotNull(computations);
@@ -436,7 +436,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test(expected = EntityNotFoundException.class)
-	public void getSlaComputationsUnknownSubscription() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void getSlaComputationsUnknownSubscription() {
 		resource.getSlaComputations(0, false);
 
 	}

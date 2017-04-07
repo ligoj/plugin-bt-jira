@@ -87,7 +87,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void getJiraVersion() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void getJiraVersion() {
 		final DataSource datasource = resource.getDataSource(subscription);
 		Assert.assertEquals("4.4.1", dao.getJiraVersion(datasource));
 	}
@@ -213,12 +213,12 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateProject() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void validateProject() {
 		checkProjectValidation(resource.validateProject(getProjectValidationParameters()));
 	}
 
 	@Test
-	public void validateProjectRes() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void validateProjectRes() {
 		final Map<String, String> parameters = nodeResource.getParametersAsMap("service:bt:jira:6");
 		parameters.put(JiraBaseResource.PARAMETER_PKEY, "MDA");
 		parameters.put(JiraBaseResource.PARAMETER_PROJECT, "10074");
@@ -242,7 +242,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void findProjectsByName() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void findProjectsByName() {
 		assertGstack(resource.findAllByName("service:bt:jira:6", "10000"));
 		assertGstack(resource.findAllByName("service:bt:jira:6", "gStack"));
 		assertGstack(resource.findAllByName("service:bt:jira:6", "GSTACK"));
@@ -283,7 +283,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateProjectFailed() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void validateProjectFailed() {
 		thrown.expect(ValidationJsonException.class);
 		thrown.expect(MatcherUtil.validationMatcher(JiraBaseResource.PARAMETER_PKEY, "jira-project"));
 

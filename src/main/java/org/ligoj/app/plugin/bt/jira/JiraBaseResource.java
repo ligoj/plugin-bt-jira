@@ -248,8 +248,7 @@ public class JiraBaseResource {
 	 *            the project parameters.
 	 * @return project description.
 	 */
-	protected JiraProject validateProject(final Map<String, String> parameters)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	protected JiraProject validateProject(final Map<String, String> parameters) {
 
 		// Get the project if it exists and with some statistics
 		final JiraProject project = jiraDao.getProject(getDataSource(parameters),
