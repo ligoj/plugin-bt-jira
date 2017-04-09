@@ -1,2 +1,2 @@
-id;name;description;refined.id;mode;uiClasses;tag;tagUiClasses
-service:bt:jira;JIRA;Atlassian Issue tracking product;service:bt;LINK;;;
+id;name;refined.id;mode;uiClasses;tag;tagUiClasses
+service:bt:jira;JIRA;service:bt;LINK;;;

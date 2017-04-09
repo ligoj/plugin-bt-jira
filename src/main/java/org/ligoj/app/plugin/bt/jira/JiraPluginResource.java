@@ -1,6 +1,7 @@
 package org.ligoj.app.plugin.bt.jira;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,8 @@ import org.ligoj.app.api.SubscriptionStatusWithData;
 import org.ligoj.app.api.ToolPlugin;
 import org.ligoj.app.dao.SubscriptionRepository;
 import org.ligoj.app.iam.Activity;
+import org.ligoj.app.model.Node;
+import org.ligoj.app.model.Parameter;
 import org.ligoj.app.plugin.bt.BugTrackerServicePlugin;
 import org.ligoj.app.plugin.bt.dao.SlaRepository;
 import org.ligoj.app.plugin.bt.jira.dao.ImportStatusRepository;
@@ -199,5 +202,10 @@ public class JiraPluginResource extends JiraBaseResource
 	@Override
 	public void create(final int subscription) {
 		throw new IllegalStateException("Not yet implemented");
+	}
+
+	@Override
+	public List<Class<?>> getInstalledEntities() {
+		return Arrays.asList(Node.class, Parameter.class);
 	}
 }
