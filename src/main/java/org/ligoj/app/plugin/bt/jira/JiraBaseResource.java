@@ -341,7 +341,7 @@ public class JiraBaseResource {
 	/**
 	 * Return unique involved statues in the given changes.
 	 */
-	protected Collection<Integer> getInvolvedStatuses(final List<ChangeItem> changes) {
+	protected Collection<Integer> getInvolvedStatuses(final List<? extends ChangeItem> changes) {
 		final Collection<Integer> statuses = new HashSet<>();
 		for (final ChangeItem change : changes) {
 			statuses.add(change.getFromStatus());

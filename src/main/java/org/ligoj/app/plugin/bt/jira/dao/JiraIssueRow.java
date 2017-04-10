@@ -24,6 +24,7 @@ public class JiraIssueRow extends IssueDetails {
 	private Date updated;
 	private String statusText;
 	private int issueNum;
+	private String author;
 
 	private Collection<Integer> components;
 	private Collection<Integer> versions;

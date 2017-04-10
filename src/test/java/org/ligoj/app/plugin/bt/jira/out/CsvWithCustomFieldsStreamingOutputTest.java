@@ -77,7 +77,6 @@ public class CsvWithCustomFieldsStreamingOutputTest {
 		final List<IssueSla> issues = new ArrayList<>();
 		final IssueSla issue1 = new IssueSla();
 		issue1.setAssignee("A11");
-		issue1.setAuthor("A12");
 		issue1.setCreated(new Date());
 		issue1.setPriority(1);
 		issue1.setReporter("R1");
@@ -91,7 +90,6 @@ public class CsvWithCustomFieldsStreamingOutputTest {
 		issues.add(issue1);
 		final IssueSla issueNoCustomField = new IssueSla();
 		issueNoCustomField.setAssignee("A21");
-		issueNoCustomField.setAuthor("A22");
 		issueNoCustomField.setCreated(new Date());
 		issueNoCustomField.setPriority(1);
 		issueNoCustomField.setReporter("R2");
@@ -106,7 +104,6 @@ public class CsvWithCustomFieldsStreamingOutputTest {
 
 		final IssueSla issueOutOfRange = new IssueSla();
 		issueOutOfRange.setAssignee("A11");
-		issueOutOfRange.setAuthor("A12");
 		issueOutOfRange.setCreated(new Date());
 		issueOutOfRange.setPriority(1);
 		issueOutOfRange.setReporter("R1");

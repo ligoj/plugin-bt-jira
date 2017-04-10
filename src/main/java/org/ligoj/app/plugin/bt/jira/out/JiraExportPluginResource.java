@@ -41,6 +41,7 @@ import org.ligoj.app.plugin.bt.dao.SlaRepository;
 import org.ligoj.app.plugin.bt.jira.JiraBaseResource;
 import org.ligoj.app.plugin.bt.jira.JiraSimpleExport;
 import org.ligoj.app.plugin.bt.jira.JiraSlaComputations;
+import org.ligoj.app.plugin.bt.jira.dao.JiraChangeItem;
 import org.ligoj.app.plugin.bt.jira.dao.JiraIssueRow;
 import org.ligoj.app.plugin.bt.jira.editor.CustomFieldEditor;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
@@ -169,7 +170,8 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 		// Get changes
 		log.info("Get changes of {}({})", pkey, jira);
-		final List<ChangeItem> changes = jiraDao.getChanges(dataSource, jira, pkey, false, timing);
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		final List<ChangeItem> changes = (List) jiraDao.getChanges(dataSource, jira, pkey, false, timing);
 		log.info("Retrieved changes : {}", changes.size());
 
 		// Get SLA configuration
@@ -320,7 +322,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 		// Get changes, relevant holidays and project configuration
 		log.info("Get changes of {}({})", pkey, jira);
-		final List<ChangeItem> changes = jiraDao.getChanges(dataSource, jira, pkey, true, false);
+		final List<JiraChangeItem> changes = jiraDao.getChanges(dataSource, jira, pkey, true, false);
 		log.info("Retrieved changes : " + changes.size());
 
 		// Compute the identifiers from the texts
