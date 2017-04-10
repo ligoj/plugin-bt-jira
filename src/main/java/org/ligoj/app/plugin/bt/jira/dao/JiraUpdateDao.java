@@ -270,36 +270,30 @@ public class JiraUpdateDao {
 	}
 
 	/**
-	 * Add an issue, workflow entry, corresponding step of current status and
-	 * link author to this issue (user activity dashboard)
+	 * Add an issue, workflow entry, corresponding step of current status and link author to this issue (user activity
+	 * dashboard)
 	 */
-	private void addIssue(final int jira, final JdbcOperations jdbcTemplate, final int nextId,
-			final int nextCurrentStepId, final int nextWfEntryId, final JiraIssueRow issueRow,
-			final Workflow workflow) {
+	private void addIssue(final int jira, final JdbcOperations jdbcTemplate, final int nextId, final int nextCurrentStepId, final int nextWfEntryId,
+			final JiraIssueRow issueRow, final Workflow workflow) {
 		final INamableBean<Integer> workflowStep = workflow.getStatusToSteps().get(issueRow.getStatusText());
 
 		// Insert workflow activity
-		jdbcTemplate.update("INSERT INTO OS_WFENTRY (ID,NAME,STATE) values(?,?,?)", nextWfEntryId, workflow.getName(),
-				1);
-		jdbcTemplate.update(
-				"INSERT INTO OS_CURRENTSTEP (ID,ENTRY_ID,STEP_ID,ACTION_ID,START_DATE,STATUS) values(?,?,?,?,?,?)",
-				nextCurrentStepId, nextWfEntryId, workflowStep.getId(), 0, issueRow.getCreated(),
-				workflowStep.getName());
+		jdbcTemplate.update("INSERT INTO OS_WFENTRY (ID,NAME,STATE) values(?,?,?)", nextWfEntryId, workflow.getName(), 1);
+		jdbcTemplate.update("INSERT INTO OS_CURRENTSTEP (ID,ENTRY_ID,STEP_ID,ACTION_ID,START_DATE,STATUS) values(?,?,?,?,?,?)", nextCurrentStepId,
+				nextWfEntryId, workflowStep.getId(), 0, issueRow.getCreated(), workflowStep.getName());
 
 		// Insert issue
 		jdbcTemplate.update(
 				"INSERT INTO jiraissue"
 						+ " (ID,issuenum,WATCHES,VOTES,PROJECT,REPORTER,ASSIGNEE,CREATOR,issuetype,SUMMARY,DESCRIPTION,PRIORITY,RESOLUTION,RESOLUTIONDATE,"
 						+ "issuestatus,CREATED,UPDATED,WORKFLOW_ID,DUEDATE) values(?,?,1,0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-				nextId, issueRow.getIssueNum(), jira, issueRow.getReporter(), issueRow.getAssignee(),
-				issueRow.getAuthor(), issueRow.getType(), issueRow.getSummary(), issueRow.getDescription(),
-				issueRow.getPriority(), issueRow.getResolution(), issueRow.getResolutionDate(), issueRow.getStatus(),
-				issueRow.getCreated(), issueRow.getUpdated(), nextWfEntryId, issueRow.getDueDate());
+				nextId, issueRow.getIssueNum(), jira, issueRow.getReporter(), issueRow.getAssignee(), issueRow.getAuthor(), issueRow.getType(),
+				issueRow.getSummary(), issueRow.getDescription(), issueRow.getPriority(), issueRow.getResolution(), issueRow.getResolutionDate(),
+				issueRow.getStatus(), issueRow.getCreated(), issueRow.getUpdated(), nextWfEntryId, issueRow.getDueDate());
 
 		// Add user relation
-		jdbcTemplate.update(
-				"INSERT INTO userassociation (SOURCE_NAME,SINK_NODE_ID,SINK_NODE_ENTITY,ASSOCIATION_TYPE,CREATED) values(?,?,?,?,?)",
-				issueRow.getAuthor(), nextId, ISSUE_NODE, "WatchIssue", issueRow.getUpdated());
+		jdbcTemplate.update("INSERT INTO userassociation (SOURCE_NAME,SINK_NODE_ID,SINK_NODE_ENTITY,ASSOCIATION_TYPE,CREATED) values(?,?,?,?,?)",
+				issueRow.getAuthor(), nextId, "Issue", "WatchIssue", issueRow.getUpdated());
 	}
 
 	/**

@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.ligoj.app.plugin.bt.model.ChangeItem;
+import org.ligoj.app.plugin.bt.jira.dao.JiraChangeItem;
 
 /**
  * CSV status history output writer from Jira issues data.
  */
 public class CsvStatusStreamingOutput extends AbstractCsvOutput {
 
-	protected final List<ChangeItem> changes;
+	protected final List<JiraChangeItem> changes;
 
 	/**
 	 * Constructor for database offline data.
@@ -25,7 +25,7 @@ public class CsvStatusStreamingOutput extends AbstractCsvOutput {
 	 * @param statusText
 	 *            Status mapping, identifier to text.
 	 */
-	public CsvStatusStreamingOutput(final List<ChangeItem> changes, final Map<Integer, String> statusText) {
+	public CsvStatusStreamingOutput(final List<JiraChangeItem> changes, final Map<Integer, String> statusText) {
 		super(null, null, statusText, null);
 		this.changes = changes;
 	}
@@ -38,7 +38,7 @@ public class CsvStatusStreamingOutput extends AbstractCsvOutput {
 	@Override
 	protected void writeData(final Writer writer, final Format df, final Format idf) throws IOException {
 		final Map<Integer, String> idToKey = new HashMap<>();
-		for (final ChangeItem change : changes) {
+		for (final JiraChangeItem change : changes) {
 			// Complete mapping
 			if (change.getPkey() != null) {
 				idToKey.put(change.getId(), change.getPkey());
@@ -53,7 +53,7 @@ public class CsvStatusStreamingOutput extends AbstractCsvOutput {
 	/**
 	 * Write issue data
 	 */
-	private void writeData(final ChangeItem change, final String key, final Writer writer, final Format df, final Format idf) throws IOException {
+	private void writeData(final JiraChangeItem change, final String key, final Writer writer, final Format df, final Format idf) throws IOException {
 		// Write static data
 		writer.write(change.getId().toString());
 		writer.write(';');

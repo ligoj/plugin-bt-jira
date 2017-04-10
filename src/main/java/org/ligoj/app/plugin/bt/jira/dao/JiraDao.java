@@ -37,7 +37,6 @@ import org.ligoj.app.plugin.bt.jira.editor.MultipleIdEditor;
 import org.ligoj.app.plugin.bt.jira.editor.UrlEditor;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
-import org.ligoj.app.plugin.bt.model.ChangeItem;
 import org.ligoj.app.plugin.bt.model.IssueDetails;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -156,13 +155,13 @@ public class JiraDao {
 	 *            When <code>true</code> time spent data is fetched.
 	 * @return status changes of all issues of given project.
 	 */
-	public List<ChangeItem> getChanges(final DataSource dataSource, final int jira, final String pkey, final boolean authoring,
+	public List<JiraChangeItem> getChanges(final DataSource dataSource, final int jira, final String pkey, final boolean authoring,
 			final boolean timing) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		final RowMapper<ChangeItem> rowMapper = new BeanPropertyRowMapper<>(ChangeItem.class);
+		final RowMapper<JiraChangeItem> rowMapper = new BeanPropertyRowMapper<>(JiraChangeItem.class);
 
 		// First, get all created issues (first change)
-		final List<ChangeItem> changes = getChanges(dataSource, jira, pkey, ChangeItem.class, timing, false);
+		final List<JiraChangeItem> changes = getChanges(dataSource, jira, pkey, JiraChangeItem.class, timing, false);
 
 		// Then add all status changes
 		changes.addAll(jdbcTemplate.query(
