@@ -175,7 +175,7 @@ public class JiraPluginResource extends JiraBaseResource
 	}
 
 	@Override
-	public boolean checkStatus(final String node, final Map<String, String> parameters) throws Exception {
+	public boolean checkStatus(final Map<String, String> parameters) throws Exception {
 		// Status is UP <=> Database is UP and Administration access is UP (if
 		// defined)
 		final String version = validateDataBaseConnectivity(parameters);
@@ -184,7 +184,7 @@ public class JiraPluginResource extends JiraBaseResource
 	}
 
 	@Override
-	public SubscriptionStatusWithData checkSubscriptionStatus(final String node, final Map<String, String> parameters)
+	public SubscriptionStatusWithData checkSubscriptionStatus(final Map<String, String> parameters)
 			throws Exception {
 		final SubscriptionStatusWithData nodeStatusWithData = new SubscriptionStatusWithData();
 		nodeStatusWithData.put("project", validateProject(parameters));
