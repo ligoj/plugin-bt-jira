@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -39,6 +38,7 @@ import org.ligoj.bootstrap.core.INamableBean;
 import org.ligoj.bootstrap.core.resource.BusinessException;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -174,7 +174,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		Assert.assertEquals("Won't Fix", resolutions.get(5));
 	}
 
-	@Test(expected = EntityNotFoundException.class)
+	@Test(expected = JpaObjectRetrievalFailureException.class)
 	public void deleteUnknown() {
 		resource.delete(-1, false);
 	}

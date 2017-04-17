@@ -27,6 +27,7 @@ import org.ligoj.app.api.SubscriptionStatusWithData;
 import org.ligoj.app.dao.NodeRepository;
 import org.ligoj.app.dao.ParameterRepository;
 import org.ligoj.app.iam.Activity;
+import org.ligoj.app.model.Parameter;
 import org.ligoj.app.model.ParameterValue;
 import org.ligoj.app.model.Project;
 import org.ligoj.app.model.Subscription;
@@ -577,5 +578,10 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 		// Restore the value
 		jdbcTemplate.update("UPDATE cwd_user_attributes SET attribute_value=1, lower_attribute_value=1 WHERE ID=212");
+	}
+
+	@Test
+	public void getInstalledEntities() {
+		Assert.assertTrue(resource.getInstalledEntities().contains(Parameter.class));
 	}
 }
