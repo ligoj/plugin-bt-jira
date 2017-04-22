@@ -17,6 +17,7 @@
 Provides the following features :
 - JIRA secured export and live import without restart
 - Contribution to user activities report
+- Compatible with [Jira](https://www.atlassian.com/software/jira) 3 to 6. 7+ version has not been checked.
 
 Dashboard features :
 - Issues status by severity and type
