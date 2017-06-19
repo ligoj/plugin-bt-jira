@@ -13,16 +13,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface ImportStatusRepository extends RestRepository<ImportStatus, Integer> {
 
 	/**
-	 * Delete the import status associated to the given subscription.
-	 * 
-	 * @param subscription
-	 *            the subscription identifier.
-	 */
-	@Modifying
-	@Query("DELETE ImportStatus i WHERE i.subscription.id = ?1")
-	void deleteBySubscription(int subscription);
-
-	/**
 	 * Return not finished import status of a given project.
 	 * 
 	 * @param project

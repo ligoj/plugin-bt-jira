@@ -98,7 +98,7 @@ public class JiraPluginResource extends JiraBaseResource
 	@Override
 	public void delete(final int subscription, final boolean deleteRemoteData) {
 		checkNoImport(subscription);
-		importStatusRepository.deleteBySubscription(subscription);
+		importStatusRepository.deleteAllBy("subscription.id", subscription);
 	}
 
 	/**
