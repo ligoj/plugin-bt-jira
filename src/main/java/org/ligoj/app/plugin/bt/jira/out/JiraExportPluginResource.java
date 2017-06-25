@@ -39,6 +39,7 @@ import org.ligoj.app.plugin.bt.dao.BugTrackerConfigurationRepository;
 import org.ligoj.app.plugin.bt.dao.HolidayRepository;
 import org.ligoj.app.plugin.bt.dao.SlaRepository;
 import org.ligoj.app.plugin.bt.jira.JiraBaseResource;
+import org.ligoj.app.plugin.bt.jira.JiraPluginResource;
 import org.ligoj.app.plugin.bt.jira.JiraSimpleExport;
 import org.ligoj.app.plugin.bt.jira.JiraSlaComputations;
 import org.ligoj.app.plugin.bt.jira.dao.JiraChangeItem;
@@ -68,18 +69,13 @@ import lombok.extern.slf4j.Slf4j;
  * JIRA export issues resource.
  */
 @Slf4j
-@Path(JiraExportPluginResource.EXPORT_URL)
+@Path(JiraPluginResource.URL)
 @Service
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)
 public class JiraExportPluginResource extends JiraBaseResource {
 
 	private static final String START_WORKFLOW = "start";
-
-	/**
-	 * Plug-in key.
-	 */
-	public static final String EXPORT_URL = JiraBaseResource.URL + "/export";
 
 	/**
 	 * Simple processor returning the time from a date.
@@ -224,7 +220,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("sla/{subscription:\\d+}/{file:.*-short.csv}")
+	@Path("{subscription:\\d+}/{file:.*-short.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getSlaComputationsCsv(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {
@@ -244,7 +240,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("sla/{subscription:\\d+}/{file:.*-simple.csv}")
+	@Path("{subscription:\\d+}/{file:.*-simple.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getSimpleCsv(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {
@@ -263,7 +259,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("sla/{subscription:\\d+}/{file:.*-full.csv}")
+	@Path("{subscription:\\d+}/{file:.*-full.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getSlaComputationsCsvWithCustomFields(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {
@@ -308,7 +304,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("sla/{subscription:\\d+}/{file:.*-status.csv}")
+	@Path("{subscription:\\d+}/{file:.*-status.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getStatusHistory(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {
@@ -356,7 +352,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("sla/{subscription:\\d+}/{file:.*.xml}")
+	@Path("{subscription:\\d+}/{file:.*.xml}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getSlaComputationsXls(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {

@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  * JIRA import issues resource.
  */
 @Slf4j
-@Path(JiraImportPluginResource.IMPORT_URL)
+@Path(JiraPluginResource.URL)
 @Service
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)
@@ -66,16 +66,6 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	private static final String FIELD_ISSUE = "issue";
 	private static final String FIELD_STATUS = "status";
 	private static final String FIELD_RESOLUTION = "resolution";
-
-	/**
-	 * Plug-in key.
-	 */
-	public static final String IMPORT_URL = JiraBaseResource.URL + "/import";
-
-	/**
-	 * Plug-in key.
-	 */
-	public static final String IMPORT_KEY = IMPORT_URL.replace('/', ':').substring(1);
 
 	@Autowired
 	private CsvForBean csvForBean;

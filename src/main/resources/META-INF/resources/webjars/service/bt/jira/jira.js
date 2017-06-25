@@ -65,7 +65,7 @@ define(['sparkline'], function () {
 
 		renderExportGroup: function (subscription) {
 			var now = moment();
-			var linkRoot = REST_PATH + 'service/bt/jira/export/sla/' + subscription.id + '/' + subscription.parameters['service:bt:jira:pkey'] + '-' + subscription.id + '-' + now.format('YYYY-MM-DD');
+			var linkRoot = REST_PATH + 'service/bt/jira/' + subscription.id + '/' + subscription.parameters['service:bt:jira:pkey'] + '-' + subscription.id + '-' + now.format('YYYY-MM-DD');
 			var linkCsvSlaCf = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-full.csv', undefined, 'service:bt:jira:sla-csv-full', ' download');
 			var linkCsvSlaShort = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-short.csv', undefined, 'service:bt:jira:sla-csv', ' download');
 			var linkCsvStatus = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-status.csv', undefined, 'service:bt:jira:sla-csv-status', ' download');
@@ -78,7 +78,7 @@ define(['sparkline'], function () {
 		upload: function () {
 			current.resetUploadError();
 			_('importPopup').ajaxSubmit({
-				url: REST_PATH + 'service/bt/jira/import/' + current.subscription + '/' + _('csv-upload-mode').val() + '/' + _('csv-upload-encoding').val(),
+				url: REST_PATH + 'service/bt/jira/' + current.subscription + '/' + _('csv-upload-mode').val() + '/' + _('csv-upload-encoding').val(),
 				type: 'POST',
 				dataType: 'json',
 				success: function (data) {
@@ -117,7 +117,7 @@ define(['sparkline'], function () {
 			current.unscheduleUploadStep();
 			$.ajax({
 				dataType: 'json',
-				url: REST_PATH + 'service/bt/jira/import/status/' + current.subscription,
+				url: REST_PATH + 'service/bt/jira/' + current.subscription + '/task',
 				type: 'GET',
 				success: function (data) {
 					current.displayUploadResult(data);
@@ -132,7 +132,7 @@ define(['sparkline'], function () {
 		onUploadFailure: function () {
 			$.ajax({
 				dataType: 'json',
-				url: REST_PATH + 'service/bt/jira/import/status/' + current.subscription,
+				url: REST_PATH + 'service/bt/jira/' + current.subscription + '/task',
 				type: 'GET',
 				success: function (data) {
 					current.displayUploadResult(data);
