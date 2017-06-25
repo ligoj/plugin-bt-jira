@@ -22,7 +22,6 @@ import org.ligoj.app.model.Subscription;
 import org.ligoj.app.plugin.bt.BugTrackerResource;
 import org.ligoj.app.plugin.bt.dao.BugTrackerConfigurationRepository;
 import org.ligoj.app.plugin.bt.jira.dao.JiraDao;
-import org.ligoj.app.plugin.bt.jira.in.JiraImportStatusResource;
 import org.ligoj.app.plugin.bt.jira.model.ImportStatus;
 import org.ligoj.app.plugin.bt.model.BugTrackerConfiguration;
 import org.ligoj.app.plugin.bt.model.BusinessHours;
@@ -51,9 +50,6 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 	protected ProjectRepository projectRepository;
 
 	protected static DataSource datasource;
-
-	@Autowired
-	protected JiraImportStatusResource importStatusResource;
 
 	@Autowired
 	protected IamProvider iamProvider;

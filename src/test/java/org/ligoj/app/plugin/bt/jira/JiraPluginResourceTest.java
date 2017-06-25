@@ -36,7 +36,6 @@ import org.ligoj.app.resource.node.NodeResource;
 import org.ligoj.app.resource.plugin.CurlProcessor;
 import org.ligoj.app.resource.subscription.SubscriptionResource;
 import org.ligoj.bootstrap.core.IDescribableBean;
-import org.ligoj.bootstrap.core.resource.BusinessException;
 import org.ligoj.bootstrap.core.resource.TechnicalException;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,42 +92,15 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		Assert.assertEquals("4.4.1", dao.getJiraVersion(datasource));
 	}
 
-	/**
-	 * delete while a running import must fail
-	 */
-	@Test(expected = BusinessException.class)
-	public void deleteDuringImport() {
-		em.createQuery("UPDATE ImportStatus i SET i.end = NULL WHERE i.subscription.id = ?1")
-				.setParameter(1, subscription).executeUpdate();
-		em.flush();
-		em.clear();
-		resource.delete(subscription, false);
-	}
-
-	/**
-	 * delete without running import
-	 */
 	@Test
-	public void deleteNoImport() {
-		importStatusRepository.deleteAllNoFetch();
-		em.flush();
-		em.clear();
-		resource.delete(subscription, false);
-		em.flush();
-		em.clear();
-		Assert.assertEquals(0, importStatusRepository.count());
-		Assert.assertNull(importStatusRepository.findBySubscription(subscription));
-	}
-
-	@Test
-	public void delete() {
+	public void deleteTask() throws Exception {
 		final long initCount = importStatusRepository.count();
 		em.clear();
-		resource.delete(subscription, false);
+		resource.deleteTask(subscription);
 		em.flush();
 		em.clear();
 		Assert.assertEquals(initCount - 1, importStatusRepository.count());
-		Assert.assertNull(importStatusRepository.findBySubscription(subscription));
+		Assert.assertNull(resource.getTask(subscription));
 	}
 
 	@Test
@@ -200,8 +172,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	public void validateDataBaseConnectivityRes() throws Exception {
-		final String version = resource
-				.validateDataBaseConnectivity(nodeResource.getParametersAsMap("service:bt:jira:6"));
+		final String version = resource.validateDataBaseConnectivity(nodeResource.getParametersAsMap("service:bt:jira:6"));
 		Assert.assertEquals("4.4.1", version);
 	}
 
@@ -324,9 +295,9 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_OK)));
 		httpServer.stubFor(post(urlPathEqualTo("/login.jsp"))
 				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
-		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa")).willReturn(aResponse()
-				.withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")
-				.withHeader("X-Atlassian-WebSudo", "Has-Authentication")));
+		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa")).willReturn(
+				aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")
+						.withHeader("X-Atlassian-WebSudo", "Has-Authentication")));
 		httpServer.start();
 	}
 
@@ -387,8 +358,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		parameterValueEntity2.setSubscription(subscription);
 		em.persist(parameterValueEntity2);
 		final ParameterValue parameterValueEntity3 = new ParameterValue();
-		parameterValueEntity3
-				.setParameter(parameterRepository.findOneExpected(JiraBaseResource.PARAMETER_JDBC_PASSSWORD));
+		parameterValueEntity3.setParameter(parameterRepository.findOneExpected(JiraBaseResource.PARAMETER_JDBC_PASSSWORD));
 		parameterValueEntity3.setData("invalid");
 		parameterValueEntity3.setSubscription(subscription);
 		em.persist(parameterValueEntity3);
@@ -416,8 +386,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 		// Set an invalid URL
 		em.createQuery("UPDATE ParameterValue v SET v.data = ?3 WHERE v.node.id = ?1 AND v.parameter.id = ?2")
-				.setParameter(1, JiraBaseResource.PARAMETER_URL).setParameter(2, "service:bt:jira:6")
-				.setParameter(3, "any").executeUpdate();
+				.setParameter(1, JiraBaseResource.PARAMETER_URL).setParameter(2, "service:bt:jira:6").setParameter(3, "any")
+				.executeUpdate();
 		em.flush();
 		em.clear();
 		CacheManager.getInstance().getCache("subscription-parameters").removeAll();
@@ -462,14 +432,13 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		em.persist(subscription);
 		addProjectParameters(subscription, 10074);
 		em.createQuery("DELETE ParameterValue v WHERE v.node.id = ?1 AND v.parameter.id = ?2")
-				.setParameter(2, JiraBaseResource.PARAMETER_ADMIN_USER).setParameter(1, "service:bt:jira:6")
-				.executeUpdate();
+				.setParameter(2, JiraBaseResource.PARAMETER_ADMIN_USER).setParameter(1, "service:bt:jira:6").executeUpdate();
 		em.flush();
 		em.clear();
 		resource.link(subscription.getId());
 		em.flush();
-		Assert.assertEquals(initCount + 1, importStatusRepository.count());
-		Assert.assertNotNull(importStatusRepository.findBySubscription(subscription.getId()));
+		Assert.assertEquals(initCount, importStatusRepository.count());
+		Assert.assertNotNull(resource.getTask(subscription.getId()));
 	}
 
 	@Test
@@ -491,8 +460,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		em.clear();
 		resource.link(subscription.getId());
 		em.flush();
-		Assert.assertEquals(initCount + 1, importStatusRepository.count());
-		Assert.assertNotNull(importStatusRepository.findBySubscription(subscription.getId()));
+		Assert.assertEquals(initCount, importStatusRepository.count());
+		Assert.assertNotNull(resource.getTask(subscription.getId()));
 	}
 
 	private void addProjectParameters(final Subscription subscription, final int jira) {
@@ -516,8 +485,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	public void clearLoginFailedNoUser() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assert.assertEquals("1", jdbcTemplate
-				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assert.assertEquals("1", jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
 			dao.clearLoginFailed(datasource, "any");
@@ -526,15 +494,13 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		}
 
 		// Untouched counter
-		Assert.assertEquals("1", jdbcTemplate
-				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assert.assertEquals("1", jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 	}
 
 	@Test
 	public void clearLoginFailedOtherUser() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assert.assertEquals("1", jdbcTemplate
-				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assert.assertEquals("1", jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
 			dao.clearLoginFailed(datasource, "alocquet");
@@ -543,8 +509,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		}
 
 		// Untouched counter
-		Assert.assertEquals("1", jdbcTemplate
-				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assert.assertEquals("1", jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 	}
 
 	/**
@@ -553,18 +518,15 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	public void clearLoginFailedJira4() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assert.assertEquals("1", jdbcTemplate
-				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assert.assertEquals("1", jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		dao.clearLoginFailed(datasource, "fdaugan");
-		Assert.assertEquals("1", jdbcTemplate
-				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assert.assertEquals("1", jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 	}
 
 	@Test
 	public void clearLoginFailed() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assert.assertEquals("1", jdbcTemplate
-				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assert.assertEquals("1", jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
@@ -573,8 +535,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		} finally {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "4.4.1", 10075);
 		}
-		Assert.assertEquals("0", jdbcTemplate
-				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assert.assertEquals("0", jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 
 		// Restore the value
 		jdbcTemplate.update("UPDATE cwd_user_attributes SET attribute_value=1, lower_attribute_value=1 WHERE ID=212");

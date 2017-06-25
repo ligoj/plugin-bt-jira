@@ -5,14 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 
-import org.ligoj.app.model.Subscription;
-import org.ligoj.bootstrap.core.model.AbstractPersistable;
+import org.ligoj.app.model.AbstractLongTask;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,34 +22,11 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "LIGOJ_BT_IMPORT_STATUS")
-public class ImportStatus extends AbstractPersistable<Integer> {
+public class ImportStatus extends AbstractLongTask {
 
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
-	@NotNull
-	@JsonIgnore
-	@JoinColumn(name = "subscription")
-	private Subscription subscription;
-
 	private int step;
-
-	private Date start;
-
-	/**
-	 * Current status. <code>true</code> means failed.
-	 */
-	private boolean failed;
-
-	/**
-	 * Null while not finished
-	 */
-	private Date end;
-
-	/**
-	 * User proceeding the import.
-	 */
-	private String author;
 
 	private UploadMode mode;
 	private Integer jira;

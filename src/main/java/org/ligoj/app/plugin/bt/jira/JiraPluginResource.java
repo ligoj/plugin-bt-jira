@@ -3,11 +3,11 @@ package org.ligoj.app.plugin.bt.jira;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Supplier;
 
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
@@ -29,13 +29,16 @@ import org.ligoj.app.plugin.bt.BugTrackerServicePlugin;
 import org.ligoj.app.plugin.bt.dao.SlaRepository;
 import org.ligoj.app.plugin.bt.jira.dao.ImportStatusRepository;
 import org.ligoj.app.plugin.bt.jira.model.ImportStatus;
+import org.ligoj.app.plugin.bt.jira.model.UploadMode;
 import org.ligoj.app.plugin.bt.jira.model.Workflow;
 import org.ligoj.app.resource.ActivitiesProvider;
+import org.ligoj.app.resource.plugin.LongTaskRunner;
 import org.ligoj.app.resource.plugin.VersionUtils;
-import org.ligoj.bootstrap.core.resource.BusinessException;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.Getter;
 
 /**
  * JIRA issues resource.
@@ -45,11 +48,13 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)
 public class JiraPluginResource extends JiraBaseResource
-		implements BugTrackerServicePlugin, ToolPlugin, ActivitiesProvider {
+		implements BugTrackerServicePlugin, ToolPlugin, ActivitiesProvider, LongTaskRunner<ImportStatus, ImportStatusRepository> {
 
 	@Autowired
-	private ImportStatusRepository importStatusRepository;
+	@Getter
+	private ImportStatusRepository taskRepository;
 
+	@Getter
 	@Autowired
 	protected SubscriptionRepository subscriptionRepository;
 
@@ -70,12 +75,6 @@ public class JiraPluginResource extends JiraBaseResource
 			// Invalid administration configuration
 			throw new ValidationJsonException(PARAMETER_ADMIN_USER, "jira-admin", parameters.get(PARAMETER_ADMIN_USER));
 		}
-
-		// Initialize an empty import status
-		final ImportStatus importStatus = new ImportStatus();
-		importStatus.setSubscription(subscriptionRepository.findOne(subscription));
-		importStatus.setEnd(new Date());
-		importStatusRepository.saveAndFlush(importStatus);
 	}
 
 	/**
@@ -90,27 +89,8 @@ public class JiraPluginResource extends JiraBaseResource
 	@GET
 	@Path("{node:\\w+:.*}/{criteria}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<JiraProject> findAllByName(@PathParam("node") final String node,
-			@PathParam("criteria") final String criteria) {
+	public List<JiraProject> findAllByName(@PathParam("node") final String node, @PathParam("criteria") final String criteria) {
 		return jiraDao.findProjectsByName(getDataSource(nodeResource.getParametersAsMap(node)), criteria);
-	}
-
-	@Override
-	public void delete(final int subscription, final boolean deleteRemoteData) {
-		checkNoImport(subscription);
-		importStatusRepository.deleteAllBy("subscription.id", subscription);
-	}
-
-	/**
-	 * Check there no running import.
-	 */
-	private void checkNoImport(final int id) {
-		// Check there is no running import
-		final ImportStatus importStatus = importStatusRepository.findBySubscription(id);
-		if (importStatus != null && importStatus.getEnd() == null) {
-			throw new BusinessException("Running import not finished", importStatus.getAuthor(),
-					importStatus.getStart());
-		}
 	}
 
 	@Override
@@ -184,16 +164,14 @@ public class JiraPluginResource extends JiraBaseResource
 	}
 
 	@Override
-	public SubscriptionStatusWithData checkSubscriptionStatus(final Map<String, String> parameters)
-			throws Exception {
+	public SubscriptionStatusWithData checkSubscriptionStatus(final Map<String, String> parameters) throws Exception {
 		final SubscriptionStatusWithData nodeStatusWithData = new SubscriptionStatusWithData();
 		nodeStatusWithData.put("project", validateProject(parameters));
 		return nodeStatusWithData;
 	}
 
 	@Override
-	public Map<String, Activity> getActivities(final int subscription, final Collection<String> users)
-			throws Exception {
+	public Map<String, Activity> getActivities(final int subscription, final Collection<String> users) throws Exception {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final DataSource dataSource = getDataSource(parameters);
 		return jiraDao.getActivities(dataSource, users);
@@ -207,5 +185,52 @@ public class JiraPluginResource extends JiraBaseResource
 	@Override
 	public List<Class<?>> getInstalledEntities() {
 		return Arrays.asList(Node.class, Parameter.class);
+	}
+
+	@Override
+	public void nextStepInternal(final ImportStatus task) {
+		task.setStep(task.getStep() + 1);
+	}
+
+	@Override
+	public void resetTask(final ImportStatus task) {
+
+		// Initialize starting information
+		task.setStep(1);
+
+		// Rest old values
+		task.setChanges(null);
+		task.setFailed(false);
+		task.setComponents(null);
+		task.setCustomFields(null);
+		task.setEnd(null);
+		task.setIssueFrom(null);
+		task.setIssues(null);
+		task.setJira(null);
+		task.setJiraVersion(null);
+		task.setLabels(null);
+		task.setMaxIssue(null);
+		task.setMinIssue(null);
+		task.setNewIssues(null);
+		task.setNewVersions(null);
+		task.setNewComponents(null);
+		task.setPkey(null);
+		task.setPriorities(null);
+		task.setResolutions(null);
+		task.setStatuses(null);
+		task.setIssueTo(null);
+		task.setTypes(null);
+		task.setUsers(null);
+		task.setVersions(null);
+		task.setScriptRunner(null);
+		task.setStatusChanges(null);
+		task.setSynchronizedJira(null);
+		task.setCanSynchronizeJira(null);
+		task.setMode(UploadMode.VALIDATION);
+	}
+
+	@Override
+	public Supplier<ImportStatus> newTask() {
+		return ImportStatus::new;
 	}
 }

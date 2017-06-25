@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.ligoj.app.MatcherUtil;
 import org.ligoj.app.plugin.bt.jira.AbstractJiraUploadTest;
+import org.ligoj.app.plugin.bt.jira.JiraPluginResource;
 import org.ligoj.app.plugin.bt.jira.dao.ImportStatusRepository;
 import org.ligoj.app.plugin.bt.jira.editor.AbstractEditor;
 import org.ligoj.app.plugin.bt.jira.in.JiraImportPluginResource.ImportContext;
@@ -50,8 +51,9 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 
 	private static final String ENCODING = "cp1250";
 
-	@Autowired
 	private JiraImportPluginResource resource;
+
+	private JiraPluginResource jiraResource;
 
 	@Autowired
 	private ImportStatusRepository repository;
@@ -59,6 +61,28 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	@Before
 	public void prepareSubscription() {
 		this.subscription = getSubscription("MDA");
+		resource = new JiraImportPluginResource();
+		applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
+
+		// Replace the task management to handle the inner transaction
+		resource.resource = new JiraPluginResource() {
+			@Override
+			public ImportStatus startTask(final int subscription) {
+				return super.startTask(subscription);
+			}
+
+			@Override
+			public void endTask(final int subscription, final boolean failed) {
+				super.endTask(subscription, failed);
+			}
+
+			@Override
+			public void nextStep(final ImportStatus task) {
+				super.nextStep(task);
+			}
+		};
+		super.applicationContext.getAutowireCapableBeanFactory().autowireBean(resource.resource);
+		jiraResource = resource.resource;
 	}
 
 	@Test
@@ -85,7 +109,8 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	@Test
 	public void testUploadBrokenHistory() throws Exception {
 		thrown.expect(ValidationJsonException.class);
-		thrown.expect(MatcherUtil.validationMatcher("date", "Broken history for issue 2(id=2) Sat Mar 01 12:01:00 CET 2014 and 1.3.2014 12:00:59"));
+		thrown.expect(MatcherUtil.validationMatcher("date",
+				"Broken history for issue 2(id=2) Sat Mar 01 12:01:00 CET 2014 and 1.3.2014 12:00:59"));
 		resource.upload(new ClassPathResource("csv/upload/broken-history.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.PREVIEW);
 	}
@@ -98,7 +123,8 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
 		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
 		resource.synchronizeJira(context, result);
-		Mockito.verify(resource, Mockito.never()).authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.never()).authenticateAdmin(ArgumentMatchers.same(context),
+				ArgumentMatchers.any(CurlProcessor.class));
 		Assert.assertNull(result.getSynchronizedJira());
 	}
 
@@ -110,8 +136,10 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
 		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
 		resource.synchronizeJira(context, result);
-		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.never()).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result), ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context),
+				ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.never()).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+				ArgumentMatchers.any(CurlProcessor.class));
 		Assert.assertFalse(result.getSynchronizedJira());
 	}
 
@@ -122,11 +150,15 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		result.setCanSynchronizeJira(true);
 		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
 		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
-		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
+		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
+				.thenReturn(true);
 		resource.synchronizeJira(context, result);
-		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.times(1)).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result), ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.never()).reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result), ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context),
+				ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.times(1)).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+				ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.never()).reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+				ArgumentMatchers.any(CurlProcessor.class));
 		Assert.assertFalse(result.getSynchronizedJira());
 	}
 
@@ -137,12 +169,17 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		result.setCanSynchronizeJira(true);
 		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
 		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
-		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
-		Mockito.when(resource.clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result), ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
+		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
+				.thenReturn(true);
+		Mockito.when(resource.clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+				ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
 		resource.synchronizeJira(context, result);
-		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.times(1)).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result), ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.times(1)).reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result), ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context),
+				ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.times(1)).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+				ArgumentMatchers.any(CurlProcessor.class));
+		Mockito.verify(resource, Mockito.times(1)).reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+				ArgumentMatchers.any(CurlProcessor.class));
 		Assert.assertFalse(result.getSynchronizedJira());
 	}
 
@@ -153,9 +190,12 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		result.setCanSynchronizeJira(true);
 		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
 		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
-		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
-		Mockito.when(resource.clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result), ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
-		Mockito.when(resource.reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result), ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
+		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
+				.thenReturn(true);
+		Mockito.when(resource.clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+				ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
+		Mockito.when(resource.reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+				ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
 		resource.synchronizeJira(context, result);
 		Assert.assertTrue(result.getSynchronizedJira());
 	}
@@ -188,7 +228,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	public void testUploadTranslatedCf() throws Exception {
 		resource.upload(new ClassPathResource("csv/upload/nominal-translated.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.PREVIEW);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertEquals(0, result.getComponents().intValue());
 		Assert.assertEquals(1, result.getCustomFields().intValue());
@@ -255,8 +295,8 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	@Test
 	public void testUploadInvalidResolutionDate() throws Exception {
 		thrown.expect(ValidationJsonException.class);
-		thrown.expect(
-				MatcherUtil.validationMatcher("resolutionDate", "Resolution date must be greater or equals to the change date for issue 2(id=1)"));
+		thrown.expect(MatcherUtil.validationMatcher("resolutionDate",
+				"Resolution date must be greater or equals to the change date for issue 2(id=1)"));
 		resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.PREVIEW);
 	}
@@ -264,7 +304,8 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	@Test
 	public void testUploadInvalidResolutionDateNoId() throws Exception {
 		thrown.expect(ValidationJsonException.class);
-		thrown.expect(MatcherUtil.validationMatcher("resolutionDate", "Resolution date must be greater or equals to the change date for issue 2"));
+		thrown.expect(MatcherUtil.validationMatcher("resolutionDate",
+				"Resolution date must be greater or equals to the change date for issue 2"));
 		resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date-no-id.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.PREVIEW);
 	}
@@ -272,7 +313,8 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	@Test
 	public void testUploadInvalidDueDate() throws Exception {
 		thrown.expect(ValidationJsonException.class);
-		thrown.expect(MatcherUtil.validationMatcher("dueDate", "Due date must be greater or equals to the creation date for issue 2(id=4)"));
+		thrown.expect(
+				MatcherUtil.validationMatcher("dueDate", "Due date must be greater or equals to the creation date for issue 2(id=4)"));
 		resource.upload(new ClassPathResource("csv/upload/invalid-duedate.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.PREVIEW);
 	}
@@ -327,7 +369,8 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	@Test
 	public void testUploadInvalidWorkflowStatus() throws Exception {
 		thrown.expect(ValidationJsonException.class);
-		thrown.expect(MatcherUtil.validationMatcher("status", "At least one specified status exists but is not managed in the workflow : Assigned"));
+		thrown.expect(MatcherUtil.validationMatcher("status",
+				"At least one specified status exists but is not managed in the workflow : Assigned"));
 		resource.upload(new ClassPathResource("csv/upload/invalid-workflow-status.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.PREVIEW);
 	}
@@ -370,7 +413,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 			jdbcTemplate.update("update workflowschemeentity SET SCHEME=? WHERE ID = ?", 10025, 10272);
 		}
 
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(UploadMode.PREVIEW, result.getMode());
 		Assert.assertFalse(result.isFailed());
 		Assert.assertEquals(22, result.getStep());
@@ -392,7 +435,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 					10074, 1, "Project", 10025, "WorkflowScheme", "ProjectScheme");
 		}
 
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(UploadMode.PREVIEW, result.getMode());
 		Assert.assertFalse(result.isFailed());
 		Assert.assertEquals(22, result.getStep());
@@ -410,7 +453,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 			jdbcTemplate.update("update workflowschemeentity SET WORKFLOW=? WHERE ID=?", "CSN", 10302);
 		}
 
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(UploadMode.PREVIEW, result.getMode());
 		Assert.assertFalse(result.isFailed());
 		Assert.assertEquals(22, result.getStep());
@@ -434,7 +477,8 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 
 	@Test(expected = BusinessException.class)
 	public void testUploadConcurrent() throws Exception {
-		em.createQuery("UPDATE ImportStatus i SET i.end = NULL WHERE i.subscription.id  = ?1").setParameter(1, subscription).executeUpdate();
+		em.createQuery("UPDATE ImportStatus i SET i.end = NULL WHERE i.subscription.id  = ?1").setParameter(1, subscription)
+				.executeUpdate();
 		em.flush();
 		em.clear();
 		resource.upload(null, ENCODING, subscription, UploadMode.PREVIEW);
@@ -448,7 +492,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		} catch (final ValidationJsonException vje) {
 			em.flush();
 			em.clear();
-			final ImportStatus result = importStatusResource.getImportStatus(subscription);
+			final ImportStatus result = jiraResource.getTask(subscription);
 			Assert.assertNotNull(result.getEnd());
 			Assert.assertTrue(result.isFailed());
 			Assert.assertEquals(3, result.getStep());
@@ -459,7 +503,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	public void testUploadSingleChange() throws Exception {
 		resource.upload(new ClassPathResource("csv/upload/single-change.csv").getInputStream(), ENCODING, subscription, UploadMode.PREVIEW);
 		em.clear();
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(46, result.getChanges().intValue());
 		Assert.assertEquals(getAuthenticationName(), result.getAuthor());
 		Assert.assertEquals(2, result.getComponents().intValue());
@@ -494,7 +538,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		resource.upload(new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream(), ENCODING, subscription, UploadMode.SYNTAX);
 		em.flush();
 		em.clear();
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertNull(result.getComponents());
 		Assert.assertNull(result.getCustomFields());
@@ -523,7 +567,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	public void testUploadSimpleValidation() throws Exception {
 		resource.upload(new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.VALIDATION);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertEquals(0, result.getComponents().intValue());
 		Assert.assertEquals(0, result.getCustomFields().intValue());
@@ -552,7 +596,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	public void testUploadSimple() throws Exception {
 		resource.upload(new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.PREVIEW);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals("6.0.1", result.getJiraVersion());
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertEquals(0, result.getComponents().intValue());
@@ -588,7 +632,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	@Test
 	public void testUploadPreview() throws Exception {
 		resource.upload(new ClassPathResource("csv/upload/nominal.csv").getInputStream(), ENCODING, subscription, UploadMode.PREVIEW);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(3, result.getChanges().intValue());
 		Assert.assertEquals(4, result.getComponents().intValue());
 		Assert.assertEquals(9, result.getCustomFields().intValue());
@@ -619,7 +663,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		final int pcounter = jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10074);
 
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete.csv").getInputStream(), ENCODING, subscription, UploadMode.FULL);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(42, result.getChanges().intValue());
 		Assert.assertEquals(30, result.getStep());
 		Assert.assertEquals(4, result.getComponents().intValue());
@@ -651,7 +695,8 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		Assert.assertNull(result.getSynchronizedJira());
 
 		// Lesser than the maximal "pcounter"
-		Assert.assertEquals(pcounter, jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10074).intValue());
+		Assert.assertEquals(pcounter,
+				jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10074).intValue());
 
 		// Check sequences
 		final Map<String, Integer> sequences = AbstractEditor.getInvertedMap(datasource,
@@ -666,12 +711,15 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		Assert.assertEquals(10300, sequences.get("Version").intValue());
 
 		final int workflowId = jdbcTemplate
-				.queryForObject("SELECT WORKFLOW_ID FROM jiraissue WHERE issuenum=? AND project=? AND issuestatus=? AND priority=?"
-						+ " AND RESOLUTION=? AND RESOLUTIONDATE IS NOT NULL AND issuetype=? AND DESCRIPTION=? AND SUMMARY=? AND REPORTER=?"
-						+ " AND ASSIGNEE=?", Integer.class, 3, 10074, 6, 3, 1, 1, "DESCRIPTION-34", "SUMMARY-34", "alocquet", "fdaugan");
+				.queryForObject(
+						"SELECT WORKFLOW_ID FROM jiraissue WHERE issuenum=? AND project=? AND issuestatus=? AND priority=?"
+								+ " AND RESOLUTION=? AND RESOLUTIONDATE IS NOT NULL AND issuetype=? AND DESCRIPTION=? AND SUMMARY=? AND REPORTER=?"
+								+ " AND ASSIGNEE=?",
+						Integer.class, 3, 10074, 6, 3, 1, 1, "DESCRIPTION-34", "SUMMARY-34", "alocquet", "fdaugan");
 		Assert.assertEquals(10201, workflowId);
 
-		final String workflow = jdbcTemplate.queryForObject("SELECT NAME FROM OS_WFENTRY WHERE ID=? AND STATE=?", String.class, workflowId, 1);
+		final String workflow = jdbcTemplate.queryForObject("SELECT NAME FROM OS_WFENTRY WHERE ID=? AND STATE=?", String.class, workflowId,
+				1);
 		Assert.assertEquals("CSN", workflow);
 
 		final String status = jdbcTemplate.queryForObject("SELECT STATUS FROM OS_CURRENTSTEP WHERE ENTRY_ID=? AND STEP_ID=?", String.class,
@@ -688,7 +736,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		this.subscription = getSubscription("gStack");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete2.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertEquals(30, result.getStep());
 		Assert.assertEquals(10000, result.getJira().intValue());
@@ -698,24 +746,25 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 
 		// Greater than the maximal "pcounter"
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assert.assertEquals(5124, jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10000).intValue());
+		Assert.assertEquals(5124,
+				jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10000).intValue());
 	}
 
 	@Test
 	public void testZUploadWithInsertWithFailCache() throws Exception {
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_OK)));
-		httpServer.stubFor(
-				post(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
-		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa"))
-				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")));
-		httpServer.stubFor(
-				get(urlPathEqualTo("/secure/admin/groovy/CannedScriptRunner.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_NOT_FOUND)));
+		httpServer.stubFor(post(urlPathEqualTo("/login.jsp"))
+				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
+		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa")).willReturn(
+				aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")));
+		httpServer.stubFor(get(urlPathEqualTo("/secure/admin/groovy/CannedScriptRunner.jspa"))
+				.willReturn(aResponse().withStatus(HttpStatus.SC_NOT_FOUND)));
 		httpServer.start();
 
 		this.subscription = getSubscription("gStack");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete3.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertEquals(30, result.getStep());
 		Assert.assertTrue(result.getCanSynchronizeJira());
@@ -726,19 +775,20 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 	@Test
 	public void testZUploadWithInsertWithFailReIndex() throws Exception {
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_OK)));
+		httpServer.stubFor(post(urlPathEqualTo("/login.jsp"))
+				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
+		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa")).willReturn(
+				aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")));
+		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/groovy/CannedScriptRunner.jspa"))
+				.willReturn(aResponse().withStatus(HttpStatus.SC_NO_CONTENT)));
 		httpServer.stubFor(
-				post(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
-		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa"))
-				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")));
-		httpServer.stubFor(
-				post(urlPathEqualTo("/secure/admin/groovy/CannedScriptRunner.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_NO_CONTENT)));
-		httpServer.stubFor(get(urlPathEqualTo("/secure/admin/IndexProject.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_NOT_FOUND)));
+				get(urlPathEqualTo("/secure/admin/IndexProject.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_NOT_FOUND)));
 		httpServer.start();
 
 		this.subscription = getSubscription("gStack");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete4.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertEquals(30, result.getStep());
 		Assert.assertTrue(result.getCanSynchronizeJira());
@@ -753,7 +803,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		this.subscription = getSubscription("gStack");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete5.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(7, result.getChanges().intValue());
 		Assert.assertEquals(3, result.getIssues().intValue());
 		Assert.assertEquals(30, result.getStep());
@@ -773,7 +823,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 			this.subscription = getSubscription("gStack");
 			resource.upload(new ClassPathResource("csv/upload/nominal-complete6.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.FULL);
-			final ImportStatus result = importStatusResource.getImportStatus(subscription);
+			final ImportStatus result = jiraResource.getTask(subscription);
 			Assert.assertEquals(1, result.getChanges().intValue());
 			Assert.assertEquals(30, result.getStep());
 			Assert.assertTrue(result.getCanSynchronizeJira());
@@ -790,7 +840,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		this.subscription = getSubscription("gStack");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete7.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertEquals(30, result.getStep());
 		Assert.assertTrue(result.getCanSynchronizeJira());
@@ -805,7 +855,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		this.subscription = getSubscription("gStack");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete-no-association.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
-		final ImportStatus result = importStatusResource.getImportStatus(subscription);
+		final ImportStatus result = jiraResource.getTask(subscription);
 		Assert.assertEquals(1, result.getChanges().intValue());
 		Assert.assertEquals(1, result.getIssues().intValue());
 		Assert.assertEquals(30, result.getStep());
@@ -816,14 +866,15 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 
 	private void startOperationalServer() {
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_OK)));
+		httpServer.stubFor(post(urlPathEqualTo("/login.jsp"))
+				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
+		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa")).willReturn(
+				aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")
+						.withHeader("X-Atlassian-WebSudo", "Has-Authentication")));
+		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/groovy/CannedScriptRunner.jspa"))
+				.willReturn(aResponse().withStatus(HttpStatus.SC_NO_CONTENT)));
 		httpServer.stubFor(
-				post(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
-		httpServer.stubFor(
-				post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY)
-						.withHeader("Location", "/secure/project/ViewProjects.jspa").withHeader("X-Atlassian-WebSudo", "Has-Authentication")));
-		httpServer.stubFor(
-				post(urlPathEqualTo("/secure/admin/groovy/CannedScriptRunner.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_NO_CONTENT)));
-		httpServer.stubFor(get(urlPathEqualTo("/secure/admin/IndexProject.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_NO_CONTENT)));
+				get(urlPathEqualTo("/secure/admin/IndexProject.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_NO_CONTENT)));
 		httpServer.start();
 	}
 
