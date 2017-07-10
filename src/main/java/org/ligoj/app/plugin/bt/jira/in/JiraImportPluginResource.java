@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  * JIRA import issues resource.
  */
 @Slf4j
-@Path(JiraPluginResource.URL)
+@Path(JiraBaseResource.URL)
 @Service
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)

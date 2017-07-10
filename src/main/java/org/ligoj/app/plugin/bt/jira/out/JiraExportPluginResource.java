@@ -39,7 +39,6 @@ import org.ligoj.app.plugin.bt.dao.BugTrackerConfigurationRepository;
 import org.ligoj.app.plugin.bt.dao.HolidayRepository;
 import org.ligoj.app.plugin.bt.dao.SlaRepository;
 import org.ligoj.app.plugin.bt.jira.JiraBaseResource;
-import org.ligoj.app.plugin.bt.jira.JiraPluginResource;
 import org.ligoj.app.plugin.bt.jira.JiraSimpleExport;
 import org.ligoj.app.plugin.bt.jira.JiraSlaComputations;
 import org.ligoj.app.plugin.bt.jira.dao.JiraChangeItem;
@@ -69,7 +68,7 @@ import lombok.extern.slf4j.Slf4j;
  * JIRA export issues resource.
  */
 @Slf4j
-@Path(JiraPluginResource.URL)
+@Path(JiraBaseResource.URL)
 @Service
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)
