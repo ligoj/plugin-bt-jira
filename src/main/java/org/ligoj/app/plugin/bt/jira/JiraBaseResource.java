@@ -1,8 +1,5 @@
 package org.ligoj.app.plugin.bt.jira;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -356,8 +353,7 @@ public class JiraBaseResource {
 	 * 'jira' workflow. KEY is the status, VALUE is the corresponding workflow's
 	 * step
 	 */
-	private Workflow getWorkflow(final String name, final String workflowXml, final Map<Integer, String> statuses)
-			throws IOException {
+	private Workflow getWorkflow(final String name, final String workflowXml, final Map<Integer, String> statuses) {
 		if (workflowXml == null) {
 			// Default worflow
 			return JIRA_WORKFLOW;
@@ -381,7 +377,7 @@ public class JiraBaseResource {
 	 *            the worldwide available statuses.
 	 */
 	protected Map<Integer, Workflow> getTypeToStatusToStep(final DataSource dataSource, final int jira,
-			final Map<Integer, String> statuses) throws IOException {
+			final Map<Integer, String> statuses) {
 		final Map<Integer, String> typeToWorkflow = jiraDao.getTypesToWorkflow(dataSource, jira);
 		final Map<String, Workflow> workflows = new HashMap<>();
 		final Map<Integer, Workflow> mapping = new HashMap<>();
@@ -403,13 +399,11 @@ public class JiraBaseResource {
 	 * is the corresponding workflow's step
 	 */
 	private Map<String, INamableBean<Integer>> getWorkflowSteps(final String workflowXml,
-			final Map<Integer, String> statuses) throws IOException {
+			final Map<Integer, String> statuses) {
 		final Map<String, INamableBean<Integer>> workflowSteps = new HashMap<>();
-		final BufferedReader reader = new BufferedReader(
-				new StringReader(StringUtils.replace(StringUtils.replace(workflowXml, "\\\"", "\""), "\\n", "\n")));
-		String line = reader.readLine();
+		final String[] lines = StringUtils.replace(StringUtils.replace(workflowXml, "\\\"", "\""), "\\n", "\n").split("\\r?\\n");
 		NamedBean<Integer> currentStep = null;
-		while (line != null) {
+		for(final String line : lines) {
 			if (line.startsWith("<step id=")) {
 				final Matcher matcher = STEP_PATTERN.matcher(line);
 				matcher.find();
@@ -420,7 +414,6 @@ public class JiraBaseResource {
 				workflowSteps.put(statuses.get(Integer.valueOf(matcher.group(1))), currentStep);
 				currentStep = null;
 			}
-			line = StringUtils.trim(reader.readLine());
 		}
 
 		// Remove not used status by the current import

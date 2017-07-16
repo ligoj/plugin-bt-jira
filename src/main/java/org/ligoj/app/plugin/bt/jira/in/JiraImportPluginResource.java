@@ -353,7 +353,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		resource.nextStep(result);
 	}
 
-	private void validateWorkflowData(final ImportStatus result, final ImportContext context) throws IOException {
+	private void validateWorkflowData(final ImportStatus result, final ImportContext context) {
 		// Compute workflow types
 		log.info("Compute workflow types");
 		checkTypesAgainstWorkflow(context, result);
@@ -575,7 +575,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Check types against workflow
 	 */
-	private void checkTypesAgainstWorkflow(final ImportContext context, final ImportStatus result) throws IOException {
+	private void checkTypesAgainstWorkflow(final ImportContext context, final ImportStatus result) {
 		context.typeToStatusToStep = getTypeToStatusToStep(context.dataSource, result.getJira(), context.statuses);
 		if (!context.typeToStatusToStep.containsKey(0)) {
 			checkTypesAgainstWorkflow(context);
