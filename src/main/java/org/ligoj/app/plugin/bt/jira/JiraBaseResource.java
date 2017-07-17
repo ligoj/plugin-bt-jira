@@ -175,7 +175,7 @@ public class JiraBaseResource {
 		try {
 			return new SimpleDriverDataSource(
 					(Driver) Class.forName(
-							StringUtils.defaultIfBlank(parameters.get(PARAMETER_JDBC_DRIVER), "com.mysql.jdbc.Driver"))
+							StringUtils.defaultIfBlank(parameters.get(PARAMETER_JDBC_DRIVER), "com.mysql.cj.jdbc.Driver"))
 							.newInstance(),
 					StringUtils.defaultIfBlank(parameters.get(PARAMETER_JDBC_URL),
 							"jdbc:mysql://localhost:3306/jira6?useColumnNamesInFindColumn=true&useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&maxReconnects=3"),
