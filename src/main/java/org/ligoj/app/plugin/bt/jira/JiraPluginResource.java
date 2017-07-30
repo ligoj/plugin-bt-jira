@@ -90,7 +90,7 @@ public class JiraPluginResource extends JiraBaseResource
 	@Path("{node:\\w+:.*}/{criteria}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public List<JiraProject> findAllByName(@PathParam("node") final String node, @PathParam("criteria") final String criteria) {
-		return jiraDao.findProjectsByName(getDataSource(nodeResource.getParametersAsMap(node)), criteria);
+		return jiraDao.findProjectsByName(getDataSource(pvResource.getNodeParameters(node)), criteria);
 	}
 
 	@Override

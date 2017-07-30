@@ -149,7 +149,7 @@ public class JiraBaseResource {
 	protected NodeResource nodeResource;
 
 	@Autowired
-	protected ParameterValueResource parameterValueResource;
+	protected ParameterValueResource pvResource;
 
 	/**
 	 * Return the data source of JIRA database server.

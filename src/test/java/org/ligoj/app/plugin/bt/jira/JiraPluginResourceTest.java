@@ -32,7 +32,7 @@ import org.ligoj.app.model.ParameterValue;
 import org.ligoj.app.model.Project;
 import org.ligoj.app.model.Subscription;
 import org.ligoj.app.plugin.bt.jira.dao.ImportStatusRepository;
-import org.ligoj.app.resource.node.NodeResource;
+import org.ligoj.app.resource.node.ParameterValueResource;
 import org.ligoj.app.resource.plugin.CurlProcessor;
 import org.ligoj.app.resource.subscription.SubscriptionResource;
 import org.ligoj.bootstrap.core.IDescribableBean;
@@ -61,7 +61,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	private JiraPluginResource resource;
 
 	@Autowired
-	private NodeResource nodeResource;
+	private ParameterValueResource pvResource;
 
 	@Autowired
 	protected ImportStatusRepository importStatusRepository;
@@ -80,7 +80,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		this.subscription = getSubscription("MDA");
 
 		// Clear the cache
-		nodeResource.getParametersAsMap("service:bt:jira:6").remove(JiraBaseResource.PARAMETER_CACHE_VERSION);
+		pvResource.getNodeParameters("service:bt:jira:6").remove(JiraBaseResource.PARAMETER_CACHE_VERSION);
 
 		// For coverage
 		resource.getKey();
@@ -172,7 +172,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	public void validateDataBaseConnectivityRes() throws Exception {
-		final String version = resource.validateDataBaseConnectivity(nodeResource.getParametersAsMap("service:bt:jira:6"));
+		final String version = resource.validateDataBaseConnectivity(pvResource.getNodeParameters("service:bt:jira:6"));
 		Assert.assertEquals("4.4.1", version);
 	}
 
@@ -191,7 +191,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	public void validateProjectRes() {
-		final Map<String, String> parameters = nodeResource.getParametersAsMap("service:bt:jira:6");
+		final Map<String, String> parameters = pvResource.getNodeParameters("service:bt:jira:6");
 		parameters.put(JiraBaseResource.PARAMETER_PKEY, "MDA");
 		parameters.put(JiraBaseResource.PARAMETER_PROJECT, "10074");
 		checkProjectValidation(resource.validateProject(parameters));
@@ -280,7 +280,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	public void validateAdminConnectivityRes() throws Exception {
 		prepareJiraServer();
-		final Map<String, String> parameters = nodeResource.getParametersAsMap("service:bt:jira:6");
+		final Map<String, String> parameters = pvResource.getNodeParameters("service:bt:jira:6");
 		parameters.put(JiraBaseResource.PARAMETER_URL, "http://localhost:" + MOCK_PORT);
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_PASSWORD, "any");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_USER, "one");
