@@ -1,6 +1,6 @@
 parameter.id;data;node.id;subscription.id!
 service:bt:jira:jdbc-url;BMUnUOgVZN/hS9cDCz2JZ8R1WYs/G3SObm7dEI7Lm7fVsNz69Fscpg==;service:bt:jira:4;
-service:bt:jira:jdbc-driver;Y4/qNe8wRy5Q7zK7nyZ8piwaOoY4AU4NL18I9/ajDoNVBg+EIB5d9Q==;service:bt:jira:4;
+service:bt:jira:jdbc-driver;org.hsqldb.jdbc.JDBCDriver;service:bt:jira:4;
 service:bt:jira:jdbc-user;jg0C7Cb/jxUh6njn3kddtw==;service:bt:jira:4;
 service:bt:jira:jdbc-password;8QWZgpMFB0WV48BYbVRtHg==;service:bt:jira:4;
 service:bt:jira:url;http://localhost:8120;service:bt:jira:4;
