@@ -214,6 +214,11 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
+	public void findProjectsByNameNotExists() {
+		Assert.assertEquals(0, resource.findAllByName("service:bt:jira:any", "10000").size());
+	}
+
+	@Test
 	public void findProjectsByName() {
 		assertGstack(resource.findAllByName("service:bt:jira:6", "10000"));
 		assertGstack(resource.findAllByName("service:bt:jira:6", "gStack"));

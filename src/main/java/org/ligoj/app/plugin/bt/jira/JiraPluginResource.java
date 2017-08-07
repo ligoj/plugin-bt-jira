@@ -3,6 +3,7 @@ package org.ligoj.app.plugin.bt.jira;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.ligoj.app.api.SubscriptionStatusWithData;
 import org.ligoj.app.api.ToolPlugin;
+import org.ligoj.app.dao.NodeRepository;
 import org.ligoj.app.dao.SubscriptionRepository;
 import org.ligoj.app.iam.Activity;
 import org.ligoj.app.model.Node;
@@ -34,6 +36,7 @@ import org.ligoj.app.plugin.bt.jira.model.Workflow;
 import org.ligoj.app.resource.ActivitiesProvider;
 import org.ligoj.app.resource.plugin.LongTaskRunner;
 import org.ligoj.app.resource.plugin.VersionUtils;
+import org.ligoj.bootstrap.core.security.SecurityHelper;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +60,12 @@ public class JiraPluginResource extends JiraBaseResource
 	@Getter
 	@Autowired
 	protected SubscriptionRepository subscriptionRepository;
+
+	@Autowired
+	protected NodeRepository nodeRepository;
+
+	@Autowired
+	protected SecurityHelper securityHelper;
 
 	@Autowired
 	protected SlaRepository slaRepository;
@@ -90,6 +99,11 @@ public class JiraPluginResource extends JiraBaseResource
 	@Path("{node:\\w+:.*}/{criteria}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public List<JiraProject> findAllByName(@PathParam("node") final String node, @PathParam("criteria") final String criteria) {
+		// Check the node exists
+		if (nodeRepository.findOneVisible(node, securityHelper.getLogin()) == null) {
+			return Collections.emptyList();
+		}
+
 		return jiraDao.findProjectsByName(getDataSource(pvResource.getNodeParameters(node)), criteria);
 	}
 
