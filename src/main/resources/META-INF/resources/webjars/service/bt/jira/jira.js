@@ -278,7 +278,7 @@ define(['sparkline'], function () {
 		renderDetailsKey: function (subscription) {
 			return current.$super('generateCarousel')(subscription, [current.renderKey(subscription), ['name', subscription.data.project.description],
 				['service:bt:sla:priorities', current.iconPriorities(subscription)]
-			]);
+			], 2);
 		},
 
 		/**
