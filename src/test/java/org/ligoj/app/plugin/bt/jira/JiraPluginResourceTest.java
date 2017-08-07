@@ -77,6 +77,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Before
 	public void prepareSubscription() {
+		persistSystemEntities();
 		this.subscription = getSubscription("MDA");
 
 		// Clear the cache
@@ -247,7 +248,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	private void assertGstack(final List<JiraProject> projects) {
 		Assert.assertEquals(1, projects.size());
 		// HSQLDB issue for conversions....
-		// Assert.assertEquals("10000", projects.get(0).getId().toString())
+		Assert.assertEquals(10000, projects.get(0).getId().intValue());
 		Assert.assertEquals("GSTACK", projects.get(0).getName());
 		Assert.assertEquals("gStack", projects.get(0).getDescription());
 	}
@@ -443,7 +444,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		resource.link(subscription.getId());
 		em.flush();
 		Assert.assertEquals(initCount, importStatusRepository.count());
-		Assert.assertNotNull(resource.getTask(subscription.getId()));
+		Assert.assertNull(resource.getTask(subscription.getId()));
 	}
 
 	@Test
@@ -466,7 +467,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		resource.link(subscription.getId());
 		em.flush();
 		Assert.assertEquals(initCount, importStatusRepository.count());
-		Assert.assertNotNull(resource.getTask(subscription.getId()));
+		Assert.assertNull(resource.getTask(subscription.getId()));
 	}
 
 	private void addProjectParameters(final Subscription subscription, final int jira) {
@@ -549,5 +550,11 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	public void getInstalledEntities() {
 		Assert.assertTrue(resource.getInstalledEntities().contains(Parameter.class));
+	}
+
+
+	@Override
+	protected String getAuthenticationName() {
+		return DEFAULT_USER;
 	}
 }

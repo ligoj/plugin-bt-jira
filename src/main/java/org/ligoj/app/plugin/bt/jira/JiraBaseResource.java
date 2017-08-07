@@ -403,7 +403,8 @@ public class JiraBaseResource {
 		final Map<String, INamableBean<Integer>> workflowSteps = new HashMap<>();
 		final String[] lines = StringUtils.replace(StringUtils.replace(workflowXml, "\\\"", "\""), "\\n", "\n").split("\\r?\\n");
 		NamedBean<Integer> currentStep = null;
-		for(final String line : lines) {
+		for(String line : lines) {
+			line = line.trim();
 			if (line.startsWith("<step id=")) {
 				final Matcher matcher = STEP_PATTERN.matcher(line);
 				matcher.find();
