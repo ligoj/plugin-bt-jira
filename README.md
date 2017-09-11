@@ -15,7 +15,9 @@
 
 [Ligoj](https://github.com/ligoj/ligoj) JIRA plugin, and extending [Bug Tracker plugin](https://github.com/ligoj/plugin-bt)
 Provides the following features :
-- JIRA secured export and live import without restart
+- JIRA secured, fast (SQL) export without any size limitations
+- SLA configuration and exports
+- Live issues import without restart
 - Contribution to user activities report
 - Compatible with [Jira](https://www.atlassian.com/software/jira) 3 to 6. 7+ version has not been checked.
 
