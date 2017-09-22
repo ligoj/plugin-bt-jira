@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;
