@@ -450,7 +450,7 @@ define(['sparkline'], function () {
 				_('service:bt:jira:project').attr('disabled', 'disabled');
 
 				// Create the select2 suggestion a LIKE %criteria% for project name and pkey
-				var $select = $('<input class="form-control" type="text" id="service:bt:jira:pkey-project" required autocomplete="off">');
+				var $select = $('<input class="form-control" type="text" id="service:bt:jira:pkey-project" autocomplete="off">');
 				cProviders.standard({
 					id: 'service:bt:jira:pkey-project'
 				}, $fieldset, $select);
