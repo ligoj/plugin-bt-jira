@@ -288,7 +288,7 @@ define(['sparkline'], function () {
 			window.setTimeout(function () {
 				current.pieStatuses(subscription, $td);
 			}, 50);
-			return '<span class="jira-small-pie"></span><span class="jira-big-pie"></span>';
+			return '<span class="jira-pie"></span>';
 		},
 
 		/**
@@ -336,67 +336,77 @@ define(['sparkline'], function () {
 			}
 
 			// Build the pie chart
-			var $smallPie = $td.find('.jira-small-pie').sparkline(filteredAmounts, {
-				type: 'pie',
-				sliceColors: ['#478EC7', '#EA632B', '#205081', '#D04437', '#A7A7A7'],
-				offset: '-90',
-				width: '16px',
-				height: '16px',
-				fillColor: 'black'
-			});
-			var $bigPie = $td.find('.jira-big-pie').sparkline(filteredAmounts, {
-				type: 'pie',
-				sliceColors: ['#478EC7', '#EA632B', '#205081', '#D04437', '#A7A7A7'],
-				offset: '-90',
-				width: '64px',
-				height: '64px',
-				fillColor: 'black',
-				tooltipFormatter: function (sparkline, options, fields) {
-					if (fields.offset < 5) {
-						return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset], fields.value, total, current.$super('roundPercent')(fields.percent)]);
-					}
-					return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset].join(', '), fields.value, total, current.$super('roundPercent')(fields.percent)]);
-				}
-			}).on('sparklineClick', function (ev) {
-				var offset = ev.sparklines[0].getCurrentRegionFields().offset;
-				if (typeof offset === 'undefined') {
-					// Ignore this out of bound click
-					return;
-				}
-				var multiple = '';
-				var url = params['service:bt:jira:url'] + '/issues/?jql=project%20%3D%20' + params['service:bt:jira:pkey'] + '%20AND%20resolution%20%3D%20NULL%20AND%20';
-				var index;
-				if (offset < 5) {
-					// Single status
-					url += 'status%20%3D%20%22' + filteredStatuses[offset] + '%22';
-				} else if (offset) {
-					// Multiple statuses, build "AND"
-					for (index = 0; index < filteredStatuses[4].length; index++) {
-						if (multiple) {
-							multiple += '%20OR';
-						} else {
-							multiple += '(';
+			var $spark = $td.find('.jira-pie');
+			function setupSparkline(size) {
+				$spark.sparkline(filteredAmounts, {
+					type: 'pie',
+					sliceColors: ['#478EC7', '#EA632B', '#205081', '#D04437', '#A7A7A7'],
+					offset: '-90',
+					width: size,
+					height: size,
+					fillColor: 'black',
+					borderWidth: '2',
+					borderColor: '#ffffff',
+					tooltipFormatter: function (sparkline, options, fields) {
+						if (fields.offset < 5) {
+							return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset], fields.value, total, current.$super('roundPercent')(fields.percent)]);
 						}
-						multiple += 'status%20%3D%20%22' + filteredStatuses[4][index];
+						return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset].join(', '), fields.value, total, current.$super('roundPercent')(fields.percent)]);
 					}
-					if (multiple) {
-						multiple += ')';
+				}).on('sparklineClick', function (ev) {
+					var offset = ev.sparklines[0].getCurrentRegionFields().offset;
+					if (typeof offset === 'undefined') {
+						// Ignore this out of bound click
+						return;
 					}
-					url += multiple;
+					var multiple = '';
+					var url = params['service:bt:jira:url'] + '/issues/?jql=project%20%3D%20' + params['service:bt:jira:pkey'] + '%20AND%20resolution%20%3D%20NULL%20AND%20';
+					var index;
+					if (offset < 5) {
+						// Single status
+						url += 'status%20%3D%20%22' + filteredStatuses[offset] + '%22';
+					} else if (offset) {
+						// Multiple statuses, build "AND"
+						for (index = 0; index < filteredStatuses[4].length; index++) {
+							if (multiple) {
+								multiple += '%20OR';
+							} else {
+								multiple += '(';
+							}
+							multiple += 'status%20%3D%20%22' + filteredStatuses[4][index];
+						}
+						if (multiple) {
+							multiple += ')';
+						}
+						url += multiple;
+					}
+	
+					// Open a new tag with the right filters
+					var win = window.open(url, '_blank');
+					win && win.focus();
+				});
+			};
+			setupSparkline('20px');
+			
+			// Zoom and auto update tooltips
+			$spark.on('mouseenter', 'canvas', function(e) {
+				if (!$spark.is('.zoomed')) {
+					$spark.addClass('zoomed');
+					setupSparkline('64px');
+					window.setTimeout(function () {
+						$spark.addClass('zoomed2');
+					}, 50);
 				}
-
-				// Open a new tag with the right filters
-				var win = window.open(url, '_blank');
-				win && win.focus();
-			}).addClass('hidden');
-			$smallPie.on('mouseenter', function() {
-				$bigPie.removeClass('hidden');
-				$smallPie.addClass('hidden');
-			})
-			$bigPie.on('mouseleave', function() {
-				$smallPie.removeClass('hidden');
-				$bigPie.addClass('hidden');
-			})
+			}).on('mouseleave', 'canvas', function(e) {
+				var $this = $(this);
+				if ($spark.is('.zoomed')) {
+					$spark.removeClass('zoomed');
+					setupSparkline('20px');
+					window.setTimeout(function () {
+						$spark.removeClass('zoomed2');
+					}, 50);
+				}
+			});
 			return buffer;
 		},
 

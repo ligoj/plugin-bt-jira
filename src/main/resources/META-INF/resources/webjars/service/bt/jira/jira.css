@@ -12,14 +12,40 @@
 	top: 5%;
 	max-height: inherit;
 }
-.service-bt-jira .jira-small-pie {
-	height: 16px;
-    width: 16px;
+.service-bt-jira .jira-pie {
 }
-.service-bt-jira .jira-big-pie {
-	height: 64px;
-    width: 64px;
-    position: absolute;
+.service-bt-jira .jira-pie.zoomed {
+	position: absolute;
+ 	z-index: 2;
+}
+.service-bt-jira .jira-pie.zoomed.zoomed2 {
+    -webkit-transition: all 200ms ease-in;
+    -ms-transition: all 200ms ease-in;
+    -moz-transition: all 200ms ease-in;
+    transition: all 200ms ease-in;
+}
+.service-bt-jira .jira-pie canvas {
+	position: relative;
+}
+.service-bt-jira .jira-pie.zoomed canvas {
+    -webkit-transform: scale(.25); 
+    -ms-transform: scale(.25); 
+    -moz-transform: scale(.25);
+    transform: scale(.25);
+	left: -41px;
+	top: -22px;
+}
+.service-bt-jira .jira-pie.zoomed.zoomed2 canvas {
+	left: -41px;
+	top: -22px;
+    -webkit-transition: all 200ms ease-in;
+    -webkit-transform: scale(1); 
+    -ms-transition: all 200ms ease-in;
+    -ms-transform: scale(1); 
+    -moz-transition: all 200ms ease-in;
+    -moz-transform: scale(1);
+    transition: all 200ms ease-in;
+    transform: scale(1);
 }
 .masonry-container .node.node.service-bt-jira.mode-th-list table.subscriptions th.features {
 	width: 90px;
@@ -42,10 +68,4 @@
 #slaPopup .control-label i {
 	position: relative;
 	right: -2px;
-}
-
-.jira-big-pie canvas {
-	position: relative;
-	left: -40px;
-	top: -21px;
 }
