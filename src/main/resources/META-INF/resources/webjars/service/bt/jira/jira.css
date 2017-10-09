@@ -12,9 +12,14 @@
 	top: 5%;
 	max-height: inherit;
 }
-tr.service-bt-jira .features .details>span {
+.service-bt-jira .jira-small-pie {
 	height: 16px;
-	width: 16px;
+    width: 16px;
+}
+.service-bt-jira .jira-big-pie {
+	height: 64px;
+    width: 64px;
+    position: absolute;
 }
 .masonry-container .node.node.service-bt-jira.mode-th-list table.subscriptions th.features {
 	width: 90px;
@@ -37,4 +42,10 @@ tr.service-bt-jira .features .details>span {
 #slaPopup .control-label i {
 	position: relative;
 	right: -2px;
+}
+
+.jira-big-pie canvas {
+	position: relative;
+	left: -40px;
+	top: -21px;
 }

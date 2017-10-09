@@ -284,11 +284,11 @@ define(['sparkline'], function () {
 		/**
 		 * Display the status pie chart
 		 */
-		renderDetailsFeatures: function (subscription) {
+		renderDetailsFeatures: function (subscription, $tr, $td) {
 			window.setTimeout(function () {
-				current.pieStatuses(subscription);
+				current.pieStatuses(subscription, $td);
 			}, 50);
-			return '<span></span>';
+			return '<span class="jira-small-pie"></span><span class="jira-big-pie"></span>';
 		},
 
 		/**
@@ -314,7 +314,7 @@ define(['sparkline'], function () {
 		 * Render BT statuses pie chart keeping original order, and pushing low value to "other" category when
 		 * there is not enough space.
 		 */
-		pieStatuses: function (subscription) {
+		pieStatuses: function (subscription, $td) {
 			var amount;
 			var buffer = '';
 			var filteredAmounts = [];
@@ -336,12 +336,20 @@ define(['sparkline'], function () {
 			}
 
 			// Build the pie chart
-			$('[data-subscription="' + subscription.id + '"]').find('.details>span').sparkline(filteredAmounts, {
+			var $smallPie = $td.find('.jira-small-pie').sparkline(filteredAmounts, {
 				type: 'pie',
 				sliceColors: ['#478EC7', '#EA632B', '#205081', '#D04437', '#A7A7A7'],
 				offset: '-90',
 				width: '16px',
 				height: '16px',
+				fillColor: 'black'
+			});
+			var $bigPie = $td.find('.jira-big-pie').sparkline(filteredAmounts, {
+				type: 'pie',
+				sliceColors: ['#478EC7', '#EA632B', '#205081', '#D04437', '#A7A7A7'],
+				offset: '-90',
+				width: '64px',
+				height: '64px',
 				fillColor: 'black',
 				tooltipFormatter: function (sparkline, options, fields) {
 					if (fields.offset < 5) {
@@ -350,8 +358,12 @@ define(['sparkline'], function () {
 					return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset].join(', '), fields.value, total, current.$super('roundPercent')(fields.percent)]);
 				}
 			}).on('sparklineClick', function (ev) {
-				var multiple = '';
 				var offset = ev.sparklines[0].getCurrentRegionFields().offset;
+				if (typeof offset === 'undefined') {
+					// Ignore this out of bound click
+					return;
+				}
+				var multiple = '';
 				var url = params['service:bt:jira:url'] + '/issues/?jql=project%20%3D%20' + params['service:bt:jira:pkey'] + '%20AND%20resolution%20%3D%20NULL%20AND%20';
 				var index;
 				if (offset < 5) {
@@ -376,7 +388,15 @@ define(['sparkline'], function () {
 				// Open a new tag with the right filters
 				var win = window.open(url, '_blank');
 				win && win.focus();
-			});
+			}).addClass('hidden');
+			$smallPie.on('mouseenter', function() {
+				$bigPie.removeClass('hidden');
+				$smallPie.addClass('hidden');
+			})
+			$bigPie.on('mouseleave', function() {
+				$smallPie.removeClass('hidden');
+				$bigPie.addClass('hidden');
+			})
 			return buffer;
 		},
 
