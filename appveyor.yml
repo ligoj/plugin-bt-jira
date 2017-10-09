@@ -18,7 +18,7 @@ install:
   - cmd: SET M2_HOME=C:\mavenX\apache-maven-3.3.9
   - cmd: SET MAVEN_OPTS=-Xmx2g
   - cmd: SET MAVEN_HOME=C:\mavenX\apache-maven-3.3.9
-  - cmd: SET rmdir /S /Q C:\Users\appveyor\.m2 
+  - cmd: rmdir /S /Q C:\Users\appveyor\.m2 
   - cmd: SET
 
 build_script:
