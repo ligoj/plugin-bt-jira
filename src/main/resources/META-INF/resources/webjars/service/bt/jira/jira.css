@@ -18,20 +18,14 @@
 	position: absolute;
  	z-index: 2;
 }
-.service-bt-jira .jira-pie.zoomed.zoomed2 {
-    -webkit-transition: all 200ms ease-in;
-    -ms-transition: all 200ms ease-in;
-    -moz-transition: all 200ms ease-in;
-    transition: all 200ms ease-in;
-}
 .service-bt-jira .jira-pie canvas {
 	position: relative;
 }
 .service-bt-jira .jira-pie.zoomed canvas {
-    -webkit-transform: scale(.25); 
-    -ms-transform: scale(.25); 
-    -moz-transform: scale(.25);
-    transform: scale(.25);
+    -webkit-transform: scale(.33); 
+    -ms-transform: scale(.33); 
+    -moz-transform: scale(.33);
+    transform: scale(.33);
 	left: -41px;
 	top: -22px;
 }
@@ -48,10 +42,10 @@
     transform: scale(1);
 }
 .masonry-container .node.node.service-bt-jira.mode-th-list table.subscriptions th.features {
-	width: 90px;
+	width: 98px;
 }
 .masonry-container .node.node.service-bt-jira.mode-th-large table.subscriptions th.features {
-	width: 88px;
+	width: 98px;
 }
 .masonry-container .node.node.service-bt-jira table.subscriptions th.features {
 	width: 86px;
