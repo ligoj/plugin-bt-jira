@@ -21,6 +21,9 @@
 .service-bt-jira .jira-pie canvas {
 	position: relative;
 }
+.service-bt-jira.node .jira-pie.zoomed canvas {
+	left: -56px;
+}
 .service-bt-jira .jira-pie.zoomed canvas {
     -webkit-transform: scale(.33); 
     -ms-transform: scale(.33); 
