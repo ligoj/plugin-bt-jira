@@ -276,7 +276,7 @@ define(['sparkline'], function () {
 		 * Render JIRA details : id, name and unresolved issues with priorities
 		 */
 		renderDetailsKey: function (subscription) {
-			return current.$super('generateCarousel')(subscription, [current.renderKey(subscription), ['name', subscription.data.project.description],
+			return current.$super('generateCarousel')(subscription, [['project', current.renderKey(subscription)], ['name', subscription.data.project.description],
 				['service:bt:sla:priorities', current.iconPriorities(subscription)]
 			], 2);
 		},
