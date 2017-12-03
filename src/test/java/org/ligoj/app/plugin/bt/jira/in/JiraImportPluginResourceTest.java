@@ -65,22 +65,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
 
 		// Replace the task management to handle the inner transaction
-		resource.resource = new JiraPluginResource() {
-			@Override
-			public ImportStatus startTask(final int subscription) {
-				return super.startTask(subscription);
-			}
-
-			@Override
-			public void endTask(final int subscription, final boolean failed) {
-				super.endTask(subscription, failed);
-			}
-
-			@Override
-			public void nextStep(final ImportStatus task) {
-				super.nextStep(task);
-			}
-		};
+		resource.resource = new JiraPluginResource();
 		super.applicationContext.getAutowireCapableBeanFactory().autowireBean(resource.resource);
 		jiraResource = resource.resource;
 	}
@@ -477,7 +462,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 
 	@Test(expected = BusinessException.class)
 	public void testUploadConcurrent() throws Exception {
-		em.createQuery("UPDATE ImportStatus i SET i.end = NULL WHERE i.subscription.id  = ?1").setParameter(1, subscription)
+		em.createQuery("UPDATE ImportStatus i SET i.end = NULL WHERE i.locked.id  = ?1").setParameter(1, subscription)
 				.executeUpdate();
 		em.flush();
 		em.clear();
@@ -711,11 +696,9 @@ public class JiraImportPluginResourceTest extends AbstractJiraUploadTest {
 		Assert.assertEquals(10300, sequences.get("Version").intValue());
 
 		final int workflowId = jdbcTemplate
-				.queryForObject(
-						"SELECT WORKFLOW_ID FROM jiraissue WHERE issuenum=? AND project=? AND issuestatus=? AND priority=?"
-								+ " AND RESOLUTION=? AND RESOLUTIONDATE IS NOT NULL AND issuetype=? AND DESCRIPTION=? AND SUMMARY=? AND REPORTER=?"
-								+ " AND ASSIGNEE=?",
-						Integer.class, 3, 10074, 6, 3, 1, 1, "DESCRIPTION-34", "SUMMARY-34", "alocquet", "fdaugan");
+				.queryForObject("SELECT WORKFLOW_ID FROM jiraissue WHERE issuenum=? AND project=? AND issuestatus=? AND priority=?"
+						+ " AND RESOLUTION=? AND RESOLUTIONDATE IS NOT NULL AND issuetype=? AND DESCRIPTION=? AND SUMMARY=? AND REPORTER=?"
+						+ " AND ASSIGNEE=?", Integer.class, 3, 10074, 6, 3, 1, 1, "DESCRIPTION-34", "SUMMARY-34", "alocquet", "fdaugan");
 		Assert.assertEquals(10201, workflowId);
 
 		final String workflow = jdbcTemplate.queryForObject("SELECT NAME FROM OS_WFENTRY WHERE ID=? AND STATE=?", String.class, workflowId,

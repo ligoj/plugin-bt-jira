@@ -1,12 +1,12 @@
 package org.ligoj.app.plugin.bt.jira.dao;
 
-import org.ligoj.app.dao.LongTaskRepository;
+import org.ligoj.app.dao.task.LongTaskSubscriptionRepository;
 import org.ligoj.app.plugin.bt.jira.model.ImportStatus;
 
 /**
  * {@link ImportStatus} repository.
  */
-public interface ImportStatusRepository extends LongTaskRepository<ImportStatus> {
+public interface ImportStatusRepository extends LongTaskSubscriptionRepository<ImportStatus> {
 
 	// All is delegated
 }

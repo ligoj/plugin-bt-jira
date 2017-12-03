@@ -110,9 +110,42 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	public ImportStatus upload(@Multipart("csv-file") final InputStream csvInput, @PathParam("encoding") final String encoding,
 			@PathParam("subscription") final int subscription, @PathParam("mode") final UploadMode mode) throws IOException {
 		boolean failed = true;
+		subscriptionResource.checkVisibleSubscription(subscription);
 		try {
-			final ImportStatus importStatus = resource.startTask(subscription);
-			importStatus.setMode(mode);
+
+			final ImportStatus importStatus = resource.startTask(subscription, task -> {
+
+				// Initialize starting information
+				task.setStep(1);
+
+				// Reset old values
+				task.setChanges(null);
+				task.setComponents(null);
+				task.setCustomFields(null);
+				task.setIssueFrom(null);
+				task.setIssues(null);
+				task.setJira(null);
+				task.setJiraVersion(null);
+				task.setLabels(null);
+				task.setMaxIssue(null);
+				task.setMinIssue(null);
+				task.setNewIssues(null);
+				task.setNewVersions(null);
+				task.setNewComponents(null);
+				task.setPkey(null);
+				task.setPriorities(null);
+				task.setResolutions(null);
+				task.setStatuses(null);
+				task.setIssueTo(null);
+				task.setTypes(null);
+				task.setUsers(null);
+				task.setVersions(null);
+				task.setScriptRunner(null);
+				task.setStatusChanges(null);
+				task.setSynchronizedJira(null);
+				task.setCanSynchronizeJira(null);
+				task.setMode(mode);
+			});
 			uploadPriv(importStatus, new InputStreamReader(csvInput, encoding));
 			failed = false;
 			return importStatus;
@@ -157,6 +190,9 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		protected Map<Integer, List<ImportEntry>> changes;
 		protected Map<Integer, Workflow> typeToStatusToStep;
 		protected Map<String, String> parameters;
+		public List<ImportEntry> rawEntries;
+		public Set<String> newVersionsAsSet;
+		public Set<String> newComponentsAsSet;
 	}
 
 	/**
@@ -188,8 +224,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Build status changes of all issues. Issues without changes will not be in
-	 * this result, and VALUE of this {@link Map} is never an empty list. KEY is
-	 * the issueNum.
+	 * this result, and VALUE of this {@link Map} is never an empty list. KEY is the
+	 * issueNum.
 	 */
 	private Map<Integer, List<JiraChangeRow>> buildStatusChanges(final ImportContext context, final ImportStatus result,
 			final List<JiraIssueRow> issues) {
@@ -228,8 +264,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	/**
-	 * Convert text to identifier. Return the identifier list, in the same order
-	 * of given texts.
+	 * Convert text to identifier. Return the identifier list, in the same order of
+	 * given texts.
 	 */
 	private List<Integer> convertTextToId(final Map<String, Integer> allItems, final Collection<String> itemsAsText) {
 		return itemsAsText.stream().map(allItems::get).collect(Collectors.toList());
@@ -241,18 +277,24 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	private void validateSubscription(final ImportContext context, final ImportStatus result) {
 		// Check the subscription exists and there is no running import
 		log.info("Validate subscription settings");
-		context.parameters = subscriptionResource.getParameters(result.getSubscription().getId());
+		context.parameters = subscriptionResource.getParameters(result.getLocked().getId());
 		context.dataSource = getDataSource(context.parameters);
 		final String pkey = context.parameters.get(PARAMETER_PKEY);
 		result.setJira(Integer.valueOf(context.parameters.get(PARAMETER_PROJECT)));
 		result.setPkey(pkey);
 		result.setCanSynchronizeJira(StringUtils.isNotBlank(context.parameters.get(PARAMETER_ADMIN_USER)));
-		resource.nextStep(result);
+		nextStep(result);
 
 		log.info("Check the JIRA/plugin version");
 		result.setJiraVersion(checkJiraVersion(context.dataSource));
 		result.setScriptRunner(jiraDao.hasScriptRunnerPlugin(context.dataSource));
-		resource.nextStep(result);
+		nextStep(result);
+	}
+
+	private ImportStatus nextStep(final ImportStatus result) {
+		return resource.nextStep(result.getLocked().getId(), t -> {
+			t.setStep(t.getStep() + 1);
+		});
 	}
 
 	private void validateSyntax(final ImportContext context, final ImportStatus result, final Reader csvInput) throws IOException {
@@ -265,11 +307,11 @@ public class JiraImportPluginResource extends JiraBaseResource {
 			// No change
 			throw new ValidationJsonException("id", "Empty file, no change found");
 		}
-		resource.nextStep(result);
+		nextStep(result);
 
 		log.info("Validate syntax of {} changes", rawEntries.size());
 		validatorBean.validateCheck(rawEntries);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Collect of foreign keys to validate/complete and initialize the
 		// business objects
@@ -279,15 +321,15 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		result.setIssues(context.issues.size());
 		result.setIssueFrom(rawEntries.get(0).getDateValid());
 		result.setIssueTo(rawEntries.get(rawEntries.size() - 1).getDateValid());
-		resource.nextStep(result);
-		result.setRawEntries(rawEntries);
+		nextStep(result);
+		context.rawEntries = rawEntries;
 	}
 
 	private void validateRequiredData(final ImportStatus result, final ImportContext context) {
 		// Collect of foreign keys to validate/complete and initialize the
 		// business objects
 		log.info("Collect required data for the {} issues", context.issues.size());
-		final List<ImportEntry> rawEntries = result.getRawEntries();
+		final List<ImportEntry> rawEntries = context.rawEntries;
 		completeContext(result, rawEntries, context);
 		final Set<String> requiredStatuses = context.requiredStatuses;
 		final Set<String> requiredPriorities = context.requiredPriorities;
@@ -303,7 +345,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		result.setResolutions(requiredResolutions.size());
 		result.setVersions(context.completeVersions.size());
 		result.setComponents(context.completeComponents.size());
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Get and check mandatory links
 		log.info("Load and check required data ...");
@@ -311,73 +353,73 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		context.statuses = jiraDao.getStatuses(context.dataSource, new ArrayList<>(), requiredStatuses);
 		context.invertedStatuses = MapUtils.invertMap(context.statuses);
 		checkRequired(FIELD_STATUS, "statuses", context.invertedStatuses, requiredStatuses);
-		resource.nextStep(result);
+		nextStep(result);
 
 		log.info("... Priorities");
 		context.priorities = MapUtils.invertMap(jiraDao.getPriorities(context.dataSource));
 		checkRequired("priority", "priorities", context.priorities, requiredPriorities);
-		resource.nextStep(result);
+		nextStep(result);
 
 		log.info("... Resolutions");
 		context.resolutions = MapUtils.invertMap(jiraDao.getResolutions(context.dataSource));
 		checkRequired(FIELD_RESOLUTION, "resolutions", context.resolutions, requiredResolutions);
-		resource.nextStep(result);
+		nextStep(result);
 
 		log.info("... Types");
 		context.types = MapUtils.invertMap(jiraDao.getTypes(context.dataSource, result.getJira()));
 		checkRequired("type", "types", context.types, requiredTypes);
-		resource.nextStep(result);
+		nextStep(result);
 
 		log.info("... Custom fields definition");
 		context.customFields = jiraDao.getCustomFields(context.dataSource, requiredCustomFields, result.getJira());
 		checkCustomFields(rawEntries, requiredCustomFields, context.customFields);
-		resource.nextStep(result);
+		nextStep(result);
 
 		log.info("... Users");
 		checkUsers(context.dataSource, requiredUsers);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Convert text to identifiers
 		log.info("Convert texts to identifiers");
 		convertTextToId(rawEntries, context);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Compare changes for at least on change each line for each issue
 		log.info("Compute changes");
 		context.changes = checkChanges(rawEntries);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Compute labels
 		log.info("Compute labels");
 		result.setLabels(computeNbLabels(context.changes));
-		resource.nextStep(result);
+		nextStep(result);
 	}
 
 	private void validateWorkflowData(final ImportStatus result, final ImportContext context) {
 		// Compute workflow types
 		log.info("Compute workflow types");
 		checkTypesAgainstWorkflow(context, result);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Compute workflow statuses
 		log.info("Compute workflow statuses");
 		checkStatusAgainstWorkflow(context);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Compute resolution flow
 		log.info("Compute resolution flow");
 		checkStatusAgainstResolution(context);
-		resource.nextStep(result);
+		nextStep(result);
 	}
 
 	private void prepareCompleteData(final ImportContext context, final ImportStatus result) {
 		final int jira = result.getJira();
 		checkNewComponents(context, result, jira);
-		resource.nextStep(result);
+		nextStep(result);
 		checkNewVersions(context, result, jira);
-		resource.nextStep(result);
+		nextStep(result);
 		checkNewIssues(context, result, jira);
-		resource.nextStep(result);
+		nextStep(result);
 	}
 
 	private void checkNewIssues(final ImportContext context, final ImportStatus result, final int jira) {
@@ -404,8 +446,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	private void checkNewVersions(final ImportContext context, final ImportStatus result, final int jira) {
 		log.info("Get existing versions");
 		context.existingVersions = MapUtils.invertMap(jiraDao.getVersions(context.dataSource, jira));
-		result.setNewVersionsAsSet(computeDiff(context.existingVersions, context.completeVersions));
-		result.setNewVersions(result.getNewVersionsAsSet().size());
+		context.newVersionsAsSet = computeDiff(context.existingVersions, context.completeVersions);
+		result.setNewVersions(context.newVersionsAsSet.size());
 	}
 
 	/**
@@ -414,52 +456,51 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	private void checkNewComponents(final ImportContext context, final ImportStatus result, final int jira) {
 		log.info("Get existing components");
 		context.existingComponents = MapUtils.invertMap(jiraDao.getComponents(context.dataSource, jira));
-		result.setNewComponentsAsSet(computeDiff(context.existingComponents, context.completeComponents));
-		result.setNewComponents(result.getNewComponentsAsSet().size());
+		context.newComponentsAsSet = computeDiff(context.existingComponents, context.completeComponents);
+		result.setNewComponents(context.newComponentsAsSet.size());
 	}
 
 	private void persistData(final ImportContext context, final ImportStatus result) {
 
 		// Add components and versions
 		log.info("Create new components");
-		context.existingComponents
-				.putAll(jiraUpdateDao.addComponents(context.dataSource, result.getJira(), result.getNewComponentsAsSet()));
-		resource.nextStep(result);
+		context.existingComponents.putAll(jiraUpdateDao.addComponents(context.dataSource, result.getJira(), context.newComponentsAsSet));
+		nextStep(result);
 
 		log.info("Create new versions");
-		context.existingVersions.putAll(jiraUpdateDao.addVersions(context.dataSource, result.getJira(), result.getNewVersionsAsSet()));
-		resource.nextStep(result);
+		context.existingVersions.putAll(jiraUpdateDao.addVersions(context.dataSource, result.getJira(), context.newVersionsAsSet));
+		nextStep(result);
 
 		// Add issues, final state
 		log.info("Create issues");
 		final List<JiraIssueRow> issues = computeFinalIssueState(context);
 		jiraUpdateDao.addIssues(context.dataSource, result.getJira(), issues, context.typeToStatusToStep);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Associate issues to components and (due|fix)versions
 		log.info("Associate components to issues");
 		jiraUpdateDao.associateComponentsAndVersions(context.dataSource, issues);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Associate custom field values
 		log.info("Associate custom fields");
 		jiraUpdateDao.associateCustomFieldsValues(context.dataSource, issues, context.customFields);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Associate labels
 		log.info("Associate labels");
 		jiraUpdateDao.addLabels(context.dataSource, issues);
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Add status changes
 		log.info("Add status changes history");
 		jiraUpdateDao.addChanges(context.dataSource, buildStatusChanges(context, result, issues));
-		resource.nextStep(result);
+		nextStep(result);
 
 		// Synchronize JIRA
 		log.info("Synchronize JIRA cache and index");
 		synchronizeJira(context, result);
-		resource.nextStep(result);
+		nextStep(result);
 		// OPT : Build and return a rollback file
 	}
 
@@ -728,8 +769,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	/**
-	 * Check custom fields. During this call, {@link String} custom fields
-	 * values are replaced with the formatted and typed ones.
+	 * Check custom fields. During this call, {@link String} custom fields values
+	 * are replaced with the formatted and typed ones.
 	 */
 	private void checkCustomFields(final List<ImportEntry> rawEntries, final Set<String> requiredCustomFields,
 			final Map<String, CustomFieldEditor> customFields) {
@@ -845,8 +886,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	/**
-	 * Separate the PKEY from the issue number, update the entry, validate the
-	 * PKEY is the same than the expected one, otherwise, throws an exception.
+	 * Separate the PKEY from the issue number, update the entry, validate the PKEY
+	 * is the same than the expected one, otherwise, throws an exception.
 	 */
 	private void checkPKey(final String pkey, final ImportEntry entry) {
 		final String issue = entry.getIssue();

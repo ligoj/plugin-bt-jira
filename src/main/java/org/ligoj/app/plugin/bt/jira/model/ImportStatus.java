@@ -1,16 +1,12 @@
 package org.ligoj.app.plugin.bt.jira.model;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
-import org.ligoj.app.model.AbstractLongTask;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.ligoj.app.model.AbstractLongTaskSubscription;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +17,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "LIGOJ_BT_IMPORT_STATUS")
-public class ImportStatus extends AbstractLongTask {
+@Table(name = "LIGOJ_BT_IMPORT_STATUS", uniqueConstraints=@UniqueConstraint(columnNames="locked"))
+public class ImportStatus extends AbstractLongTaskSubscription {
 
 	private static final long serialVersionUID = 1L;
 
@@ -55,15 +51,4 @@ public class ImportStatus extends AbstractLongTask {
 	private Boolean canSynchronizeJira;
 	private Boolean synchronizedJira;
 
-	@Transient
-	@JsonIgnore
-	private Set<String> newComponentsAsSet;
-
-	@Transient
-	@JsonIgnore
-	private Set<String> newVersionsAsSet;
-
-	@Transient
-	@JsonIgnore
-	private List<ImportEntry> rawEntries;
 }
