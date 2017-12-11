@@ -103,8 +103,8 @@ public class JiraBaseResource {
 	public static final String PARAMETER_ADMIN_PASSWORD = KEY + ":password";
 
 	/**
-	 * Parameter corresponding to the associated version. Not yet saved in
-	 * database, only in-memory to save request during status checks.
+	 * Parameter corresponding to the associated version. Not yet saved in database,
+	 * only in-memory to save request during status checks.
 	 */
 	protected static final String PARAMETER_CACHE_VERSION = KEY + ":version";
 
@@ -167,15 +167,14 @@ public class JiraBaseResource {
 	 * Return the data source of JIRA database server.
 	 * 
 	 * @param parameters
-	 *            the subscription parameters containing at least the data
-	 *            source configuration.
+	 *            the subscription parameters containing at least the data source
+	 *            configuration.
 	 * @return the data source of JIRA database server.
 	 */
 	protected DataSource getDataSource(final Map<String, String> parameters) {
 		try {
 			return new SimpleDriverDataSource(
-					(Driver) Class.forName(
-							StringUtils.defaultIfBlank(parameters.get(PARAMETER_JDBC_DRIVER), "com.mysql.cj.jdbc.Driver"))
+					(Driver) Class.forName(StringUtils.defaultIfBlank(parameters.get(PARAMETER_JDBC_DRIVER), "com.mysql.cj.jdbc.Driver"))
 							.newInstance(),
 					StringUtils.defaultIfBlank(parameters.get(PARAMETER_JDBC_URL),
 							"jdbc:mysql://localhost:3306/jira6?useColumnNamesInFindColumn=true&useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&maxReconnects=3"),
@@ -202,24 +201,17 @@ public class JiraBaseResource {
 	}
 
 	/**
-	 * Return the version of Jira from the database.
+	 * Return the version of JIRA from the database.
 	 * 
 	 * @param parameters
 	 *            The parameters required to connect to the JIRA database.
-	 * @return The version of Jira from the database.
+	 * @return The version of JIRA from the database.
 	 */
 	@Transactional(value = TxType.SUPPORTS)
 	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public String getVersion(final Map<String, String> parameters) {
-
-		// Get previously resolved version if available
-		String version = parameters.get(PARAMETER_CACHE_VERSION);
-		if (version == null) {
-			// Require a SQL query
-			version = jiraDao.getJiraVersion(getDataSource(parameters));
-			parameters.put(PARAMETER_CACHE_VERSION, version);
-		}
-		return version;
+		// Get previously resolved version if available or query it from SQL
+		return parameters.computeIfAbsent(PARAMETER_CACHE_VERSION, v -> jiraDao.getJiraVersion(getDataSource(parameters)));
 	}
 
 	/**
@@ -269,27 +261,23 @@ public class JiraBaseResource {
 		final String url = StringUtils.appendIfMissing(baseUrl, "/") + "login.jsp";
 		final List<CurlRequest> requests = new ArrayList<>();
 		requests.add(new CurlRequest(HttpMethod.GET, url, null));
-		requests.add(
-				new CurlRequest(HttpMethod.POST, url,
-						"os_username=" + user + "&os_password=" + password
-								+ "&os_destination=&atl_token=&login=Connexion",
-						JiraCurlProcessor.LOGIN_CALLBACK,
-						"Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
+		requests.add(new CurlRequest(HttpMethod.POST, url,
+				"os_username=" + user + "&os_password=" + password + "&os_destination=&atl_token=&login=Connexion",
+				JiraCurlProcessor.LOGIN_CALLBACK, "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
 
 		// Sudoing is only required for JIRA 4+
 		if ("4".compareTo(getVersion(parameters)) <= 0) {
-			requests.add(new CurlRequest(HttpMethod.POST,
-					StringUtils.appendIfMissing(baseUrl, "/") + "secure/admin/WebSudoAuthenticate.jspa",
-					"webSudoIsPost=false&os_cookie=true&authenticate=Confirm&webSudoPassword=" + password,
-					JiraCurlProcessor.SUDO_CALLBACK,
-					"Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
+			requests.add(
+					new CurlRequest(HttpMethod.POST, StringUtils.appendIfMissing(baseUrl, "/") + "secure/admin/WebSudoAuthenticate.jspa",
+							"webSudoIsPost=false&os_cookie=true&authenticate=Confirm&webSudoPassword=" + password,
+							JiraCurlProcessor.SUDO_CALLBACK, "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
 		}
 		return processor.process(requests);
 	}
 
 	/**
-	 * Update the status, priorities, resolutions and types text of given SLA
-	 * and retrieve all status texts involved of issues of given project.
+	 * Update the status, priorities, resolutions and types text of given SLA and
+	 * retrieve all status texts involved of issues of given project.
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
@@ -299,11 +287,11 @@ public class JiraBaseResource {
 	 *            the JIRA project identifier.
 	 * @param changes
 	 *            Current changes. Used to computed required statuses.
-	 * @return a {@link Map} where KEY is the status identifier and the VALUE is
-	 *         the status name, upper case and un-localized.
+	 * @return a {@link Map} where KEY is the status identifier and the VALUE is the
+	 *         status name, upper case and un-localized.
 	 */
-	protected Map<Integer, String> updateIndentifierFromText(final DataSource dataSource, final List<Sla> slas,
-			final int jira, final List<ChangeItem> changes) {
+	protected Map<Integer, String> updateIndentifierFromText(final DataSource dataSource, final List<Sla> slas, final int jira,
+			final List<ChangeItem> changes) {
 		// Get all available priorities & types for given project
 		final Map<Integer, String> types = jiraDao.getTypes(dataSource, jira);
 		final Map<Integer, String> priorities = jiraDao.getPriorities(dataSource);
@@ -349,9 +337,8 @@ public class JiraBaseResource {
 	}
 
 	/**
-	 * Return workflow steps of given workflow's name and managing default
-	 * 'jira' workflow. KEY is the status, VALUE is the corresponding workflow's
-	 * step
+	 * Return workflow steps of given workflow's name and managing default 'jira'
+	 * workflow. KEY is the status, VALUE is the corresponding workflow's step
 	 */
 	private Workflow getWorkflow(final String name, final String workflowXml, final Map<Integer, String> statuses) {
 		if (workflowXml == null) {
@@ -366,8 +353,8 @@ public class JiraBaseResource {
 	}
 
 	/**
-	 * Return type to status to step mapping for all types valid for given
-	 * project. KEY is the type, VALUE is the workflow mapping status and steps.
+	 * Return type to status to step mapping for all types valid for given project.
+	 * KEY is the type, VALUE is the workflow mapping status and steps.
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
@@ -395,15 +382,14 @@ public class JiraBaseResource {
 	}
 
 	/**
-	 * Return workflow steps of given workflow's name. KEY is the status, VALUE
-	 * is the corresponding workflow's step
+	 * Return workflow steps of given workflow's name. KEY is the status, VALUE is
+	 * the corresponding workflow's step
 	 */
-	private Map<String, INamableBean<Integer>> getWorkflowSteps(final String workflowXml,
-			final Map<Integer, String> statuses) {
+	private Map<String, INamableBean<Integer>> getWorkflowSteps(final String workflowXml, final Map<Integer, String> statuses) {
 		final Map<String, INamableBean<Integer>> workflowSteps = new HashMap<>();
 		final String[] lines = StringUtils.replace(StringUtils.replace(workflowXml, "\\\"", "\""), "\\n", "\n").split("\\r?\\n");
 		NamedBean<Integer> currentStep = null;
-		for(String line : lines) {
+		for (String line : lines) {
 			line = line.trim();
 			if (line.startsWith("<step id=")) {
 				final Matcher matcher = STEP_PATTERN.matcher(line);
