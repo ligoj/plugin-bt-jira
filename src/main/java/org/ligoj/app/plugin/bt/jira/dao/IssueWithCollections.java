@@ -13,11 +13,6 @@ import lombok.Setter;
 public class IssueWithCollections extends AbstractPersistable<Integer> {
 
 	/**
-	 * SID
-	 */
-	private static final long serialVersionUID = 1L;
-
-	/**
 	 * Issue key.
 	 */
 	private int issue;

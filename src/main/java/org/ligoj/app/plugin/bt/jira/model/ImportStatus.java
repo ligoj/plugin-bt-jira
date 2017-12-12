@@ -20,8 +20,6 @@ import lombok.Setter;
 @Table(name = "LIGOJ_BT_IMPORT_STATUS", uniqueConstraints=@UniqueConstraint(columnNames="locked"))
 public class ImportStatus extends AbstractLongTaskSubscription {
 
-	private static final long serialVersionUID = 1L;
-
 	private int step;
 
 	private UploadMode mode;

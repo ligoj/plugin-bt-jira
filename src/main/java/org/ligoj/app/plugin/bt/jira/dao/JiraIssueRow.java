@@ -16,8 +16,6 @@ import lombok.Setter;
 @Setter
 public class JiraIssueRow extends IssueDetails {
 
-	private static final long serialVersionUID = 1L;
-
 	private Date resolutionDate;
 	private String summary;
 	private String description;

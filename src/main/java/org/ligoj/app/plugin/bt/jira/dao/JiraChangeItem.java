@@ -13,11 +13,6 @@ import lombok.Setter;
 public class JiraChangeItem extends ChangeItem {
 
 	/**
-	 * SID
-	 */
-	private static final long serialVersionUID = 1L;
-
-	/**
 	 * Change author
 	 */
 	private String author;

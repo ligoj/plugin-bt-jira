@@ -14,8 +14,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class JiraChangeRow extends AbstractPersistable<Integer> {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Status from.
 	 */

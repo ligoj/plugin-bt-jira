@@ -13,10 +13,6 @@ import lombok.Setter;
 public class CustomFieldEditor extends CustomField {
 
 	/**
-	 * SID
-	 */
-	private static final long serialVersionUID = 1L;
-	/**
 	 * Editor for read/write operations.
 	 */
 	@JsonIgnore
