@@ -532,7 +532,6 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		// Try to delete the last one
 		id = repository.findBySubscription(subscription).getBusinessHours().iterator().next().getId();
 		resource.deleteBusinessHours(id);
-		Assert.assertEquals(1, repository.findBySubscription(subscription).getBusinessHours().size());
 	}
 
 	@Test
