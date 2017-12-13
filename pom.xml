@@ -10,7 +10,7 @@
 
 	<groupId>org.ligoj.plugin</groupId>
 	<artifactId>plugin-bt-jira</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.3</version>
 	<packaging>jar</packaging>
 	<name>Ligoj - Plugin BT - Jira</name>
 
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>org.ligoj.plugin</groupId>
 			<artifactId>plugin-bt</artifactId>
-			<version>[1.0.0,1.1.0)</version>
+			<version>[1.0.2,1.1.0)</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
