@@ -490,7 +490,7 @@ define(['sparkline'], function () {
 						_('service:bt:jira:pkey').val(e.added.name);
 						_('service:bt:jira:project').val(e.added.id);
 					}
-				}, parameter, 'project/' + current.configuration.node + '/');
+				}, parameter, 'project/' + configuration.node + '/');
 			};
 		}
 	};
