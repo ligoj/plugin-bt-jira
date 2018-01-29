@@ -68,7 +68,7 @@ import lombok.extern.slf4j.Slf4j;
  * JIRA export issues resource.
  */
 @Slf4j
-@Path(JiraBaseResource.URL)
+@Path(JiraBaseResource.URL+ "/{subscription:\\d+}")
 @Service
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)
@@ -219,7 +219,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("{subscription:\\d+}/{file:.*-short.csv}")
+	@Path("{file:.*-short.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getSlaComputationsCsv(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {
@@ -239,7 +239,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("{subscription:\\d+}/{file:.*-simple.csv}")
+	@Path("{file:.*-simple.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getSimpleCsv(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {
@@ -258,7 +258,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("{subscription:\\d+}/{file:.*-full.csv}")
+	@Path("{file:.*-full.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getSlaComputationsCsvWithCustomFields(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {
@@ -303,7 +303,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("{subscription:\\d+}/{file:.*-status.csv}")
+	@Path("{file:.*-status.csv}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getStatusHistory(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {
@@ -351,7 +351,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * @return the stream ready to be read during the serialization.
 	 */
 	@GET
-	@Path("{subscription:\\d+}/{file:.*.xml}")
+	@Path("{file:.*.xml}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getSlaComputationsXls(@PathParam("subscription") final int subscription,
 			@PathParam("file") final String file) {

@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  * JIRA import issues resource.
  */
 @Slf4j
-@Path(JiraBaseResource.URL)
+@Path(JiraBaseResource.URL + "/{subscription:\\d+}")
 @Service
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)
@@ -105,7 +105,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 * @throws IOException
 	 */
 	@POST
-	@Path("{subscription:\\d+}/{mode}/{encoding}")
+	@Path("{mode}/{encoding}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public ImportStatus upload(@Multipart("csv-file") final InputStream csvInput, @PathParam("encoding") final String encoding,
 			@PathParam("subscription") final int subscription, @PathParam("mode") final UploadMode mode) throws IOException {
