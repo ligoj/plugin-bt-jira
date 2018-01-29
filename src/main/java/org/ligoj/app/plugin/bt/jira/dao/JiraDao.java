@@ -116,10 +116,12 @@ public class JiraDao {
 	 *            When <code>true</code> time spent data is fetched.
 	 * @param summary
 	 *            When <code>true</code> Summary is fetched.
+	 * @param <T>
+	 *            The change bean type of result.
 	 * @return status changes of all issues of given project.
 	 */
-	public <T> List<T> getChanges(final DataSource dataSource, final int jira, final String pkey, final Class<T> resultType, final boolean timing,
-			final boolean summary) {
+	public <T> List<T> getChanges(final DataSource dataSource, final int jira, final String pkey, final Class<T> resultType,
+			final boolean timing, final boolean summary) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		final RowMapper<T> rowMapper = new BeanPropertyRowMapper<>(resultType);
 
@@ -140,8 +142,8 @@ public class JiraDao {
 	}
 
 	/**
-	 * Return all status changes of issues of given project and last known issue values : due date, resolution,
-	 * reporter,... in type {@link IssueDetails}.
+	 * Return all status changes of issues of given project and last known issue
+	 * values : due date, resolution, reporter,... in type {@link IssueDetails}.
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
@@ -164,17 +166,17 @@ public class JiraDao {
 		final List<JiraChangeItem> changes = getChanges(dataSource, jira, pkey, JiraChangeItem.class, timing, false);
 
 		// Then add all status changes
-		changes.addAll(jdbcTemplate.query(
-				"SELECT i.ID AS id, cgi.OLDVALUE AS fromStatus, cgi.NEWVALUE AS toStatus, cg.CREATED AS created"
-						+ (authoring ? ", cg.AUTHOR as author" : "")
-						+ " FROM changeitem cgi INNER JOIN changegroup AS cg ON (cgi.groupid = cg.ID) INNER JOIN jiraissue AS i ON (cg.issueid = i.ID)"
-						+ " WHERE cgi.FIELD = ? AND cgi.OLDVALUE IS NOT NULL AND cgi.NEWVALUE IS NOT NULL AND cg.CREATED IS NOT NULL AND i.PROJECT = ?",
+		changes.addAll(jdbcTemplate.query("SELECT i.ID AS id, cgi.OLDVALUE AS fromStatus, cgi.NEWVALUE AS toStatus, cg.CREATED AS created"
+				+ (authoring ? ", cg.AUTHOR as author" : "")
+				+ " FROM changeitem cgi INNER JOIN changegroup AS cg ON (cgi.groupid = cg.ID) INNER JOIN jiraissue AS i ON (cg.issueid = i.ID)"
+				+ " WHERE cgi.FIELD = ? AND cgi.OLDVALUE IS NOT NULL AND cgi.NEWVALUE IS NOT NULL AND cg.CREATED IS NOT NULL AND i.PROJECT = ?",
 				rowMapper, "status", jira));
 
 		/*
-		 * Then sort the result by "created" date. The previous SQL query did not used since order had to be applied to
-		 * the whole collection. In addition, the result set of the previous query "should already been ordered since
-		 * the natural order in this table is chronological.
+		 * Then sort the result by "created" date. The previous SQL query did
+		 * not used since order had to be applied to the whole collection. In
+		 * addition, the result set of the previous query "should already been
+		 * ordered since the natural order in this table is chronological.
 		 */
 		changes.sort(Comparator.comparing(IssueDetails::getCreated));
 		return changes;
@@ -187,7 +189,8 @@ public class JiraDao {
 	 *            The data source of JIRA database.
 	 * @param jira
 	 *            the JIRA project identifier.
-	 * @return all custom fields attached to an issue of a project ordered by issue.
+	 * @return all custom fields attached to an issue of a project ordered by
+	 *         issue.
 	 */
 	public List<CustomFieldValue> getCustomFieldValues(final DataSource dataSource, final int jira) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -210,9 +213,8 @@ public class JiraDao {
 	public List<JiraProject> findProjectsByName(final DataSource dataSource, final String nameIdOrKey) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		final RowMapper<JiraProject> rowMapper = new BeanPropertyRowMapper<>(JiraProject.class);
-		return jdbcTemplate.query(
-				"SELECT pkey AS name, ID AS id, pname AS description FROM project"
-						+ " WHERE UPPER(pkey) LIKE CONCAT(CONCAT('%',UPPER(?)),'%') OR  UPPER(pname) LIKE CONCAT(CONCAT('%',UPPER(?)),'%') OR ID = ? ORDER BY pname",
+		return jdbcTemplate.query("SELECT pkey AS name, ID AS id, pname AS description FROM project"
+				+ " WHERE UPPER(pkey) LIKE CONCAT(CONCAT('%',UPPER(?)),'%') OR  UPPER(pname) LIKE CONCAT(CONCAT('%',UPPER(?)),'%') OR ID = ? ORDER BY pname",
 				rowMapper, nameIdOrKey, nameIdOrKey, NumberUtils.toInt(nameIdOrKey));
 	}
 
@@ -264,33 +266,39 @@ public class JiraDao {
 	}
 
 	/**
-	 * Return a count on table <code>jiraissue</code> for unresolved issues and column matching to the given identifier.
+	 * Return a count on table <code>jiraissue</code> for unresolved issues and
+	 * column matching to the given identifier.
 	 * 
 	 * @param column
 	 *            Column to be filtered.
 	 * @param id
 	 *            Filtered value against the column.
 	 * @param prefixAlias
-	 *            The prefix used for alias. Alias would be <code>prefixAlias+id</code>.
-	 * @return a count on table <code>jiraissue</code> for unresolved issues and column matching to the given identifier.
+	 *            The prefix used for alias. Alias would be
+	 *            <code>prefixAlias+id</code>.
+	 * @return a count on table <code>jiraissue</code> for unresolved issues and
+	 *         column matching to the given identifier.
 	 */
 	private String newSelectCount(final String column, final Integer id, final String prefixAlias) {
-		return "(SELECT COUNT(ID) FROM jiraissue WHERE " + column + "=" + id + " AND PROJECT=? AND RESOLUTION IS NULL) AS " + prefixAlias + id;
+		return "(SELECT COUNT(ID) FROM jiraissue WHERE " + column + "=" + id + " AND PROJECT=? AND RESOLUTION IS NULL) AS " + prefixAlias
+				+ id;
 	}
 
 	/**
-	 * Return a map where an entry is
-	 * <code>entry.key=reverseMap.value</code> and <code>entry.value=rs[resulsetPrefix+reverseMap.key]</code> if
+	 * Return a map where an entry is <code>entry.key=reverseMap.value</code>
+	 * and <code>entry.value=rs[resulsetPrefix+reverseMap.key]</code> if
 	 * <code>entry.value</code> is superior than 0.
 	 * 
 	 * @param reverseMap
-	 *            the set of results to read from the {@link ResultSet}. K of this map is used to extract the count.
+	 *            the set of results to read from the {@link ResultSet}. K of
+	 *            this map is used to extract the count.
 	 * @param rs
 	 *            the current {@link ResultSet}
 	 * @param resulsetPrefix
 	 *            Prefix of column name of result set.
-	 * @return K is the value of given reverse map. V is the non zero result column named with the following form :
-	 *         prefix+K of given reverse map.
+	 * @return K is the value of given reverse map. V is the non zero result
+	 *         column named with the following form : prefix+K of given reverse
+	 *         map.
 	 */
 	private Map<String, Integer> toMapCount(final Map<Integer, String> reverseMap, final ResultSet rs, final String resulsetPrefix)
 			throws SQLException {
@@ -314,7 +322,8 @@ public class JiraDao {
 	 */
 	public String getJiraVersion(final DataSource dataSource) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		return jdbcTemplate.queryForObject("SELECT pluginversion FROM pluginversion WHERE pluginkey = ?", String.class, "com.atlassian.jira.ext.rpc");
+		return jdbcTemplate.queryForObject("SELECT pluginversion FROM pluginversion WHERE pluginkey = ?", String.class,
+				"com.atlassian.jira.ext.rpc");
 	}
 
 	/**
@@ -369,7 +378,8 @@ public class JiraDao {
 	}
 
 	/**
-	 * Return all statuses identifiers and names matching either to the given name, either to the given identifier.
+	 * Return all statuses identifiers and names matching either to the given
+	 * name, either to the given identifier.
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
@@ -390,6 +400,10 @@ public class JiraDao {
 
 	/**
 	 * Return the "IN" SQL query parameters like : ?,?,?
+	 * 
+	 * @param items
+	 *            The items. Only count is used.
+	 * @return The prepare statement parameters string for a SQl "IN"
 	 */
 	protected String newIn(final Collection<?> items) {
 		if (items.isEmpty()) {
@@ -406,8 +420,10 @@ public class JiraDao {
 	 * @param customFields
 	 *            the expected custom fields names.
 	 * @param project
-	 *            Jira project identifier. Required to filter custom field against contexts.
-	 * @return all custom field configurations referenced in the given project and matching the required names.
+	 *            Jira project identifier. Required to filter custom field
+	 *            against contexts.
+	 * @return all custom field configurations referenced in the given project
+	 *         and matching the required names.
 	 */
 	public Map<String, CustomFieldEditor> getCustomFields(final DataSource dataSource, final Set<String> customFields, final int project) {
 		if (customFields.isEmpty()) {
@@ -418,9 +434,10 @@ public class JiraDao {
 		// Get map as list
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		final RowMapper<CustomFieldEditor> rowMapper = new BeanPropertyRowMapper<>(CustomFieldEditor.class);
-		final List<CustomFieldEditor> resultList = jdbcTemplate
-				.query("SELECT cf.ID AS id, TRIM(cf.cfname) AS name, cf.DESCRIPTION AS description, cf.CUSTOMFIELDTYPEKEY AS fieldType FROM customfield AS cf WHERE TRIM(cf.cfname) IN ("
-						+ newIn(customFields) + ")", rowMapper, customFields.toArray());
+		final List<CustomFieldEditor> resultList = jdbcTemplate.query(
+				"SELECT cf.ID AS id, TRIM(cf.cfname) AS name, cf.DESCRIPTION AS description, cf.CUSTOMFIELDTYPEKEY AS fieldType FROM customfield AS cf WHERE TRIM(cf.cfname) IN ("
+						+ newIn(customFields) + ")",
+				rowMapper, customFields.toArray());
 
 		// Also add the translated items
 		final List<CustomFieldEditor> resultListTranslated = jdbcTemplate.query(
@@ -445,10 +462,12 @@ public class JiraDao {
 	 * @param customFields
 	 *            the expected custom fields identifiers.
 	 * @param project
-	 *            Jira project identifier. Required to filter custom field agains contexts.
+	 *            Jira project identifier. Required to filter custom field
+	 *            agains contexts.
 	 * @return ordered custom fields by their identifier.
 	 */
-	public Map<Integer, CustomFieldEditor> getCustomFieldsById(final DataSource dataSource, final Set<Integer> customFields, final int project) {
+	public Map<Integer, CustomFieldEditor> getCustomFieldsById(final DataSource dataSource, final Set<Integer> customFields,
+			final int project) {
 		if (customFields.isEmpty()) {
 			// No custom field, we save an useless query
 			return new HashMap<>();
@@ -457,9 +476,10 @@ public class JiraDao {
 		// Get map as list
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		final RowMapper<CustomFieldEditor> rowMapper = new BeanPropertyRowMapper<>(CustomFieldEditor.class);
-		final List<CustomFieldEditor> resultList = jdbcTemplate
-				.query("SELECT ID AS id, TRIM(cfname) AS name, DESCRIPTION AS description, CUSTOMFIELDTYPEKEY AS fieldType FROM customfield WHERE ID IN ("
-						+ newIn(customFields) + ") ORDER BY id", rowMapper, customFields.toArray());
+		final List<CustomFieldEditor> resultList = jdbcTemplate.query(
+				"SELECT ID AS id, TRIM(cfname) AS name, DESCRIPTION AS description, CUSTOMFIELDTYPEKEY AS fieldType FROM customfield WHERE ID IN ("
+						+ newIn(customFields) + ") ORDER BY id",
+				rowMapper, customFields.toArray());
 
 		// Make a Map of valid values for single/multi select values field
 		final Map<Integer, CustomFieldEditor> result = new LinkedHashMap<>();
@@ -503,13 +523,14 @@ public class JiraDao {
 	/**
 	 * Add custom field list to the result map. Key is the name.
 	 */
-	private void addListToMap(final DataSource dataSource, final List<CustomFieldEditor> resultList, final Map<String, CustomFieldEditor> result,
-			final int project) {
+	private void addListToMap(final DataSource dataSource, final List<CustomFieldEditor> resultList,
+			final Map<String, CustomFieldEditor> result, final int project) {
 		for (final CustomFieldEditor customField : resultList) {
 			if (result.containsKey(customField.getName()) && !result.get(customField.getName()).getId().equals(customField.getId())) {
 				// Duplicate custom field names
-				throw new ValidationJsonException("cf$" + customField.getName(), "There are several custom fields named '" + customField.getName()
-						+ "', ambiguous identifier : " + customField.getId() + ", " + result.get(customField.getName()).getId());
+				throw new ValidationJsonException("cf$" + customField.getName(),
+						"There are several custom fields named '" + customField.getName() + "', ambiguous identifier : "
+								+ customField.getId() + ", " + result.get(customField.getName()).getId());
 			}
 
 			// Get editor for this custom field
@@ -575,8 +596,8 @@ public class JiraDao {
 	}
 
 	/**
-	 * Return existing issues identifier for the given project. Min and max bounds are there to reduce the amount of
-	 * issues to get with this query.
+	 * Return existing issues identifier for the given project. Min and max
+	 * bounds are there to reduce the amount of issues to get with this query.
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
@@ -593,15 +614,17 @@ public class JiraDao {
 	public Map<Integer, IssueWithCollections> getIssues(final DataSource dataSource, final int jira, final int minIssue, final int maxIssue,
 			final Set<Integer> importIssues) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		final Set<Integer> existing = new HashSet<>(jdbcTemplate.queryForList(
-				"SELECT issuenum FROM jiraissue WHERE PROJECT = ? AND issuenum >= ? AND issuenum <= ?", Integer.class, jira, minIssue, maxIssue));
+		final Set<Integer> existing = new HashSet<>(
+				jdbcTemplate.queryForList("SELECT issuenum FROM jiraissue WHERE PROJECT = ? AND issuenum >= ? AND issuenum <= ?",
+						Integer.class, jira, minIssue, maxIssue));
 		final Collection<Integer> updatingIssues = CollectionUtils.intersection(existing, importIssues);
 		final Map<Integer, IssueWithCollections> result = new LinkedHashMap<>();
 		if (!updatingIssues.isEmpty()) {
 			final RowMapper<IssueWithCollections> rowMapper = new BeanPropertyRowMapper<>(IssueWithCollections.class);
-			final List<IssueWithCollections> issues = jdbcTemplate.query("SELECT i.ID AS id, i.issuenum AS issue"
-					+ " FROM jiraissue AS i WHERE i.PROJECT = ? AND i.issuenum IN (" + newIn(updatingIssues) + ") ORDER BY i.issuenum", rowMapper,
-					ArrayUtils.addAll(new Object[] { jira }, updatingIssues.toArray()));
+			final List<IssueWithCollections> issues = jdbcTemplate.query(
+					"SELECT i.ID AS id, i.issuenum AS issue" + " FROM jiraissue AS i WHERE i.PROJECT = ? AND i.issuenum IN ("
+							+ newIn(updatingIssues) + ") ORDER BY i.issuenum",
+					rowMapper, ArrayUtils.addAll(new Object[] { jira }, updatingIssues.toArray()));
 			for (final IssueWithCollections issue : issues) {
 				result.put(issue.getId(), issue);
 			}
@@ -620,7 +643,8 @@ public class JiraDao {
 	 */
 	public String getWorflow(final DataSource dataSource, final String workflow) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		final List<String> workflows = jdbcTemplate.queryForList("SELECT DESCRIPTOR FROM jiraworkflows WHERE workflowname=?", String.class, workflow);
+		final List<String> workflows = jdbcTemplate.queryForList("SELECT DESCRIPTOR FROM jiraworkflows WHERE workflowname=?", String.class,
+				workflow);
 		if (workflows.isEmpty()) {
 
 			// Implicit 'jira' workflow case
@@ -636,7 +660,8 @@ public class JiraDao {
 	 *            The data source of JIRA database.
 	 * @param jira
 	 *            the JIRA project identifier.
-	 * @return all custom fields attached to an issue of a project ordered by issue. Key is the issue.
+	 * @return all custom fields attached to an issue of a project ordered by
+	 *         issue. Key is the issue.
 	 */
 	public Map<Integer, Collection<Integer>> getComponentsAssociation(final DataSource dataSource, final int jira) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -646,8 +671,8 @@ public class JiraDao {
 				"SELECT n.SOURCE_NODE_ID AS issue, n.SINK_NODE_ID AS c"
 						+ " FROM nodeassociation AS n INNER JOIN jiraissue AS i ON (i.ID = n.SOURCE_NODE_ID AND i.PROJECT = ?)"
 						+ " WHERE n.SOURCE_NODE_ENTITY=? AND n.SINK_NODE_ENTITY=? AND n.ASSOCIATION_TYPE=?",
-				(RowCallbackHandler) rs -> result.computeIfAbsent(rs.getInt("issue"), k -> new ArrayList<>()).add(rs.getInt("c")), jira, "Issue",
-				"Component", "IssueComponent");
+				(RowCallbackHandler) rs -> result.computeIfAbsent(rs.getInt("issue"), k -> new ArrayList<>()).add(rs.getInt("c")), jira,
+				"Issue", "Component", "IssueComponent");
 		return result;
 	}
 
@@ -658,7 +683,8 @@ public class JiraDao {
 	 *            The data source of JIRA database.
 	 * @param jira
 	 *            the JIRA project identifier.
-	 * @return a {@link Map} were KEY is the type's identifier, and VALUE is the workflow's name.
+	 * @return a {@link Map} were KEY is the type's identifier, and VALUE is the
+	 *         workflow's name.
 	 */
 	public Map<Integer, String> getTypesToWorkflow(final DataSource dataSource, final int jira) {
 		final Map<Integer, String> result = AbstractEditor.getMap(dataSource,
@@ -687,10 +713,11 @@ public class JiraDao {
 	}
 
 	/**
-	 * Query JIRA database to collect activities of given users. For now, only the last success connection is
-	 * registered.
+	 * Query JIRA database to collect activities of given users. For now, only
+	 * the last success connection is registered.
 	 * 
-	 * @param dataSource The JIRA datasource to query the user activities.
+	 * @param dataSource
+	 *            The JIRA datasource to query the user activities.
 	 * @param users
 	 *            the users to query.
 	 * @return activities.
@@ -716,8 +743,10 @@ public class JiraDao {
 	 * @param dataSource
 	 *            The data source of JIRA database.
 	 * @param project
-	 *            Jira project identifier. Required to filter custom field against contexts.
-	 * @return all parent relationships of tickets of given project. Key is the subtask, value is the parent issue.
+	 *            Jira project identifier. Required to filter custom field
+	 *            against contexts.
+	 * @return all parent relationships of tickets of given project. Key is the
+	 *         subtask, value is the parent issue.
 	 */
 	public Map<Integer, Integer> getSubTasks(final DataSource dataSource, final int project) {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -745,7 +774,8 @@ public class JiraDao {
 			final List<Integer> ids = jdbcTemplate.query("SELECT ID FROM cwd_user WHERE lower_user_name = ?", (rs, n) -> rs.getInt("ID"),
 					login.toLowerCase(Locale.ENGLISH));
 			if (!ids.isEmpty()) {
-				jdbcTemplate.update("UPDATE cwd_user_attributes SET attribute_value=0, lower_attribute_value=0 WHERE attribute_name=? AND user_id=?",
+				jdbcTemplate.update(
+						"UPDATE cwd_user_attributes SET attribute_value=0, lower_attribute_value=0 WHERE attribute_name=? AND user_id=?",
 						"login.currentFailedCount", ids.get(0));
 			}
 		}

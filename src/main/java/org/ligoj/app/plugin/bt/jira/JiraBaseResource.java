@@ -253,6 +253,12 @@ public class JiraBaseResource {
 
 	/**
 	 * Prepare an authenticated connection to JIRA
+	 * 
+	 * @param parameters
+	 *            The subscription parameters.
+	 * @param processor
+	 *            The current processor.
+	 * @return <code>true</code> when authenticating as administrator succeed.
 	 */
 	protected boolean authenticateAdmin(final Map<String, String> parameters, final CurlProcessor processor) {
 		final String user = parameters.get(PARAMETER_ADMIN_USER);
@@ -325,6 +331,10 @@ public class JiraBaseResource {
 
 	/**
 	 * Return unique involved statues in the given changes.
+	 * 
+	 * @param changes
+	 *            The list or resolved changes.
+	 * @return unique involved statues in the given changes.
 	 */
 	protected Collection<Integer> getInvolvedStatuses(final List<? extends ChangeItem> changes) {
 		final Collection<Integer> statuses = new HashSet<>();
@@ -363,6 +373,7 @@ public class JiraBaseResource {
 	 *            the JIRA project identifier.
 	 * @param statuses
 	 *            the worldwide available statuses.
+	 * @return The mapping from type identifier to workflow.
 	 */
 	protected Map<Integer, Workflow> getTypeToStatusToStep(final DataSource dataSource, final int jira,
 			final Map<Integer, String> statuses) {
