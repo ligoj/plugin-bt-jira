@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.ligoj.app.plugin.bt.IssueSla;
 import org.ligoj.app.plugin.bt.SlaData;
 import org.ligoj.app.plugin.bt.jira.JiraSlaComputations;
@@ -200,13 +200,13 @@ public class CsvWithCustomFieldsStreamingOutputTest {
 		final List<String> lines = IOUtils.readLines(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8);
 
 		// Check
-		Assert.assertEquals(4, lines.size());
-		Assert.assertEquals("id;issue;status;statusText;type;typeText;priority;priorityText;resolution;resolutionText"
+		Assertions.assertEquals(4, lines.size());
+		Assertions.assertEquals("id;issue;status;statusText;type;typeText;priority;priorityText;resolution;resolutionText"
 				+ ";created;createdTimestamp;reporter;assignee;dueDate;dueDateTimestamp"
 				+ ";timeSpent(s);timeEstimate(s);timeEstimateInit(s);parent;components;CF1;CF2;CF3;CF4;#Open", lines.get(0));
-		Assert.assertTrue(lines.get(1).startsWith("1000;I1;1;OPEN;1;Bug;1;Critical;1;Fixed;20"));
-		Assert.assertTrue(lines.get(1).endsWith(";R1;A11;;;;;;1001;C1;\"V2\";;\"V2b,V2c\";#INVALID,#INVALID;0"));
-		Assert.assertTrue(lines.get(2).startsWith("1002;I2;1;OPEN;1;Bug;1;Critical;1;Fixed;20"));
-		Assert.assertTrue(lines.get(2).endsWith(";R2;A21;;;;;;;C1,C2;;;;;0"));
+		Assertions.assertTrue(lines.get(1).startsWith("1000;I1;1;OPEN;1;Bug;1;Critical;1;Fixed;20"));
+		Assertions.assertTrue(lines.get(1).endsWith(";R1;A11;;;;;;1001;C1;\"V2\";;\"V2b,V2c\";#INVALID,#INVALID;0"));
+		Assertions.assertTrue(lines.get(2).startsWith("1002;I2;1;OPEN;1;Bug;1;Critical;1;Fixed;20"));
+		Assertions.assertTrue(lines.get(2).endsWith(";R2;A21;;;;;;;C1,C2;;;;;0"));
 	}
 }

@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.hsqldb.jdbc.JDBCDriver;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.ligoj.app.AbstractServerTest;
 import org.ligoj.app.dao.ProjectRepository;
 import org.ligoj.app.iam.IamProvider;
@@ -56,7 +56,7 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 
 	protected int subscription;
 
-	@Before
+	@BeforeEach
 	public void prepareData() throws IOException {
 		// Only with Spring context
 		if (csvForJpa != null) {
@@ -79,7 +79,7 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 	/**
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void initializeJiraDataBase() throws SQLException {
 		datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
 		final Connection connection = datasource.getConnection();
@@ -98,7 +98,7 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 	/**
 	 * Clean data base with 'MDA' JIRA project.
 	 */
-	@AfterClass
+	@AfterAll
 	public static void cleanJiraDataBase() throws SQLException {
 		final Connection connection = datasource.getConnection();
 

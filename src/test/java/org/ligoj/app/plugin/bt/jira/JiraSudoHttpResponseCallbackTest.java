@@ -3,8 +3,8 @@ package org.ligoj.app.plugin.bt.jira;
 import org.apache.http.Header;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
@@ -15,8 +15,8 @@ public class JiraSudoHttpResponseCallbackTest {
 
 	@Test
 	public void acceptLocation() {
-		Assert.assertTrue(jiraSudoHttpResponseCallback.acceptLocation(null));
-		Assert.assertTrue(jiraSudoHttpResponseCallback.acceptLocation("/login.jsp"));
+		Assertions.assertTrue(jiraSudoHttpResponseCallback.acceptLocation(null));
+		Assertions.assertTrue(jiraSudoHttpResponseCallback.acceptLocation("/login.jsp"));
 	}
 
 	@Test
@@ -25,7 +25,7 @@ public class JiraSudoHttpResponseCallbackTest {
 		final StatusLine statusLine = Mockito.mock(StatusLine.class);
 		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
 		Mockito.when(statusLine.getStatusCode()).thenReturn(200);
-		Assert.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
+		Assertions.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class JiraSudoHttpResponseCallbackTest {
 		final StatusLine statusLine = Mockito.mock(StatusLine.class);
 		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
 		Mockito.when(statusLine.getStatusCode()).thenReturn(302);
-		Assert.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
+		Assertions.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class JiraSudoHttpResponseCallbackTest {
 		final Header header = Mockito.mock(Header.class);
 		Mockito.when(header.getValue()).thenReturn("any");
 		Mockito.when(response.getFirstHeader("X-Atlassian-WebSudo")).thenReturn(header);
-		Assert.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
+		Assertions.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
 	}
 
 	@Test
@@ -58,6 +58,6 @@ public class JiraSudoHttpResponseCallbackTest {
 		final Header header = Mockito.mock(Header.class);
 		Mockito.when(header.getValue()).thenReturn("Has-Authentication");
 		Mockito.when(response.getFirstHeader("X-Atlassian-WebSudo")).thenReturn(header);
-		Assert.assertTrue(jiraSudoHttpResponseCallback.acceptResponse(response));
+		Assertions.assertTrue(jiraSudoHttpResponseCallback.acceptResponse(response));
 	}
 }

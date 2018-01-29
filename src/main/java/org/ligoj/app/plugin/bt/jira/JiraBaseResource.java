@@ -103,8 +103,8 @@ public class JiraBaseResource {
 	public static final String PARAMETER_ADMIN_PASSWORD = KEY + ":password";
 
 	/**
-	 * Parameter corresponding to the associated version. Not yet saved in database,
-	 * only in-memory to save request during status checks.
+	 * Parameter corresponding to the associated version. Not yet saved in
+	 * database, only in-memory to save request during status checks.
 	 */
 	protected static final String PARAMETER_CACHE_VERSION = KEY + ":version";
 
@@ -167,15 +167,15 @@ public class JiraBaseResource {
 	 * Return the data source of JIRA database server.
 	 * 
 	 * @param parameters
-	 *            the subscription parameters containing at least the data source
-	 *            configuration.
+	 *            the subscription parameters containing at least the data
+	 *            source configuration.
 	 * @return the data source of JIRA database server.
 	 */
 	protected DataSource getDataSource(final Map<String, String> parameters) {
 		try {
 			return new SimpleDriverDataSource(
 					(Driver) Class.forName(StringUtils.defaultIfBlank(parameters.get(PARAMETER_JDBC_DRIVER), "com.mysql.cj.jdbc.Driver"))
-							.newInstance(),
+							.getDeclaredConstructor().newInstance(),
 					StringUtils.defaultIfBlank(parameters.get(PARAMETER_JDBC_URL),
 							"jdbc:mysql://localhost:3306/jira6?useColumnNamesInFindColumn=true&useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&maxReconnects=3"),
 					parameters.get(PARAMETER_JDBC_USER), parameters.get(PARAMETER_JDBC_PASSSWORD));
@@ -276,8 +276,8 @@ public class JiraBaseResource {
 	}
 
 	/**
-	 * Update the status, priorities, resolutions and types text of given SLA and
-	 * retrieve all status texts involved of issues of given project.
+	 * Update the status, priorities, resolutions and types text of given SLA
+	 * and retrieve all status texts involved of issues of given project.
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
@@ -287,8 +287,8 @@ public class JiraBaseResource {
 	 *            the JIRA project identifier.
 	 * @param changes
 	 *            Current changes. Used to computed required statuses.
-	 * @return a {@link Map} where KEY is the status identifier and the VALUE is the
-	 *         status name, upper case and un-localized.
+	 * @return a {@link Map} where KEY is the status identifier and the VALUE is
+	 *         the status name, upper case and un-localized.
 	 */
 	protected Map<Integer, String> updateIndentifierFromText(final DataSource dataSource, final List<Sla> slas, final int jira,
 			final List<ChangeItem> changes) {
@@ -337,8 +337,9 @@ public class JiraBaseResource {
 	}
 
 	/**
-	 * Return workflow steps of given workflow's name and managing default 'jira'
-	 * workflow. KEY is the status, VALUE is the corresponding workflow's step
+	 * Return workflow steps of given workflow's name and managing default
+	 * 'jira' workflow. KEY is the status, VALUE is the corresponding workflow's
+	 * step
 	 */
 	private Workflow getWorkflow(final String name, final String workflowXml, final Map<Integer, String> statuses) {
 		if (workflowXml == null) {
@@ -353,8 +354,8 @@ public class JiraBaseResource {
 	}
 
 	/**
-	 * Return type to status to step mapping for all types valid for given project.
-	 * KEY is the type, VALUE is the workflow mapping status and steps.
+	 * Return type to status to step mapping for all types valid for given
+	 * project. KEY is the type, VALUE is the workflow mapping status and steps.
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
@@ -382,8 +383,8 @@ public class JiraBaseResource {
 	}
 
 	/**
-	 * Return workflow steps of given workflow's name. KEY is the status, VALUE is
-	 * the corresponding workflow's step
+	 * Return workflow steps of given workflow's name. KEY is the status, VALUE
+	 * is the corresponding workflow's step
 	 */
 	private Map<String, INamableBean<Integer>> getWorkflowSteps(final String workflowXml, final Map<Integer, String> statuses) {
 		final Map<String, INamableBean<Integer>> workflowSteps = new HashMap<>();

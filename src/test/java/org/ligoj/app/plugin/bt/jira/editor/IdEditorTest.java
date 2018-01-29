@@ -3,8 +3,8 @@ package org.ligoj.app.plugin.bt.jira.editor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.ligoj.app.MatcherUtil;
 import org.ligoj.app.plugin.bt.jira.dao.AbstractEditorUploadTest;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
@@ -18,19 +18,20 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 
 	@Test
 	public void testCustomColumn() {
-		Assert.assertEquals("STRINGVALUE", new IdEditor().getCustomColumn());
+		Assertions.assertEquals("STRINGVALUE", new IdEditor().getCustomColumn());
 	}
 
 	@Test
 	public void testGetValueInvalid() {
-		MatcherUtil.expectValidationException(thrown, "cf$NAME", "Invalid value 'invalid'. Expected : keyA,keyB");
 		final CustomField customField = new CustomField();
 		final Map<String, Integer> values = new LinkedHashMap<>();
 		values.put("keyA", 1);
 		values.put("keyB", 2);
 		customField.setInvertValues(values);
 		customField.setName("NAME");
-		new IdEditor().getValue(customField, "invalid");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
+			new IdEditor().getValue(customField, "invalid");
+		}), "cf$NAME", "Invalid value 'invalid'. Expected : keyA,keyB");
 	}
 
 	@Test
@@ -39,7 +40,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 		final Map<String, Integer> values = new LinkedHashMap<>();
 		values.put("key", 1);
 		customField.setInvertValues(values);
-		Assert.assertEquals(1, ((Integer) new IdEditor().getValue(customField, "key")).intValue());
+		Assertions.assertEquals(1, ((Integer) new IdEditor().getValue(customField, "key")).intValue());
 	}
 
 	@Test
@@ -50,7 +51,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 		final Map<Integer, String> values = new LinkedHashMap<>();
 		values.put(4, "val");
 		customField.setValues(values);
-		Assert.assertEquals("val", new IdEditor().getValue(customField, value));
+		Assertions.assertEquals("val", new IdEditor().getValue(customField, value));
 	}
 
 	@Test
@@ -60,45 +61,43 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 		customField.setId(10056);
 		final IdEditor editor = new IdEditor();
 		editor.populateValues(datasource, customField, 10074);
-		Assert.assertEquals(3, customField.getValues().size());
-		Assert.assertEquals("Décalage planning", customField.getValues().get(10048));
-		Assert.assertEquals("Demande révisée", customField.getValues().get(10049));
-		Assert.assertEquals("Autre (à préciser)", customField.getValues().get(10050));
-		Assert.assertEquals(3, customField.getValues().size());
-		Assert.assertEquals(10048, customField.getInvertValues().get("Décalage planning").intValue());
-		Assert.assertEquals(10049, customField.getInvertValues().get("Demande révisée").intValue());
-		Assert.assertEquals(10050, customField.getInvertValues().get("Autre (à préciser)").intValue());
+		Assertions.assertEquals(3, customField.getValues().size());
+		Assertions.assertEquals("Décalage planning", customField.getValues().get(10048));
+		Assertions.assertEquals("Demande révisée", customField.getValues().get(10049));
+		Assertions.assertEquals("Autre (à préciser)", customField.getValues().get(10050));
+		Assertions.assertEquals(3, customField.getValues().size());
+		Assertions.assertEquals(10048, customField.getInvertValues().get("Décalage planning").intValue());
+		Assertions.assertEquals(10049, customField.getInvertValues().get("Demande révisée").intValue());
+		Assertions.assertEquals(10050, customField.getInvertValues().get("Autre (à préciser)").intValue());
 	}
 
 	@Test
 	public void testGetMap() {
 		final Map<Integer, String> items = AbstractEditor.getMap(datasource,
 				"SELECT ID AS id, customvalue AS pname, SEQUENCE FROM customfieldoption WHERE CUSTOMFIELD = ? ORDER BY SEQUENCE", 10056);
-		Assert.assertEquals(3, items.size());
-		Assert.assertEquals("Décalage planning", items.get(10048));
-		Assert.assertEquals("Demande révisée", items.get(10049));
-		Assert.assertEquals("Autre (à préciser)", items.get(10050));
+		Assertions.assertEquals(3, items.size());
+		Assertions.assertEquals("Décalage planning", items.get(10048));
+		Assertions.assertEquals("Demande révisée", items.get(10049));
+		Assertions.assertEquals("Autre (à préciser)", items.get(10050));
 	}
 
 	@Test
 	public void testGetInvertedMap() {
 		final Map<String, Integer> items = AbstractEditor.getInvertedMap(datasource,
 				"SELECT ID AS id, customvalue AS pname, SEQUENCE FROM customfieldoption WHERE CUSTOMFIELD = ? ORDER BY SEQUENCE", 10056);
-		Assert.assertEquals(3, items.size());
-		Assert.assertEquals(10048, items.get("Décalage planning").intValue());
-		Assert.assertEquals(10049, items.get("Demande révisée").intValue());
-		Assert.assertEquals(10050, items.get("Autre (à préciser)").intValue());
+		Assertions.assertEquals(3, items.size());
+		Assertions.assertEquals(10048, items.get("Décalage planning").intValue());
+		Assertions.assertEquals(10049, items.get("Demande révisée").intValue());
+		Assertions.assertEquals(10050, items.get("Autre (à préciser)").intValue());
 	}
 
 	@Test
 	public void testManagedTypesUrl() {
-		MatcherUtil.expectValidationException(thrown, "cf$NAME", "Invalid value 'invalid'. Expected : A HTTP URL");
 		final CustomField customField = new CustomField();
 		customField.setName("NAME");
-		Assert.assertEquals(4.3,
-				((Double) getEditor("com.atlassian.jira.plugin.system.customfieldtypes:url").getValue(customField, "invalid"))
-						.doubleValue(),
-				0.01);
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
+			getEditor("com.atlassian.jira.plugin.system.customfieldtypes:url").getValue(customField, "invalid");
+		}), "cf$NAME", "Invalid value 'invalid'. Expected : A HTTP URL");
 	}
 
 	@Test
@@ -117,7 +116,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 		getEditor("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP1");
 	}
 
-	@Test(expected = ValidationJsonException.class)
+	@Test
 	public void testManagedTypesRadioFailContext() {
 		final CustomField customField = new CustomField();
 		customField.setName("Origine");
@@ -125,7 +124,9 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 
 		// Provides project where the context is not valid for this custom field
 		new IdEditor().populateValues(datasource, customField, 1);
-		getEditor("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
+			getEditor("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons").getValue(customField, "APP");
+		}), "cf$Origine", "Invalid value 'APP'. Expected : APP1,INC1");
 	}
 
 	@Test
@@ -142,13 +143,15 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	/**
 	 * This a special custom field, not yet managed string to id operations.
 	 */
-	@Test(expected = ValidationJsonException.class)
+	@Test
 	public void testNotManagedFromString() {
 		final CustomField customField = new CustomField();
 		customField.setName("cf-cascading");
 		customField.setId(19003);
 		new IdEditor().populateValues(datasource, customField, 10074);
-		getEditor("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect").getValue(customField, "any");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
+			getEditor("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect").getValue(customField, "any");
+		}), "cf$cf-cascading", "Custom field 'cf-cascading' has a not yet managed type 'null'");
 	}
 
 	@Test
@@ -160,7 +163,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 		value.setStringValue("10204");
 		final AbstractEditor editor = getEditor("com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect");
 		editor.populateValues(datasource, customField, 10074);
-		Assert.assertEquals("CValue", editor.getValue(customField, value));
+		Assertions.assertEquals("CValue", editor.getValue(customField, value));
 	}
 
 	@Test
@@ -174,7 +177,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 		customField.setId(10056);
 		customField.setFieldType(key);
 		new IdEditor().populateValues(datasource, customField, 10074);
-		Assert.assertEquals(10048, ((Integer) new IdEditor().getValue(customField, "Décalage planning")).intValue());
+		Assertions.assertEquals(10048, ((Integer) new IdEditor().getValue(customField, "Décalage planning")).intValue());
 	}
 
 }

@@ -7,11 +7,10 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.hsqldb.jdbc.JDBCDriver;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.ligoj.app.plugin.bt.jira.dao.JiraUpdateDao;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -28,7 +27,7 @@ public class JiraUpdateDaoTest {
 	/**
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void initializeJiraDataBaseForImport() throws SQLException {
 		datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
 		final Connection connection = datasource.getConnection();
@@ -51,7 +50,7 @@ public class JiraUpdateDaoTest {
 	/**
 	 * Clean data base with 'MDA' JIRA project.
 	 */
-	@AfterClass
+	@AfterAll
 	public static void cleanJiraDataBaseForImport() throws SQLException {
 		final Connection connection = datasource.getConnection();
 
@@ -80,7 +79,7 @@ public class JiraUpdateDaoTest {
 			}
 
 		};
-		Assert.assertEquals(10100, dao.prepareForNextId(datasource, "ChangeGroup", 2000));
+		Assertions.assertEquals(10100, dao.prepareForNextId(datasource, "ChangeGroup", 2000));
 	}
 
 }

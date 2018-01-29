@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.hsqldb.jdbc.JDBCDriver;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -22,7 +22,7 @@ public abstract class AbstractJiraUploadTest extends AbstractJiraDataTest {
 	/**
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void initializeJiraDataBaseForImport() throws SQLException {
 		final DataSource datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
 		final Connection connection = datasource.getConnection();
@@ -38,7 +38,7 @@ public abstract class AbstractJiraUploadTest extends AbstractJiraDataTest {
 	/**
 	 * Clean data base with 'MDA' JIRA project.
 	 */
-	@AfterClass
+	@AfterAll
 	public static void cleanJiraDataBaseForImport() throws SQLException {
 		final DataSource datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
 		final Connection connection = datasource.getConnection();

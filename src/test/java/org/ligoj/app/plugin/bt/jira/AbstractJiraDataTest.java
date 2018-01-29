@@ -4,8 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
@@ -18,7 +18,7 @@ public abstract class AbstractJiraDataTest extends AbstractJiraTest {
 	/**
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void initializeJiraDataBase2() throws SQLException {
 		final Connection connection = datasource.getConnection();
 		try {
@@ -33,7 +33,7 @@ public abstract class AbstractJiraDataTest extends AbstractJiraTest {
 	/**
 	 * Clean data base with 'MDA' JIRA project.
 	 */
-	@AfterClass
+	@AfterAll
 	public static void cleanJiraDataBase2() throws SQLException {
 		final Connection connection = datasource.getConnection();
 

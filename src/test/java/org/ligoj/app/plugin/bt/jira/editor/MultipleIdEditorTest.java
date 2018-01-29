@@ -6,11 +6,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.ligoj.app.MatcherUtil;
 import org.ligoj.app.plugin.bt.jira.dao.AbstractEditorUploadTest;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
+import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 
 /**
  * test class of {@link MultipleIdEditor}
@@ -19,19 +20,20 @@ public class MultipleIdEditorTest extends AbstractEditorUploadTest {
 
 	@Test
 	public void testCustomColumn() {
-		Assert.assertEquals("STRINGVALUE", new MultipleIdEditor().getCustomColumn());
+		Assertions.assertEquals("STRINGVALUE", new MultipleIdEditor().getCustomColumn());
 	}
 
 	@Test
 	public void testGetValueInvalid() {
-		MatcherUtil.expectValidationException(thrown, "cf$NAME", "Invalid value 'invalid'. Expected : keyA,keyB");
 		final CustomField customField = new CustomField();
 		final Map<String, Integer> values = new LinkedHashMap<>();
 		values.put("keyA", 1);
 		values.put("keyB", 2);
 		customField.setInvertValues(values);
 		customField.setName("NAME");
-		new MultipleIdEditor().getValue(customField, "keyA,invalid");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
+			new MultipleIdEditor().getValue(customField, "keyA,invalid");
+		}), "cf$NAME", "Invalid value 'invalid'. Expected : keyA,keyB");
 	}
 
 	@Test
@@ -45,9 +47,9 @@ public class MultipleIdEditorTest extends AbstractEditorUploadTest {
 		@SuppressWarnings("unchecked")
 		final List<Integer> ids = new ArrayList<>(
 				(Collection<Integer>) new MultipleIdEditor().getValue(customField, "keyA, keyC, ,"));
-		Assert.assertEquals(2, ids.size());
-		Assert.assertEquals(1, ids.get(0).intValue());
-		Assert.assertEquals(3, ids.get(1).intValue());
+		Assertions.assertEquals(2, ids.size());
+		Assertions.assertEquals(1, ids.get(0).intValue());
+		Assertions.assertEquals(3, ids.get(1).intValue());
 	}
 
 	@Test
@@ -69,8 +71,8 @@ public class MultipleIdEditorTest extends AbstractEditorUploadTest {
 		@SuppressWarnings("unchecked")
 		final List<Integer> ids = new ArrayList<>(
 				(Collection<Integer>) getEditor(key).getValue(customField, "Décalage planning , Demande révisée"));
-		Assert.assertEquals(2, ids.size());
-		Assert.assertEquals(10048, ids.get(0).intValue());
-		Assert.assertEquals(10049, ids.get(1).intValue());
+		Assertions.assertEquals(2, ids.size());
+		Assertions.assertEquals(10048, ids.get(0).intValue());
+		Assertions.assertEquals(10049, ids.get(1).intValue());
 	}
 }

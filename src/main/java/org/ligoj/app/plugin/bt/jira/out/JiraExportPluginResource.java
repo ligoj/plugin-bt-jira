@@ -511,7 +511,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 */
 	protected Processor<SlaData> toStyleProcessor(final JiraSlaComputations slaComputations, final String styleNormal,
 			final String styleOver) {
-		return new Processor<SlaData>() {
+		return new Processor<>() {
 			@Override
 			public Object getValue(final Deque<Object> contextData) {
 				// Get the context
@@ -534,7 +534,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 * Return the style corresponding to the distance sign.
 	 */
 	protected Processor<SlaData> toStyleProcessorDistance(final String styleNormal, final String styleOver) {
-		return new Processor<SlaData>() {
+		return new Processor<>() {
 			@Override
 			public Object getValue(final Deque<Object> contextData) {
 				// Get the context
