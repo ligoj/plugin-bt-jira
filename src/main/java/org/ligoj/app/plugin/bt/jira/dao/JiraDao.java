@@ -55,6 +55,12 @@ public class JiraDao {
 
 	private static final String STATUS_OPEN = "1";
 
+	// Query to get issue changes
+	private static final String SELECT_CHANGES_PART1 = "SELECT i.ID AS id, cgi.OLDVALUE AS fromStatus, cgi.NEWVALUE AS toStatus, cg.CREATED AS created";
+	private static final String SELECT_CHANGES_PART2 = " FROM changeitem cgi INNER JOIN changegroup AS cg ON (cgi.groupid = cg.ID) INNER JOIN jiraissue AS i ON (cg.issueid = i.ID)"
+			+ " WHERE cgi.FIELD = ? AND cgi.OLDVALUE IS NOT NULL AND cgi.NEWVALUE IS NOT NULL AND cg.CREATED IS NOT NULL AND i.PROJECT = ?";
+	private static final String SELECT_CHANGES = SELECT_CHANGES_PART1 + SELECT_CHANGES_PART2;
+	private static final String SELECT_CHANGES_AUTHORING = SELECT_CHANGES_PART1 + ", cg.AUTHOR as author" + SELECT_CHANGES_PART2;
 	/**
 	 * Fail safe editor, non blocking export.
 	 */
@@ -166,11 +172,7 @@ public class JiraDao {
 		final List<JiraChangeItem> changes = getChanges(dataSource, jira, pkey, JiraChangeItem.class, timing, false);
 
 		// Then add all status changes
-		changes.addAll(jdbcTemplate.query("SELECT i.ID AS id, cgi.OLDVALUE AS fromStatus, cgi.NEWVALUE AS toStatus, cg.CREATED AS created"
-				+ (authoring ? ", cg.AUTHOR as author" : "")
-				+ " FROM changeitem cgi INNER JOIN changegroup AS cg ON (cgi.groupid = cg.ID) INNER JOIN jiraissue AS i ON (cg.issueid = i.ID)"
-				+ " WHERE cgi.FIELD = ? AND cgi.OLDVALUE IS NOT NULL AND cgi.NEWVALUE IS NOT NULL AND cg.CREATED IS NOT NULL AND i.PROJECT = ?",
-				rowMapper, "status", jira));
+		changes.addAll(jdbcTemplate.query(authoring ? SELECT_CHANGES_AUTHORING : SELECT_CHANGES, rowMapper, "status", jira));
 
 		/*
 		 * Then sort the result by "created" date. The previous SQL query did
