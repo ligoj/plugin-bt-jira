@@ -224,8 +224,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Build status changes of all issues. Issues without changes will not be in
-	 * this result, and VALUE of this {@link Map} is never an empty list. KEY is the
-	 * issueNum.
+	 * this result, and VALUE of this {@link Map} is never an empty list. KEY is
+	 * the issueNum.
 	 */
 	private Map<Integer, List<JiraChangeRow>> buildStatusChanges(final ImportContext context, final ImportStatus result,
 			final List<JiraIssueRow> issues) {
@@ -264,8 +264,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	/**
-	 * Convert text to identifier. Return the identifier list, in the same order of
-	 * given texts.
+	 * Convert text to identifier. Return the identifier list, in the same order
+	 * of given texts.
 	 */
 	private List<Integer> convertTextToId(final Map<String, Integer> allItems, final Collection<String> itemsAsText) {
 		return itemsAsText.stream().map(allItems::get).collect(Collectors.toList());
@@ -292,9 +292,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	private ImportStatus nextStep(final ImportStatus result) {
-		return resource.nextStep(result.getLocked().getId(), t -> {
-			t.setStep(t.getStep() + 1);
-		});
+		return resource.nextStep(result.getLocked().getId(), t -> t.setStep(t.getStep() + 1));
 	}
 
 	private void validateSyntax(final ImportContext context, final ImportStatus result, final Reader csvInput) throws IOException {
@@ -769,8 +767,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	/**
-	 * Check custom fields. During this call, {@link String} custom fields values
-	 * are replaced with the formatted and typed ones.
+	 * Check custom fields. During this call, {@link String} custom fields
+	 * values are replaced with the formatted and typed ones.
 	 */
 	private void checkCustomFields(final List<ImportEntry> rawEntries, final Set<String> requiredCustomFields,
 			final Map<String, CustomFieldEditor> customFields) {
@@ -886,8 +884,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	}
 
 	/**
-	 * Separate the PKEY from the issue number, update the entry, validate the PKEY
-	 * is the same than the expected one, otherwise, throws an exception.
+	 * Separate the PKEY from the issue number, update the entry, validate the
+	 * PKEY is the same than the expected one, otherwise, throws an exception.
 	 */
 	private void checkPKey(final String pkey, final ImportEntry entry) {
 		final String issue = entry.getIssue();

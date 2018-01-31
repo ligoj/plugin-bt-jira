@@ -295,7 +295,7 @@ public class JiraUpdateDao {
 		// Add user relation
 		jdbcTemplate.update(
 				"INSERT INTO userassociation (SOURCE_NAME,SINK_NODE_ID,SINK_NODE_ENTITY,ASSOCIATION_TYPE,CREATED) values(?,?,?,?,?)",
-				issueRow.getAuthor(), nextId, "Issue", "WatchIssue", issueRow.getUpdated());
+				issueRow.getAuthor(), nextId, ISSUE_NODE, "WatchIssue", issueRow.getUpdated());
 	}
 
 	/**
