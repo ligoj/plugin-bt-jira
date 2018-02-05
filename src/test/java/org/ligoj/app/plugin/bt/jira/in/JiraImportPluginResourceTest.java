@@ -24,28 +24,28 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest {
 
 	@Test
-	public void testUploadEmptyFile() throws Exception {
+	public void testUploadEmptyFile() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new StringInputStream("id;"), ENCODING, subscription, UploadMode.VALIDATION);
 		}), "id", "Empty file, no change found");
 	}
 
 	@Test
-	public void testUploadInvalidSubscription() throws Exception {
+	public void testUploadInvalidSubscription() {
 		Assertions.assertThrows(JpaObjectRetrievalFailureException.class, () -> {
 			resource.upload(new StringInputStream("id;"), ENCODING, -1, UploadMode.VALIDATION);
 		});
 	}
 
 	@Test
-	public void testUploadNoChange() throws Exception {
+	public void testUploadNoChange() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/nochange.csv").getInputStream(), ENCODING, subscription, UploadMode.PREVIEW);
 		}), "issue", "No change detected detected for issue 2(id=2) for changes between 01/03/2014 12:01 and 01/03/2014 12:01");
 	}
 
 	@Test
-	public void testUploadBrokenHistory() throws Exception {
+	public void testUploadBrokenHistory() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/broken-history.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -53,7 +53,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testSynchronizeJiraCantSynchronize() throws Exception {
+	public void testSynchronizeJiraCantSynchronize() {
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(false);
@@ -66,7 +66,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testSynchronizeJiraNoAuth() throws Exception {
+	public void testSynchronizeJiraNoAuth() {
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(true);
@@ -81,7 +81,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testSynchronizeJiraNoScriptRunner() throws Exception {
+	public void testSynchronizeJiraNoScriptRunner() {
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(true);
@@ -100,7 +100,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testSynchronizeJiraReindexFailed() throws Exception {
+	public void testSynchronizeJiraReindexFailed() {
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(true);
@@ -121,7 +121,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testSynchronizeJira() throws Exception {
+	public void testSynchronizeJira() {
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(true);
@@ -138,7 +138,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadTranslatedAmbiguousCf() throws Exception {
+	public void testUploadTranslatedAmbiguousCf() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-cf-ambiguous.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -152,7 +152,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadNotManagedCfType() throws Exception {
+	public void testUploadNotManagedCfType() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-cf-not-managed-type.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -190,7 +190,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidVersion() throws Exception {
+	public void testUploadInvalidVersion() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			try {
@@ -204,7 +204,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidPkey() throws Exception {
+	public void testUploadInvalidPkey() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-pkey.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -212,7 +212,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadUpdate() throws Exception {
+	public void testUploadUpdate() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-update.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -220,7 +220,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadMissingResolutionForResolved() throws Exception {
+	public void testUploadMissingResolutionForResolved() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-resolution-resolved.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -228,7 +228,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidResolutionDate() throws Exception {
+	public void testUploadInvalidResolutionDate() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -236,7 +236,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidResolutionDateNoId() throws Exception {
+	public void testUploadInvalidResolutionDateNoId() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date-no-id.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -244,7 +244,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidDueDate() throws Exception {
+	public void testUploadInvalidDueDate() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-duedate.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -252,7 +252,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidInput() throws Exception {
+	public void testUploadInvalidInput() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ConstraintViolationException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-input.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -260,7 +260,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidCfSelectValue() throws Exception {
+	public void testUploadInvalidCfSelectValue() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-cf-select.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -268,7 +268,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidCfDateValue() throws Exception {
+	public void testUploadInvalidCfDateValue() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-cf-date.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -276,7 +276,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidCfDatePickerValue() throws Exception {
+	public void testUploadInvalidCfDatePickerValue() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-cf-datepicker.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -284,7 +284,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidCfFloatValue() throws Exception {
+	public void testUploadInvalidCfFloatValue() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-cf-float.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -292,7 +292,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidStatus() throws Exception {
+	public void testUploadInvalidStatus() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-status.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -300,7 +300,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidWorkflowStatus() throws Exception {
+	public void testUploadInvalidWorkflowStatus() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-workflow-status.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -308,7 +308,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidType() throws Exception {
+	public void testUploadInvalidType() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-type.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -316,7 +316,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidWorkflowType() throws Exception {
+	public void testUploadInvalidWorkflowType() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			try {
@@ -391,7 +391,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidPriority() throws Exception {
+	public void testUploadInvalidPriority() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-priority.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -399,7 +399,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadInvalidUser() throws Exception {
+	public void testUploadInvalidUser() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new ClassPathResource("csv/upload/invalid-assignee.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.PREVIEW);
@@ -407,7 +407,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadConcurrent() throws Exception {
+	public void testUploadConcurrent() {
 		em.createQuery("UPDATE ImportStatus i SET i.end = NULL WHERE i.locked.id  = ?1").setParameter(1, subscription).executeUpdate();
 		em.flush();
 		em.clear();
@@ -417,7 +417,7 @@ public class JiraImportPluginResourceTest extends AbstractJiraImportPluginResour
 	}
 
 	@Test
-	public void testUploadFailed() throws Exception {
+	public void testUploadFailed() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			resource.upload(new StringInputStream("id;"), ENCODING, subscription, UploadMode.VALIDATION);
 		}), "id", "Empty file, no change found");

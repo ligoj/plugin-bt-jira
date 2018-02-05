@@ -385,7 +385,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsXlsBropenPipe() throws Exception {
+	public void getSlaComputationsXlsBropenPipe() {
 		Assertions.assertThrows(NullPointerException.class, () -> {
 			((StreamingOutput) resource.getSlaComputationsXls(getSubscription("MDA"), "file1").getEntity()).write(null);
 		});

@@ -91,7 +91,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void deleteTask() throws Exception {
+	public void deleteTask() {
 		final long initCount = importStatusRepository.count();
 		em.clear();
 		resource.deleteTask(subscription);
@@ -102,7 +102,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateDataBaseConnectivity() throws Exception {
+	public void validateDataBaseConnectivity() {
 		final Map<String, String> parameters = new HashMap<>();
 		addJdbcParameter(parameters);
 		final String version = resource.validateDataBaseConnectivity(parameters);
@@ -110,7 +110,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void getVersion() throws Exception {
+	public void getVersion() {
 		final Map<String, String> parameters = new HashMap<>();
 		addJdbcParameter(parameters);
 		final String version = resource.getVersion(parameters);
@@ -169,13 +169,13 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateDataBaseConnectivityRes() throws Exception {
+	public void validateDataBaseConnectivityRes() {
 		final String version = resource.validateDataBaseConnectivity(pvResource.getNodeParameters("service:bt:jira:6"));
 		Assertions.assertEquals("4.4.1", version);
 	}
 
 	@Test
-	public void validateDataBaseConnectivityFailed() throws Exception {
+	public void validateDataBaseConnectivityFailed() {
 		final Map<String, String> parameters = new HashMap<>();
 		addJdbcParameter(parameters);
 		parameters.put(JiraBaseResource.PARAMETER_JDBC_DRIVER, "org.hsqldb.jdbc.JDBCDriverAny");
@@ -226,14 +226,14 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void getActivitiesNoUser() throws Exception {
+	public void getActivitiesNoUser() {
 		final Collection<String> users = new ArrayList<>();
 		final Map<String, Activity> activities = resource.getActivities(subscription, users);
 		Assertions.assertTrue(activities.isEmpty());
 	}
 
 	@Test
-	public void getActivities() throws Exception {
+	public void getActivities() {
 		final Collection<String> users = new ArrayList<>();
 		users.add("fdaugan");
 		users.add("alocquet");
@@ -271,7 +271,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateAdminConnectivity() throws Exception {
+	public void validateAdminConnectivity() {
 		prepareJiraServer();
 		final Map<String, String> parameters = new HashMap<>();
 		parameters.put(JiraBaseResource.PARAMETER_URL, "http://localhost:" + MOCK_PORT);
@@ -282,7 +282,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateAdminConnectivityRes() throws Exception {
+	public void validateAdminConnectivityRes() {
 		prepareJiraServer();
 		final Map<String, String> parameters = pvResource.getNodeParameters("service:bt:jira:6");
 		parameters.put(JiraBaseResource.PARAMETER_URL, "http://localhost:" + MOCK_PORT);
@@ -306,7 +306,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateAdminConnectivityFailed() throws Exception {
+	public void validateAdminConnectivityFailed() {
 		final Map<String, String> parameters = new HashMap<>();
 		parameters.put(JiraBaseResource.PARAMETER_URL, "any:dummy");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_PASSWORD, "");
@@ -316,7 +316,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateAdminConnectivityAdminJira3() throws Exception {
+	public void validateAdminConnectivityAdminJira3() {
 		prepareJiraServer();
 		final Map<String, String> parameters = new HashMap<>();
 		parameters.put(JiraBaseResource.PARAMETER_URL, "http://localhost:" + MOCK_PORT);
@@ -327,7 +327,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void validateAdminConnectivityFailedClose() throws Exception {
+	public void validateAdminConnectivityFailedClose() {
 		Assertions.assertThrows(IllegalStateException.class, () -> {
 			new JiraPluginResource() {
 
@@ -341,7 +341,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void linkInvalidDatabase() throws Exception {
+	public void linkInvalidDatabase() {
 
 		final Project project = new Project();
 		project.setName("TEST");
@@ -406,7 +406,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void linkInvalidProject() throws Exception {
+	public void linkInvalidProject() {
 		final Project project = new Project();
 		project.setName("TEST");
 		project.setPkey("test");
@@ -484,7 +484,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void createNotSupported() throws Exception {
+	public void createNotSupported() {
 		Assertions.assertThrows(IllegalStateException.class, () -> {
 			resource.create(0);
 		});

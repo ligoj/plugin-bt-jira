@@ -1,6 +1,5 @@
 package org.ligoj.app.plugin.bt.jira;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -113,7 +112,7 @@ public class JiraPluginResource extends JiraBaseResource
 	}
 
 	@Override
-	public Set<String> getStatuses(final int subscription) throws IOException {
+	public Set<String> getStatuses(final int subscription) {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final int jira = Integer.parseInt(parameters.get(JiraBaseResource.PARAMETER_PROJECT));
 		final DataSource dataSource = getDataSource(parameters);
@@ -168,7 +167,7 @@ public class JiraPluginResource extends JiraBaseResource
 	}
 
 	@Override
-	public boolean checkStatus(final Map<String, String> parameters) throws Exception {
+	public boolean checkStatus(final Map<String, String> parameters) {
 		// Status is UP <=> Database is UP and Administration access is UP (if
 		// defined)
 		final String version = validateDataBaseConnectivity(parameters);
@@ -177,14 +176,14 @@ public class JiraPluginResource extends JiraBaseResource
 	}
 
 	@Override
-	public SubscriptionStatusWithData checkSubscriptionStatus(final Map<String, String> parameters) throws Exception {
+	public SubscriptionStatusWithData checkSubscriptionStatus(final Map<String, String> parameters) {
 		final SubscriptionStatusWithData nodeStatusWithData = new SubscriptionStatusWithData();
 		nodeStatusWithData.put("project", validateProject(parameters));
 		return nodeStatusWithData;
 	}
 
 	@Override
-	public Map<String, Activity> getActivities(final int subscription, final Collection<String> users) throws Exception {
+	public Map<String, Activity> getActivities(final int subscription, final Collection<String> users) {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 		final DataSource dataSource = getDataSource(parameters);
 		return jiraDao.getActivities(dataSource, users);

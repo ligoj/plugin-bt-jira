@@ -64,7 +64,7 @@ public class JiraUpdateDaoTest {
 	}
 
 	@Test
-	public void testPrepareForNextIdConcurrent() throws Exception {
+	public void testPrepareForNextIdConcurrent() {
 		final JiraUpdateDao dao = new JiraUpdateDao() {
 
 			private boolean mock = true;
