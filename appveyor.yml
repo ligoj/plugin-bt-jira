@@ -2,23 +2,22 @@ version: '{build}'
 install:
   - ps: |
       Add-Type -AssemblyName System.IO.Compression.FileSystem
-      if ((Test-Path -Path "C:\mavenX" )) {
-        Remove-Item -Recurse -Force "C:\mavenX"
+      if ((Test-Path -Path "C:\maven" )) {
+        Remove-Item -Recurse -Force "C:\maven"
       }
             
       (new-object System.Net.WebClient).DownloadFile(
         'http://www.us.apache.org/dist/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.zip',
         'C:\maven-bin.zip'
       )
-      [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\mavenX")
+      [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
   - ps: |
      $env:JAVA_HOME="c:/Program Files/Java/jdk9"
   - cmd: SET    
-  - cmd: SET PATH=C:\mavenX\apache-maven-3.5.2\bin;%PATH%
-  - cmd: SET M2_HOME=C:\mavenX\apache-maven-3.5.2
+  - cmd: SET PATH=C:\maven\apache-maven-3.5.2\bin;%PATH%
+  - cmd: SET M2_HOME=C:\maven\apache-maven-3.5.2
   - cmd: SET MAVEN_OPTS=-Xmx2g
-  - cmd: SET MAVEN_HOME=C:\mavenX\apache-maven-3.5.2
-  - cmd: rmdir /S /Q C:\Users\appveyor\.m2 
+  - cmd: SET MAVEN_HOME=C:\maven\apache-maven-3.5.2
   - cmd: SET
 
 build_script:
@@ -28,7 +27,7 @@ build_script:
 test_script:
   - mvn -B -V -e clean install
 cache:
-  - C:\mavenX\
+  - C:\maven\
   - C:\Users\appveyor\.m2
 artifacts:
   - path: 'target\*.jar'
