@@ -15,22 +15,21 @@ define(['sparkline'], function () {
 		},
 
 		subscription: null,
-
-		intialize: function () {
+		
+		renderTool: function() {
 			_('importPopup').on('submit', function (e) {
 				e.preventDefault();
 				current.upload();
 				return false;
 			}).on('show.bs.modal', function (event) {
 				// Reset the form but previous values
+				validationManager.mapping.DEFAULT = 'csv-file';
 				_('csv-upload-step-last').find('i').addClass('hide');
 				var $source = $(event.relatedTarget);
 				var uc = $source && current.$super('subscriptions').fnGetData($source.closest('tr')[0]);
 				current.subscription = uc.id;
 				current.resetUploadError();
 			});
-
-			validationManager.mapping.DEFAULT = 'csv-file';
 		},
 
 		configureSubscriptionParameters: function (configuration) {
