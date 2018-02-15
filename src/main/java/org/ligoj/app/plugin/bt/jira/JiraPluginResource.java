@@ -94,7 +94,7 @@ public class JiraPluginResource extends JiraBaseResource
 	 * @return project name.
 	 */
 	@GET
-	@Path("{node:\\w+:.*}/project/{criteria}")
+	@Path("{node:service:.+}/project/{criteria}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public List<JiraProject> findAllByName(@PathParam("node") final String node, @PathParam("criteria") final String criteria) {
 		// Check the node exists
