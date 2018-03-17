@@ -70,7 +70,7 @@ define(['sparkline'], function () {
 			var linkCsvStatus = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-status.csv', undefined, 'service:bt:jira:sla-csv-status', ' download');
 			var linkCsv = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-simple.csv', undefined, 'service:bt:jira:csv', ' download');
 			var linkXmlSla = current.$super('renderServicelink')('file-excel-o menu-icon', linkRoot + '.xml', undefined, 'service:bt:jira:sla-xls', ' download');
-			return '<div class="btn-group btn-link feature" data-container="body" data-toggle="tooltip" title="' + current.$messages['export'] + '"><i class="fa fa-download" data-toggle="dropdown"></i>'
+			return '<div class="btn-group btn-link feature" data-container="body" data-toggle="tooltip" title="' + current.$messages['export'] + '"><i class="fas fa-download" data-toggle="dropdown"></i>'
 			 + '<ul class="dropdown-menu dropdown-menu-right"><li>' + linkCsvSlaShort + '</li><li>' + linkCsvSlaCf + '</li><li>' + linkCsv + '</li><li>' + linkCsvStatus + '</li><li>' + linkXmlSla + '</li></ul></div>';
 		},
 
@@ -150,14 +150,14 @@ define(['sparkline'], function () {
 			var firstIndex = data.step > 4 ? data.step - 3 : 1;
 			var i;
 			if (firstIndex > 1) {
-				$container.append('<div class="form-group step"><label class="control-label"><i class="fa fa-check" title="succeed"></i></label><div class="toggle-visibility"><strong>[...]</strong></div></div>');
+				$container.append('<div class="form-group step"><label class="control-label"><i class="fas fa-check" title="succeed"></i></label><div class="toggle-visibility"><strong>[...]</strong></div></div>');
 				var $moreContainer = $container.find('.toggle-visibility');
 				for (i = 1; i < firstIndex; i++) {
 					$moreContainer.append('<div class="toggle-visibility-content">' + current.$messages.steps[i - 1] + '</div>');
 				}
 			}
 			for (i = firstIndex; i < lastIndex; i++) {
-				$container.append('<div class="form-group step"><label class="control-label"><i class="fa fa-check" title="succeed"></i></label><div>' + current.$messages.steps[i - 1] + '</div></div>');
+				$container.append('<div class="form-group step"><label class="control-label"><i class="fas fa-check" title="succeed"></i></label><div>' + current.$messages.steps[i - 1] + '</div></div>');
 			}
 
 			var errorField = _('csv-file').closest('.form-group').attr('data-error-property');
@@ -166,7 +166,7 @@ define(['sparkline'], function () {
 			// Last failure step
 			if (data.failed || errorField) {
 				if (data.failed) {
-					$container.append('<div class="form-group step"><label class="control-label" id="csv-upload-step-error"><i class="fa fa-remove" title="failed"></i></label><div>' + current.$messages.steps[data.step - 1]);
+					$container.append('<div class="form-group step"><label class="control-label" id="csv-upload-step-error"><i class="fas fa-times" title="failed"></i></label><div>' + current.$messages.steps[data.step - 1]);
 				}
 				if (errorField) {
 					$container.prepend(current.newAlert('<strong>' + errorField + '</strong> ' + errorMessage).addClass('step'));
@@ -180,7 +180,7 @@ define(['sparkline'], function () {
 				}
 			} else {
 				// Indicated the running step
-				$container.append('<div class="form-group step step-last"><label class="control-label" id="csv-upload-step-last"><i class="fa fa-refresh fa-spin"></i></label><div>' + current.$messages.steps[data.step - 1] + '</div></div>');
+				$container.append('<div class="form-group step step-last"><label class="control-label" id="csv-upload-step-last"><i class="fas fa-sync-alt fa-spin"></i></label><div>' + current.$messages.steps[data.step - 1] + '</div></div>');
 			}
 
 			// Add the summary
