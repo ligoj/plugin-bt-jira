@@ -12,7 +12,14 @@
 	top: 5%;
 	max-height: inherit;
 }
-.service-bt-jira .jira-pie {
+.masonry-container .node.node.service-bt-jira.mode-th-list table.subscriptions th.features {
+	width: 98px;
+}
+.masonry-container .node.node.service-bt-jira.mode-th-large table.subscriptions th.features {
+	width: 98px;
+}
+.masonry-container .node.node.service-bt-jira table.subscriptions th.features {
+	width: 86px;
 }
 .service-bt-jira .jira-pie.zoomed {
 	position: absolute;
@@ -41,15 +48,6 @@
     -moz-transform: scale(1);
     transition: all 200ms ease-in;
     transform: scale(1);
-}
-.masonry-container .node.node.service-bt-jira.mode-th-list table.subscriptions th.features {
-	width: 98px;
-}
-.masonry-container .node.node.service-bt-jira.mode-th-large table.subscriptions th.features {
-	width: 98px;
-}
-.masonry-container .node.node.service-bt-jira table.subscriptions th.features {
-	width: 86px;
 }
 .service-bt-jira .features .details canvas:hover {
 	cursor: pointer;
