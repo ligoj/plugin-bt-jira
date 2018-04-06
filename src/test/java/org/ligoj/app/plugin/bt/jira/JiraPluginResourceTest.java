@@ -37,13 +37,12 @@ import org.ligoj.bootstrap.core.IDescribableBean;
 import org.ligoj.bootstrap.core.resource.TechnicalException;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import net.sf.ehcache.CacheManager;
 
 /**
  * Test class of {@link JiraPluginResource}
@@ -71,6 +70,9 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Autowired
 	private SubscriptionResource subscriptionResource;
+
+	@Autowired
+	private CacheManager cacheManager;
 
 	@BeforeEach
 	public void prepareSubscription() {
@@ -395,12 +397,12 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 				.executeUpdate();
 		em.flush();
 		em.clear();
-		CacheManager.getInstance().getCache("subscription-parameters").removeAll();
+		cacheManager.getCache("subscription-parameters").clear();
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			try {
 				resource.link(subscription.getId());
 			} finally {
-				CacheManager.getInstance().getCache("subscription-parameters").removeAll();
+				cacheManager.getCache("subscription-parameters").clear();
 			}
 		}), JiraBaseResource.PARAMETER_ADMIN_USER, "jira-admin");
 	}
