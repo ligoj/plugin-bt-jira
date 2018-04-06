@@ -21,40 +21,15 @@
 .masonry-container .node.node.service-bt-jira table.subscriptions th.features {
 	width: 86px;
 }
-.service-bt-jira .jira-pie.zoomed {
-	position: absolute;
- 	z-index: 2;
-}
-.service-bt-jira .jira-pie canvas {
-	position: relative;
-}
-.service-bt-jira.node .jira-pie.zoomed.zoomed2 canvas  {
-	left: -56px;
-}
-.service-bt-jira .jira-pie.zoomed canvas {
-    -webkit-transform: scale(.33); 
-    -ms-transform: scale(.33); 
-    -moz-transform: scale(.33);
-    transform: scale(.33);
-	left: -41px;
-	top: -22px;
-}
-.service-bt-jira .jira-pie.zoomed.zoomed2 canvas {
-    -webkit-transition: all 200ms ease-in;
-    -webkit-transform: scale(1); 
-    -ms-transition: all 200ms ease-in;
-    -ms-transform: scale(1); 
-    -moz-transition: all 200ms ease-in;
-    -moz-transform: scale(1);
-    transition: all 200ms ease-in;
-    transform: scale(1);
-}
-.service-bt-jira .features .details canvas:hover {
-	cursor: pointer;
-}
 
 @media (min-width: 768px) {
 	.exploded .service-bt-jira .carousel-inner .item-2 {
 		text-align: right;
 	}
+}
+.node .pie.zoomed.zoomed2.bt-jira-issues canvas {
+    left: -56px;
+}
+.node .pie.zoomed.bt-jira-issues canvas {
+    left: -43px;
 }

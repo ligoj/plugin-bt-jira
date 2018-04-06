@@ -287,7 +287,7 @@ define(['sparkline'], function () {
 			window.setTimeout(function () {
 				current.pieStatuses(subscription, $td);
 			}, 50);
-			return '<span class="jira-pie"></span>';
+			return '<span class="bt-jira-issues pie"></span>';
 		},
 
 		/**
@@ -315,7 +315,6 @@ define(['sparkline'], function () {
 		 */
 		pieStatuses: function (subscription, $td) {
 			var amount;
-			var buffer = '';
 			var filteredAmounts = [];
 			var filteredStatuses = [];
 			var min = {
@@ -335,24 +334,17 @@ define(['sparkline'], function () {
 			}
 
 			// Build the pie chart
-			var $spark = $td.find('.jira-pie');
-			function setupSparkline(size) {
-				$spark.sparkline(filteredAmounts, {
-					type: 'pie',
-					sliceColors: ['#478EC7', '#EA632B', '#205081', '#D04437', '#A7A7A7'],
-					offset: '-90',
-					width: size,
-					height: size,
-					fillColor: 'black',
-					borderWidth: '2',
-					borderColor: '#ffffff',
-					tooltipFormatter: function (sparkline, options, fields) {
-						if (fields.offset < 5) {
-							return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset], fields.value, total, current.$super('roundPercent')(fields.percent)]);
-						}
-						return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset].join(', '), fields.value, total, current.$super('roundPercent')(fields.percent)]);
+			var $spark = $td.find('.bt-jira-issues');
+			current.$super('sparklinePieZoom')($spark, filteredAmounts, {
+				sliceColors: ['#EA632B', '#205081', '#D04437', '#A7A7A7'],
+				zoomSize: $spark.closest('.masonry-container').length && '64px',
+				tooltipFormatter: function (sparkline, options, fields) {
+					if (fields.offset < 5) {
+						return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset], fields.value, total, current.$super('roundPercent')(fields.percent)]);
 					}
-				}).on('sparklineClick', function (ev) {
+					return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset].join(', '), fields.value, total, current.$super('roundPercent')(fields.percent)]);
+				},
+				sparklineClick: function (ev) {
 					var offset = ev.sparklines[0].getCurrentRegionFields().offset;
 					if (typeof offset === 'undefined') {
 						// Ignore this out of bound click
@@ -383,30 +375,8 @@ define(['sparkline'], function () {
 					// Open a new tag with the right filters
 					var win = window.open(url, '_blank');
 					win && win.focus();
-				});
-			};
-			setupSparkline('20px');
-			
-			// Zoom and auto update tooltips
-			$spark.on('mouseenter', 'canvas', function(e) {
-				if (!$spark.is('.zoomed')) {
-					$spark.addClass('zoomed');
-					setupSparkline('64px');
-					window.setTimeout(function () {
-						$spark.addClass('zoomed2');
-					}, 50);
-				}
-			}).on('mouseleave', 'canvas', function(e) {
-				var $this = $(this);
-				if ($spark.is('.zoomed')) {
-					$spark.removeClass('zoomed');
-					setupSparkline('20px');
-					window.setTimeout(function () {
-						$spark.removeClass('zoomed2');
-					}, 50);
 				}
 			});
-			return buffer;
 		},
 
 		/**
