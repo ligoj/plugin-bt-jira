@@ -15,6 +15,11 @@ import lombok.Setter;
 public class JiraProject extends DescribedBean<Integer> {
 
 	/**
+	 * SID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Count for each statuses. K is the status name. V is the
 	 */
 	private Map<String, Integer> statuses;

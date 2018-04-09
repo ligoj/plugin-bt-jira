@@ -14,6 +14,11 @@ import lombok.Setter;
 @Setter
 public class CustomField extends AbstractDescribedEntity<Integer> {
 
+	/**
+	 * SID
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// CUSTOMFIELDTYPEKEY
 	private String fieldType;
 

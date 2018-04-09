@@ -379,7 +379,7 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	@Test
-	public void linkInvalidAdmin() throws Exception {
+	public void linkInvalidAdmin() {
 		final Project project = new Project();
 		project.setName("TEST");
 		project.setPkey("test");
