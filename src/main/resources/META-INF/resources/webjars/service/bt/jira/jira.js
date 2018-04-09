@@ -1,4 +1,4 @@
-define(['sparkline'], function () {
+define(function () {
 	var current = {
 
 		/**
