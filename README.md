@@ -9,7 +9,7 @@
 [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=org.ligoj.plugin:plugin-bt-jira)](https://sonarcloud.io/dashboard/index/org.ligoj.plugin:plugin-bt-jira)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/310da2c543c84d23a4d9a38ecef27b3f)](https://www.codacy.com/app/ligoj/plugin-bt-jira?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ligoj/plugin-bt-jira&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/ligoj/plugin-bt-jira/badge)](https://www.codefactor.io/repository/github/ligoj/plugin-bt-jira)
-[![License](http://img.shields.io/:license-mit-blue.svg)](http://gus.mit-license.org/)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://fabdouglas.mit-license.org/)
 
 [Ligoj](https://github.com/ligoj/ligoj) JIRA plugin, and extending [Bug Tracker plugin](https://github.com/ligoj/plugin-bt)
 Provides the following features :
