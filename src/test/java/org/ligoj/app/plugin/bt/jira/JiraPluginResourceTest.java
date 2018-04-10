@@ -167,7 +167,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	public void getLastVersion() throws Exception {
 		final String lastVersion = resource.getLastVersion();
 		Assertions.assertNotNull(lastVersion);
-		Assertions.assertTrue(new DefaultArtifactVersion(lastVersion).compareTo(new DefaultArtifactVersion("6.3.3")) >= 0);
+		Assertions.assertTrue(
+				new DefaultArtifactVersion(lastVersion).compareTo(new DefaultArtifactVersion("6.3.3")) >= 0);
 	}
 
 	@Test
@@ -301,9 +302,9 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_OK)));
 		httpServer.stubFor(post(urlPathEqualTo("/login.jsp"))
 				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
-		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa")).willReturn(
-				aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")
-						.withHeader("X-Atlassian-WebSudo", "Has-Authentication")));
+		httpServer.stubFor(post(urlPathEqualTo("/secure/admin/WebSudoAuthenticate.jspa")).willReturn(aResponse()
+				.withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/secure/project/ViewProjects.jspa")
+				.withHeader("X-Atlassian-WebSudo", "Has-Authentication")));
 		httpServer.start();
 	}
 
@@ -334,7 +335,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 			new JiraPluginResource() {
 
 				@Override
-				protected boolean authenticateAdmin(final Map<String, String> parameters, final CurlProcessor processor) {
+				protected boolean authenticateAdmin(final Map<String, String> parameters,
+						final CurlProcessor processor) {
 					throw new IllegalStateException();
 				}
 
@@ -366,7 +368,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		parameterValueEntity2.setSubscription(subscription);
 		em.persist(parameterValueEntity2);
 		final ParameterValue parameterValueEntity3 = new ParameterValue();
-		parameterValueEntity3.setParameter(parameterRepository.findOneExpected(JiraBaseResource.PARAMETER_JDBC_PASSSWORD));
+		parameterValueEntity3
+				.setParameter(parameterRepository.findOneExpected(JiraBaseResource.PARAMETER_JDBC_PASSSWORD));
 		parameterValueEntity3.setData("invalid");
 		parameterValueEntity3.setSubscription(subscription);
 		em.persist(parameterValueEntity3);
@@ -393,8 +396,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 		// Set an invalid URL
 		em.createQuery("UPDATE ParameterValue v SET v.data = ?3 WHERE v.node.id = ?1 AND v.parameter.id = ?2")
-				.setParameter(1, JiraBaseResource.PARAMETER_URL).setParameter(2, "service:bt:jira:6").setParameter(3, "any")
-				.executeUpdate();
+				.setParameter(1, JiraBaseResource.PARAMETER_URL).setParameter(2, "service:bt:jira:6")
+				.setParameter(3, "any").executeUpdate();
 		em.flush();
 		em.clear();
 		cacheManager.getCache("subscription-parameters").clear();
@@ -440,7 +443,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		em.persist(subscription);
 		addProjectParameters(subscription, 10074);
 		em.createQuery("DELETE ParameterValue v WHERE v.node.id = ?1 AND v.parameter.id = ?2")
-				.setParameter(2, JiraBaseResource.PARAMETER_ADMIN_USER).setParameter(1, "service:bt:jira:6").executeUpdate();
+				.setParameter(2, JiraBaseResource.PARAMETER_ADMIN_USER).setParameter(1, "service:bt:jira:6")
+				.executeUpdate();
 		em.flush();
 		em.clear();
 		resource.link(subscription.getId());
@@ -495,8 +499,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	public void clearLoginFailedNoUser() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assertions.assertEquals("1",
-				jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assertions.assertEquals("1", jdbcTemplate
+				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
 			dao.clearLoginFailed(datasource, "any");
@@ -505,15 +509,15 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		}
 
 		// Untouched counter
-		Assertions.assertEquals("1",
-				jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assertions.assertEquals("1", jdbcTemplate
+				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 	}
 
 	@Test
 	public void clearLoginFailedOtherUser() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assertions.assertEquals("1",
-				jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assertions.assertEquals("1", jdbcTemplate
+				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
 			dao.clearLoginFailed(datasource, "alocquet");
@@ -522,8 +526,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		}
 
 		// Untouched counter
-		Assertions.assertEquals("1",
-				jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assertions.assertEquals("1", jdbcTemplate
+				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 	}
 
 	/**
@@ -532,18 +536,18 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	public void clearLoginFailedJira4() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assertions.assertEquals("1",
-				jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assertions.assertEquals("1", jdbcTemplate
+				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		dao.clearLoginFailed(datasource, "fdaugan");
-		Assertions.assertEquals("1",
-				jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assertions.assertEquals("1", jdbcTemplate
+				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 	}
 
 	@Test
 	public void clearLoginFailed() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		Assertions.assertEquals("1",
-				jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assertions.assertEquals("1", jdbcTemplate
+				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
@@ -552,8 +556,8 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 		} finally {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "4.4.1", 10075);
 		}
-		Assertions.assertEquals("0",
-				jdbcTemplate.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
+		Assertions.assertEquals("0", jdbcTemplate
+				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 
 		// Restore the value
 		jdbcTemplate.update("UPDATE cwd_user_attributes SET attribute_value=1, lower_attribute_value=1 WHERE ID=212");
@@ -567,5 +571,10 @@ public class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Override
 	protected String getAuthenticationName() {
 		return DEFAULT_USER;
+	}
+
+	@Test
+	public void newTask() {
+		Assertions.assertNotNull(resource.newTask());
 	}
 }
