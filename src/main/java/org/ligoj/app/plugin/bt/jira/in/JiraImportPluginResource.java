@@ -110,7 +110,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	public ImportStatus upload(@Multipart("csv-file") final InputStream csvInput, @PathParam("encoding") final String encoding,
 			@PathParam("subscription") final int subscription, @PathParam("mode") final UploadMode mode) throws IOException {
 		boolean failed = true;
-		subscriptionResource.checkVisibleSubscription(subscription);
+		subscriptionResource.checkVisible(subscription);
 		try {
 
 			final ImportStatus importStatus = resource.startTask(subscription, task -> {

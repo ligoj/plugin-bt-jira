@@ -34,6 +34,7 @@ import org.ligoj.app.plugin.bt.jira.model.Workflow;
 import org.ligoj.app.resource.ActivitiesProvider;
 import org.ligoj.app.resource.plugin.VersionUtils;
 import org.ligoj.app.resource.subscription.LongTaskRunnerSubscription;
+import org.ligoj.app.resource.subscription.SubscriptionResource;
 import org.ligoj.bootstrap.core.security.SecurityHelper;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,10 @@ public class JiraPluginResource extends JiraBaseResource
 	@Getter
 	@Autowired
 	protected SubscriptionRepository subscriptionRepository;
+
+	@Getter
+	@Autowired
+	protected SubscriptionResource subscriptionResource;
 
 	@Autowired
 	protected NodeRepository nodeRepository;
