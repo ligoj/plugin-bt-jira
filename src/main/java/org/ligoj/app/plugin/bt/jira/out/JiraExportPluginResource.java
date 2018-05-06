@@ -103,7 +103,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return a simple export data without any computation.
-	 * 
+	 *
 	 * @param subscription
 	 *            The subscription identifier.
 	 * @return the SLA configuration
@@ -142,9 +142,11 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return SLA computations.
-	 * 
+	 *
 	 * @param subscription
 	 *            The subscription identifier.
+	 * @param timing
+	 *            When <code>true</code> time spent data is fetched.
 	 * @return the SLA configuration
 	 */
 	protected JiraSlaComputations getSlaComputations(final int subscription, final boolean timing) {
@@ -211,7 +213,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return SLA computations as CSV input stream.
-	 * 
+	 *
 	 * @param subscription
 	 *            The subscription identifier.
 	 * @param file
@@ -231,7 +233,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return simple data as CSV input stream. There is no specific computation.
-	 * 
+	 *
 	 * @param subscription
 	 *            The subscription identifier.
 	 * @param file
@@ -250,7 +252,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return SLA computations and custom field data as CSV input stream.
-	 * 
+	 *
 	 * @param subscription
 	 *            The subscription identifier.
 	 * @param file
@@ -295,7 +297,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return status history without SL computation.
-	 * 
+	 *
 	 * @param subscription
 	 *            The subscription identifier.
 	 * @param file
@@ -343,7 +345,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return SLA computations as XLS input stream.
-	 * 
+	 *
 	 * @param subscription
 	 *            The subscription identifier.
 	 * @param file
@@ -508,6 +510,10 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return the style corresponding to the threshold value.
+	 * @param slaComputations The SLA computations.
+	 * @param styleNormal The normal style.
+	 * @param styleNormal The style when the SLA is over.
+	 * @return {@link SlaData} {@link Processor}.
 	 */
 	protected Processor<SlaData> toStyleProcessor(final JiraSlaComputations slaComputations, final String styleNormal,
 			final String styleOver) {
@@ -532,6 +538,9 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return the style corresponding to the distance sign.
+	 * @param styleNormal The normal style.
+	 * @param styleNormal The style when the SLA is over.
+	 * @return {@link SlaData} {@link Processor}.
 	 */
 	protected Processor<SlaData> toStyleProcessorDistance(final String styleNormal, final String styleOver) {
 		return new Processor<>() {
@@ -553,7 +562,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 		/**
 		 * Property bean access constructor.
-		 * 
+		 *
 		 * @param beanType
 		 *            the source bean type.
 		 * @param property

@@ -28,6 +28,17 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 	protected final Map<Integer, String> typeText;
 	protected final Map<Integer, String> priorityText;
 
+	/**
+	 *
+	 * @param priorityText
+	 *            The priority mapping: identifier to name.
+	 * @param resolutionText
+	 *            The resolution mapping: identifier to name.
+	 * @param statusText
+	 *            The status mapping: identifier to name.
+	 * @param typeText
+	 *            The issue type mapping: identifier to name.
+	 */
 	protected AbstractCsvOutput(final Map<Integer, String> priorityText, final Map<Integer, String> resolutionText,
 			final Map<Integer, String> statusText, final Map<Integer, String> typeText) {
 		this.resolutionText = resolutionText;
@@ -52,6 +63,9 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 
 	/**
 	 * Basic headers.
+	 *
+	 * @param writer
+	 *            Target output.
 	 */
 	protected void writeNonSlaHeaders(final Writer writer) throws IOException {
 		// Write static headers
@@ -63,7 +77,7 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 
 	/**
 	 * Write CSV header. Ends with new line.
-	 * 
+	 *
 	 * @param writer
 	 *            Target output.
 	 */
@@ -71,13 +85,30 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 
 	/**
 	 * Write issues data. Ends with new line.
+	 *
+	 * @param writer
+	 *            Target output.
+	 * @param df
+	 *            The {@link Format} used to write the date when not <code>null</code>.
+	 * @param idf
+	 *            The identifier format.
 	 */
 	protected abstract void writeData(Writer writer, Format df, Format idf) throws IOException;
 
 	/**
 	 * Write issue data
+	 *
+	 * @param issue
+	 *            The issue to write.
+	 * @param writer
+	 *            Target output.
+	 * @param df
+	 *            The {@link Format} used to write the date when not <code>null</code>.
+	 * @param idf
+	 *            The identifier format.
 	 */
-	protected void writeIssueData(final IssueDetails issue, final Writer writer, final Format df, final Format idf) throws IOException {
+	protected void writeIssueData(final IssueDetails issue, final Writer writer, final Format df, final Format idf)
+			throws IOException {
 		// Write static data
 		writer.write(issue.getId().toString());
 		writer.write(';');
@@ -124,9 +155,8 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 
 	/**
 	 * Write a date using the given format and in millisecond format, so 2 strings are added in the CSV output.
-	 * <code>null</code> management is performed there.
-	 * Empty {@link String} is written with <code>null</code> date.
-	 * 
+	 * <code>null</code> management is performed there. Empty {@link String} is written with <code>null</code> date.
+	 *
 	 * @param writer
 	 *            The target output.
 	 * @param df
@@ -148,9 +178,8 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 
 	/**
 	 * Write a duration using the "HH:mm:ss" format and in millisecond format, so 2 strings are added in the CSV output.
-	 * <code>null</code> management is performed there.
-	 * Empty {@link String} is written with <code>null</code> duration.
-	 * 
+	 * <code>null</code> management is performed there. Empty {@link String} is written with <code>null</code> duration.
+	 *
 	 * @param writer
 	 *            The target output.
 	 * @param duration
