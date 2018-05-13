@@ -68,7 +68,7 @@ import lombok.extern.slf4j.Slf4j;
  * JIRA export issues resource.
  */
 @Slf4j
-@Path(JiraBaseResource.URL+ "/{subscription:\\d+}")
+@Path(JiraBaseResource.URL + "/{subscription:\\d+}")
 @Service
 @Transactional
 @Produces(MediaType.APPLICATION_JSON)
@@ -362,14 +362,11 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 		// Get the template data
 		return AbstractToolPluginResource.download(output -> {
-			final InputStream template = new ClassPathResource("csv/template/template-sla.xml").getInputStream();
-			try {
-				final PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
+			try (InputStream template = new ClassPathResource("csv/template/template-sla.xml").getInputStream();
+					PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8))) {
 				new Template<JiraSlaComputations>(IOUtils.toString(template, StandardCharsets.UTF_8)).write(writer,
 						tags, slaComputations);
 				writer.flush();
-			} finally {
-				IOUtils.closeQuietly(template);
 			}
 		}, file).build();
 
@@ -510,9 +507,13 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return the style corresponding to the threshold value.
-	 * @param slaComputations The SLA computations.
-	 * @param styleNormal The normal style.
-	 * @param styleNormal The style when the SLA is over.
+	 *
+	 * @param slaComputations
+	 *            The SLA computations.
+	 * @param styleNormal
+	 *            The normal style.
+	 * @param styleNormal
+	 *            The style when the SLA is over.
 	 * @return {@link SlaData} {@link Processor}.
 	 */
 	protected Processor<SlaData> toStyleProcessor(final JiraSlaComputations slaComputations, final String styleNormal,
@@ -538,8 +539,11 @@ public class JiraExportPluginResource extends JiraBaseResource {
 
 	/**
 	 * Return the style corresponding to the distance sign.
-	 * @param styleNormal The normal style.
-	 * @param styleNormal The style when the SLA is over.
+	 *
+	 * @param styleNormal
+	 *            The normal style.
+	 * @param styleNormal
+	 *            The style when the SLA is over.
 	 * @return {@link SlaData} {@link Processor}.
 	 */
 	protected Processor<SlaData> toStyleProcessorDistance(final String styleNormal, final String styleOver) {
