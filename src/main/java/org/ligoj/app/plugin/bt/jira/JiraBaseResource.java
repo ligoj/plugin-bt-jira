@@ -39,6 +39,7 @@ import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -136,6 +137,7 @@ public class JiraBaseResource {
 	@PersistenceContext(type = PersistenceContextType.TRANSACTION, unitName = "pu")
 	protected EntityManager em;
 
+	@Getter
 	@Autowired
 	protected SubscriptionResource subscriptionResource;
 
@@ -153,7 +155,7 @@ public class JiraBaseResource {
 
 	/**
 	 * Return the data source of JIRA database server.
-	 * 
+	 *
 	 * @param subscription
 	 *            The subscription used to retrieved the database parameters to
 	 *            build the datasource.
@@ -165,7 +167,7 @@ public class JiraBaseResource {
 
 	/**
 	 * Return the data source of JIRA database server.
-	 * 
+	 *
 	 * @param parameters
 	 *            the subscription parameters containing at least the data
 	 *            source configuration.
@@ -187,7 +189,7 @@ public class JiraBaseResource {
 
 	/**
 	 * Validate the database connectivity.
-	 * 
+	 *
 	 * @param parameters
 	 *            the JDBC parameters.
 	 * @return the detected JIRA version.
@@ -202,7 +204,7 @@ public class JiraBaseResource {
 
 	/**
 	 * Return the version of JIRA from the database.
-	 * 
+	 *
 	 * @param parameters
 	 *            The parameters required to connect to the JIRA database.
 	 * @return The version of JIRA from the database.
@@ -216,7 +218,7 @@ public class JiraBaseResource {
 
 	/**
 	 * Validate the administration connectivity.
-	 * 
+	 *
 	 * @param parameters
 	 *            the administration parameters.
 	 * @return <code>true</code> when administration connection succeed.
@@ -232,7 +234,7 @@ public class JiraBaseResource {
 
 	/**
 	 * Validate the project configuration.
-	 * 
+	 *
 	 * @param parameters
 	 *            the project parameters.
 	 * @return project description.
@@ -253,7 +255,7 @@ public class JiraBaseResource {
 
 	/**
 	 * Prepare an authenticated connection to JIRA
-	 * 
+	 *
 	 * @param parameters
 	 *            The subscription parameters.
 	 * @param processor
@@ -284,7 +286,7 @@ public class JiraBaseResource {
 	/**
 	 * Update the status, priorities, resolutions and types text of given SLA
 	 * and retrieve all status texts involved of issues of given project.
-	 * 
+	 *
 	 * @param dataSource
 	 *            The data source of JIRA database.
 	 * @param slas
@@ -331,7 +333,7 @@ public class JiraBaseResource {
 
 	/**
 	 * Return unique involved statues in the given changes.
-	 * 
+	 *
 	 * @param changes
 	 *            The list or resolved changes.
 	 * @return unique involved statues in the given changes.
@@ -366,7 +368,7 @@ public class JiraBaseResource {
 	/**
 	 * Return type to status to step mapping for all types valid for given
 	 * project. KEY is the type, VALUE is the workflow mapping status and steps.
-	 * 
+	 *
 	 * @param dataSource
 	 *            The data source of JIRA database.
 	 * @param jira
