@@ -1,5 +1,5 @@
 id;owner.id;data;mandatory;type;mode;secured;defaultValue
-service:bt:jira:jdbc-url;service:bt:jira;;true;TEXT;;true;"jdbc:mysql://localhost:3306/jira?useColumnNamesInFindColumn=true&useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&maxReconnects=10"
+service:bt:jira:jdbc-url;service:bt:jira;;true;TEXT;;true;"jdbc:mysql://localhost:3306/jira?useColumnNamesInFindColumn=true&useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&maxReconnects=10&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false"
 service:bt:jira:jdbc-driver;service:bt:jira;;true;TEXT;;;com.mysql.cj.jdbc.Driver
 service:bt:jira:jdbc-user;service:bt:jira;;true;TEXT;;true;ligoj
 service:bt:jira:jdbc-password;service:bt:jira;;true;TEXT;;true;ligoj
