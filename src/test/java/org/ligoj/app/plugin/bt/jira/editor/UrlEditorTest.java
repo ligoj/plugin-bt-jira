@@ -2,9 +2,9 @@ package org.ligoj.app.plugin.bt.jira.editor;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.ligoj.app.MatcherUtil;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.bootstrap.AbstractDataGeneratorTest;
+import org.ligoj.bootstrap.MatcherUtil;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 
 /**

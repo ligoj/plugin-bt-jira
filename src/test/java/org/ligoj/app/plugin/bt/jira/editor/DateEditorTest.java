@@ -4,10 +4,10 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.ligoj.app.MatcherUtil;
 import org.ligoj.app.plugin.bt.jira.dao.AbstractEditorTest;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
+import org.ligoj.bootstrap.MatcherUtil;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 
 /**

@@ -1,6 +1,6 @@
 package org.ligoj.app.plugin.bt.jira;
 
-import org.ligoj.app.resource.plugin.OnlyRedirectHttpResponseCallback;
+import org.ligoj.bootstrap.core.curl.OnlyRedirectHttpResponseCallback;
 
 /**
  * Jira login response handler.

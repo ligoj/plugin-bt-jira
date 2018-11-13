@@ -1,7 +1,7 @@
 package org.ligoj.app.plugin.bt.jira;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.ligoj.app.resource.plugin.OnlyRedirectHttpResponseCallback;
+import org.ligoj.bootstrap.core.curl.OnlyRedirectHttpResponseCallback;
 
 /**
  * Jira Sudo response handler.
