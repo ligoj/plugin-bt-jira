@@ -1,23 +1,23 @@
-Gfi France;Organization;;;;
-Gfi Europe;Organization;;;;
-Gfi International;Organization;;;;
-Operations;Organization;Gfi France;;;
-Belux;Organization;Gfi Europe;;;
-Spain;Organization;Gfi Europe;;;
-Morocco;Organization;Gfi International;;;
-Portugal;Organization;Gfi Europe;;;
-Switzerland;Organization;Gfi Europe;;;
+Ligoj France;Organization;;;;
+Ligoj Europe;Organization;;;;
+Ligoj International;Organization;;;;
+Operations;Organization;Ligoj France;;;
+Belux;Organization;Ligoj Europe;;;
+Spain;Organization;Ligoj Europe;;;
+Morocco;Organization;Ligoj International;;;
+Portugal;Organization;Ligoj Europe;;;
+Switzerland;Organization;Ligoj Europe;;;
 Branche Software;Organization;Operations;;;
 Branche BS;Organization;Operations;;;
 Branche AS;Organization;Operations;;;
-Gfi Belgium;Organization;Belux;;;
+Ligoj Belgium;Organization;Belux;;;
 Production;Organization;Operations;;;
 Consulting;Organization;Operations;;;
 Branche IS;Organization;Operations;;;
 Software (Branche Software);Organization;Branche Software;;;
 Offres Specialisees (Branche BS);Organization;Branche BS;;;
 AS Regions (Branche AS);Organization;Branche AS;;;
-Gfi Belgium (Gfi Belgium);Organization;Gfi Belgium;;;
+Ligoj Belgium (Ligoj Belgium);Organization;Ligoj Belgium;;;
 Morocco (Morocco);Organization;Morocco;;;
 AS IDF (Branche AS);Organization;Branche AS;;;
 Atp (Branche AS);Organization;Branche AS;;;
@@ -34,7 +34,7 @@ Suisse (Switzerland);Organization;Switzerland;;;
 Sante (Software/Branche Software);Organization;Software (Branche Software);;;
 BFI (Offres Specialisees/Branche BS);Organization;Offres Specialisees (Branche BS);;;
 Mediterranee (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
-Gfi Belgium (Gfi Belgium/Gfi Belgium);Organization;Gfi Belgium (Gfi Belgium);;;
+Ligoj Belgium (Ligoj Belgium/Ligoj Belgium);Organization;Ligoj Belgium (Ligoj Belgium);;;
 AS Centre (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
 AS Centre - Ouest (AS Regions/Branche AS);Organization;AS Regions (Branche AS);;;
 Morocco (Morocco/Morocco);Organization;Morocco (Morocco);;;
@@ -46,7 +46,7 @@ BPR (Production/Production);Organization;Production;;;
 Transverses (Software/Branche Software);Organization;Software (Branche Software);;;
 BI (ES/Branche BS);Organization;ES (Branche BS);;;
 BIg Data (Digital/Branche BS);Organization;Digital (Branche BS);;;
-Gfi Telecom (Offres Specialisees/Branche BS);Organization;Offres Specialisees (Branche BS);;;
+Ligoj Telecom (Offres Specialisees/Branche BS);Organization;Offres Specialisees (Branche BS);;;
 Amoa BFA (Amoa BFA/Consulting);Organization;Amoa BFA (Consulting);;;
 Oss (Offres Specialisees/Branche BS);Organization;Offres Specialisees (Branche BS);;;
 Temps & Activite (Software/Branche Software);Organization;Software (Branche Software);;;
@@ -87,7 +87,7 @@ Suisse (Suisse/Switzerland);Organization;Suisse (Switzerland);;;
 Division Social (Sante/Software/Branche Software);Organization;Sante (Software/Branche Software);;;
 Addstones (BFI/Offres Specialisees/Branche BS);Organization;BFI (Offres Specialisees/Branche BS);;;
 PACA (Mediterranee/AS Regions/Branche AS);Organization;Mediterranee (AS Regions/Branche AS);;;
-Belgique (Gfi Belgium/Gfi Belgium/Gfi Belgium);Organization;Gfi Belgium (Gfi Belgium/Gfi Belgium);;;
+Belgique (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);Organization;Ligoj Belgium (Ligoj Belgium/Ligoj Belgium);;;
 AS Centre (AS Centre/AS Regions/Branche AS);Organization;AS Centre (AS Regions/Branche AS);;;
 AS Ouest Direction (AS Centre - Ouest/AS Regions/Branche AS);Organization;AS Centre - Ouest (AS Regions/Branche AS);;;
 AS Spain (Spain);Organization;Spain;;;
@@ -102,15 +102,15 @@ Vanilla (BFI/Offres Specialisees/Branche BS);Organization;BFI (Offres Specialise
 BI (BI/ES/Branche BS);Organization;BI (ES/Branche BS);;;
 BIg Data (BIg Data/Digital/Branche BS);Organization;BIg Data (Digital/Branche BS);;;
 Bretagne AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);Organization;AS Centre - Ouest (AS Regions/Branche AS);;;
-BSS (Gfi Telecom/Offres Specialisees/Branche BS);Organization;Gfi Telecom (Offres Specialisees/Branche BS);;;
+BSS (Ligoj Telecom/Offres Specialisees/Branche BS);Organization;Ligoj Telecom (Offres Specialisees/Branche BS);;;
 Amoa BFA (Amoa BFA/Amoa BFA/Consulting);Organization;Amoa BFA (Amoa BFA/Consulting);;;
 Oss (Oss/Offres Specialisees/Branche BS);Organization;Oss (Offres Specialisees/Branche BS);;;
 Division Temps & Activite (Temps & Activite/Software/Branche Software);Organization;Temps & Activite (Software/Branche Software);;;
-Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);Organization;Gfi Belgium (Gfi Belgium/Gfi Belgium);;;
+Software Belux (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);Organization;Ligoj Belgium (Ligoj Belgium/Ligoj Belgium);;;
 Software (Spain);Organization;Spain;;;
 DI Service & Support (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
 Cis (Cis/ES/Branche BS);Organization;Cis (ES/Branche BS);;;
-Gfi Cloud (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
+Ligoj Cloud (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
 BPR D&O (BPR/Production);Organization;BPR (Production);;;
 Direction Industrielle IES (IES/AS IDF/Branche AS);Organization;IES (AS IDF/Branche AS);;;
 Delivery SO (Sud Ouest/AS Regions/Branche AS);Organization;Sud Ouest (AS Regions/Branche AS);;;
@@ -127,7 +127,7 @@ DO Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche AS);Organization;AS Rhone-Alpe
 Direction Operation TP (TP/AS IDF/Branche AS);Organization;TP (AS IDF/Branche AS);;;
 DO-Pdl/Lm AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);Organization;AS Centre - Ouest (AS Regions/Branche AS);;;
 Hybris (Hybris/Digital/Branche BS);Organization;Hybris (Digital/Branche BS);;;
-Luxembourg (Gfi Belgium/Gfi Belgium/Gfi Belgium);Organization;Gfi Belgium (Gfi Belgium/Gfi Belgium);;;
+Luxembourg (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);Organization;Ligoj Belgium (Ligoj Belgium/Ligoj Belgium);;;
 ES Morocco (Morocco/Morocco/Morocco);Organization;Morocco (Morocco/Morocco);;;
 Division Offres Specialisees (Divers/Software/Branche Software);Organization;Divers (Software/Branche Software);;;
 Division Finance Publique (Management/Software/Branche Software);Organization;Management (Software/Branche Software);;;
@@ -163,7 +163,7 @@ Autre Charges (Spain);Organization;Spain;;;
 Management SO (Sud Ouest/AS Regions/Branche AS);Organization;Sud Ouest (AS Regions/Branche AS);;;
 Management Conseil (Management Conseil/Management Conseil/Consulting);Organization;Management Conseil (Management Conseil/Consulting);;;
 Management ES (Management ES/ES/Branche BS);Organization;Management ES (ES/Branche BS);;;
-Management Gfi Telecom (Gfi Telecom/Offres Specialisees/Branche BS);Organization;Gfi Telecom (Offres Specialisees/Branche BS);;;
+Management Ligoj Telecom (Ligoj Telecom/Offres Specialisees/Branche BS);Organization;Ligoj Telecom (Offres Specialisees/Branche BS);;;
 IDF IS (IDF IS/IS/Branche IS);Organization;IDF IS (IS/Branche IS);;;
 Management IS (Management IS/IS/Branche IS);Organization;Management IS (IS/Branche IS);;;
 Structure Med (Mediterranee/AS Regions/Branche AS);Organization;Mediterranee (AS Regions/Branche AS);;;
@@ -208,14 +208,14 @@ Management Portugal (Operational Portugal);Organization;Operational Portugal;;;
 Action Logement;Organization;Division Social (Sante/Software/Branche Software);;;475611
 Addstones;Organization;Addstones (BFI/Offres Specialisees/Branche BS);;;202633
 Aix;Organization;PACA (Mediterranee/AS Regions/Branche AS);;;338069
-AS;Organization;Belgique (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355509
+AS;Organization;Belgique (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;355509
 AS Centre;Organization;AS Centre (AS Centre/AS Regions/Branche AS);;;305704
 AS Centre - Ouest Direction;Organization;AS Ouest Direction (AS Centre - Ouest/AS Regions/Branche AS);;;341520
-AS Gfi Cataluna;Organization;AS Spain (Spain);;;555450
-AS Gfi Isban;Organization;AS Spain (Spain);;;555411
-AS Gfi Madrid;Organization;AS Spain (Spain);;;555410
-AS Gfi Norte;Organization;AS Spain (Spain);;;555430
-AS Gfi Sur;Organization;AS Spain (Spain);;;555470
+AS Ligoj Cataluna;Organization;AS Spain (Spain);;;555450
+AS Ligoj Isban;Organization;AS Spain (Spain);;;555411
+AS Ligoj Madrid;Organization;AS Spain (Spain);;;555410
+AS Ligoj Norte;Organization;AS Spain (Spain);;;555430
+AS Ligoj Sur;Organization;AS Spain (Spain);;;555470
 AS Morocco;Organization;AS Morocco (Morocco/Morocco/Morocco);;;458203
 ASd;Organization;Division Social (Sante/Software/Branche Software);;;475721
 Assurances;Organization;Operations BFA (BFA/AS IDF/Branche AS);;;303534
@@ -234,19 +234,19 @@ BIbliotheques;Organization;Division Social (Sante/Software/Branche Software);;;4
 BIg Data;Organization;BIg Data (BIg Data/Digital/Branche BS);;;304090
 Bnpp;Organization;Operations BFA (BFA/AS IDF/Branche AS);;;303536
 Bretagne AS Ouest;Organization;Bretagne AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);;;341531
-BSS;Organization;BSS (Gfi Telecom/Offres Specialisees/Branche BS);;;304050
+BSS;Organization;BSS (Ligoj Telecom/Offres Specialisees/Branche BS);;;304050
 Business Consulting;Organization;Business Transformation (Consulting);;;202610
 Business Consulting BFA;Organization;Amoa BFA (Amoa BFA/Amoa BFA/Consulting);;;202611
 Business Transformation;Organization;Business Transformation (Consulting);;;372700
 Casa-Irps;Organization;Operations BFA (BFA/AS IDF/Branche AS);;;303533
 Cem;Organization;Oss (Oss/Offres Specialisees/Branche BS);;;304061
 Chronogestor;Organization;Division Temps & Activite (Temps & Activite/Software/Branche Software);;;475115
-Chronotime;Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355514
+Chronotime;Organization;Software Belux (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;355514
 Chronotime Spain;Organization;Software (Spain);;;555483
 Ciceo;Organization;DI Service & Support (Management/Software/Branche Software);;;475607
 Cis;Organization;Cis (Cis/ES/Branche BS);;;207110
-Compant Hub Belux;Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355515
-Company Hub;Organization;Gfi Cloud (Management/Software/Branche Software);;;475933
+Compant Hub Belux;Organization;Software Belux (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;355515
+Company Hub;Organization;Ligoj Cloud (Management/Software/Branche Software);;;475933
 Company Hub Spain;Organization;Software (Spain);;;555482
 D&O - Maroc;Organization;BPR D&O (BPR/Production);;;873878
 D&O - Nord;Organization;BPR D&O (BPR/Production);;;873867
@@ -260,7 +260,7 @@ DI Lyon Clermont;Organization;DI Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche 
 DI PACA;Organization;PACA (Mediterranee/AS Regions/Branche AS);;;338062
 DI TP Orange;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314060
 DI TP Spu Airial;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314091
-DI TP Spu Gfi;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314090
+DI TP Spu Ligoj;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314090
 DI TP Telco Media;Organization;Direction Industrielle TP (TP/AS IDF/Branche AS);;;314070
 Digital;Organization;Digital (Digital/Digital/Branche BS);;;304080
 DI-N;Organization;Nord AS (Nord Est/AS Regions/Branche AS);;;364076
@@ -274,9 +274,9 @@ DO Iat;Organization;Direction Operation IES (IES/AS IDF/Branche AS);;;304020
 DO Lyon Clermont;Organization;DO Rhone-Alpes (AS Rhone-Alpes/AS Regions/Branche AS);;;322030
 DO TP;Organization;Direction Operation TP (TP/AS IDF/Branche AS);;;314050
 DO-Pdl/Lm AS Ouest;Organization;DO-Pdl/Lm AS Ouest (AS Centre - Ouest/AS Regions/Branche AS);;;341528
-Easy (Software);Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;455503
+Easy (Software);Organization;Software Belux (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;455503
 Ecommercehybris;Organization;Hybris (Hybris/Digital/Branche BS);;;873801
-ES;Organization;Luxembourg (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355510
+ES;Organization;Luxembourg (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;355510
 ES Morocco;Organization;ES Morocco (Morocco/Morocco/Morocco);;;458200
 Etablissement Algerie;Organization;Division Offres Specialisees (Divers/Software/Branche Software);;;475150
 Finance;Organization;Division Finance Publique (Management/Software/Branche Software);;;475650
@@ -287,12 +287,12 @@ Frais ES;Organization;Frais AS (Branche AS);;;303597
 Gce Technologies;Organization;Operations;;;873865
 Gestion & Facturation;Organization;Division Solutions Territoriales (Management/Software/Branche Software);;;475110
 Gestor,Net;Organization;Division Temps & Activite (Temps & Activite/Software/Branche Software);;;475117
-Gfi Levante IS;Organization;IS Spain (Spain);;;555510
+Ligoj Levante IS;Organization;IS Spain (Spain);;;555510
 GIE ESas;Organization;GIE ESas (GIE ESas/AS Regions/Branche AS);;;311100
 Global Outsourcing DOsi 3Si;Organization;Outsourcing (Outsourcing/Offres Specialisees/Branche BS);;;510311
-Infrastructure Services Psf;Organization;Luxembourg (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355517
+Infrastructure Services Psf;Organization;Luxembourg (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;355517
 I-Orga Spain;Organization;ES Spain (Spain);;;555495
-IS;Organization;Luxembourg (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355506
+IS;Organization;Luxembourg (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;355506
 IS - Hebergement;Organization;BPR Hbgt (BPR/Production);;;873875
 IS - Maroc;Organization;BPR IS (BPR/Production);;;873874
 IS - Nord;Organization;BPR IS (BPR/Production);;;873881
@@ -305,8 +305,8 @@ IS Arcitel;Organization;IS Spain (Spain);;;555490
 IS Bordeaux;Organization;IS Sud Ouest (IS Sud Ouest/IS/Branche IS);;;311314
 IS Centre;Organization;IS Centre (IS Ouest/IS/Branche IS);;;305712
 IS Cnes;Organization;IS Sud Ouest (IS Sud Ouest/IS/Branche IS);;;573320
-IS Gfi Madrid;Organization;IS Spain (Spain);;;555420
-IS Gfi Norte;Organization;IS Spain (Spain);;;555440
+IS Ligoj Madrid;Organization;IS Spain (Spain);;;555420
+IS Ligoj Norte;Organization;IS Spain (Spain);;;555440
 IS IDF Cit;Organization;IDF Direction Industrielle (IDF IS/IS/Branche IS);;;573323
 IS IDF DI BFA;Organization;IDF Direction Industrielle (IDF IS/IS/Branche IS);;;573309
 IS IDF DI Euci;Organization;IDF Direction Industrielle (IDF IS/IS/Branche IS);;;573322
@@ -333,7 +333,7 @@ IS Rha Sncf;Organization;IS Rha Sncf (IS Rhone-Alpes/IS/Branche IS);;;573321
 IS Toulouse;Organization;IS Sud Ouest (IS Sud Ouest/IS/Branche IS);;;573318
 IS-Ouest Bdd;Organization;BPR IS (BPR/Production);;;873885
 ITN;Organization;Division Assurance & Finance Prive (Finance/Software/Branche Software);;;475820
-ITN Belux;Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355513
+ITN Belux;Organization;Software Belux (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;355513
 ITN Spain;Organization;Software (Spain);;;555481
 Jde;Organization;Jde (Jde/ES/Branche BS);;;207210
 Lyon IS;Organization;IS Rhone-Alpes (IS Rhone-Alpes/IS/Branche IS);;;573311
@@ -344,7 +344,7 @@ Management AS SO;Organization;Management SO (Sud Ouest/AS Regions/Branche AS);;;
 Management Branche Conseil;Organization;Management Conseil (Management Conseil/Management Conseil/Consulting);;;202624
 Management Digital;Organization;Digital (Digital/Digital/Branche BS);;;201215
 Management ES;Organization;Management ES (Management ES/ES/Branche BS);;;201210
-Management Gfi Telecom;Organization;Management Gfi Telecom (Gfi Telecom/Offres Specialisees/Branche BS);;;304051
+Management Ligoj Telecom;Organization;Management Ligoj Telecom (Ligoj Telecom/Offres Specialisees/Branche BS);;;304051
 Management IDF IS;Organization;IDF IS (IDF IS/IS/Branche IS);;;573317
 Management IS;Organization;Management IS (Management IS/IS/Branche IS);;;573700
 Management Mediterranee;Organization;Structure Med (Mediterranee/AS Regions/Branche AS);;;338063
@@ -390,12 +390,12 @@ Pit;Organization;DI Service & Support (Management/Software/Branche Software);;;4
 Pm;Organization;Division Social (Sante/Software/Branche Software);;;475723
 Ppc;Organization;Oss (Oss/Offres Specialisees/Branche BS);;;304062
 Public Administration Logiciels;Organization;Software (Spain);;;555650
-Public Crm & Smart Cities;Organization;Gfi Cloud (Management/Software/Branche Software);;;475934
+Public Crm & Smart Cities;Organization;Ligoj Cloud (Management/Software/Branche Software);;;475934
 Qsi;Organization;Qsi (Qsi/Consulting);;;202620
 Rh;Organization;Division Rh (Management/Software/Branche Software);;;475605
 Sage;Organization;Infogen (Sage/ES/Branche BS);;;475209
 Sage Resale;Organization;Infogen (Sage/ES/Branche BS);;;475211
-Sage X3;Organization;Software Belux (Gfi Belgium/Gfi Belgium/Gfi Belgium);;;355516
+Sage X3;Organization;Software Belux (Ligoj Belgium/Ligoj Belgium/Ligoj Belgium);;;355516
 Sante;Organization;Division Sante (Management/Software/Branche Software);;;305710
 SAP;Organization;SAP (SAP/SAP/Consulting);;;304030
 Sepamail;Organization;Division Assurance & Finance Prive (Finance/Software/Branche Software);;;475644
