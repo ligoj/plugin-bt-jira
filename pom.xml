@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.ligoj.api</groupId>
 		<artifactId>plugin-parent</artifactId>
-		<version>3.1.8</version>
+		<version>3.2.0</version>
 		<relativePath />
 	</parent>
 
@@ -13,6 +13,7 @@
 	<version>1.0.13-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Ligoj - Plugin BT - Jira</name>
+	<url>https://github.com/ligoj/plugin-bt-jira</url>
 
 	<scm>
 		<connection>scm:git:https://github.com/ligoj/plugin-bt-jira</connection>
@@ -24,7 +25,7 @@
 		<dependency>
 			<groupId>org.ligoj.plugin</groupId>
 			<artifactId>plugin-bt</artifactId>
-			<version>[1.0.7,1.1.0)</version>
+			<version>[1.0.9,1.1.0)</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
