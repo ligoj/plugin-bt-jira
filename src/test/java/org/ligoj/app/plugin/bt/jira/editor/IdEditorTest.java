@@ -17,15 +17,15 @@ import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 /**
  * test class of {@link IdEditor} and {@link AbstractEditor}
  */
-public class IdEditorTest extends AbstractEditorUploadTest {
+class IdEditorTest extends AbstractEditorUploadTest {
 
 	@Test
-	public void testCustomColumn() {
+	void testCustomColumn() {
 		Assertions.assertEquals("STRINGVALUE", new IdEditor().getCustomColumn());
 	}
 
 	@Test
-	public void testGetValueInvalid() {
+	void testGetValueInvalid() {
 		final CustomField customField = new CustomField();
 		final Map<String, Integer> values = new LinkedHashMap<>();
 		values.put("keyA", 1);
@@ -38,7 +38,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testGetValue() {
+	void testGetValue() {
 		final CustomField customField = new CustomField();
 		final Map<String, Integer> values = new LinkedHashMap<>();
 		values.put("key", 1);
@@ -47,7 +47,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testGetValuebyId() {
+	void testGetValuebyId() {
 		final CustomField customField = new CustomField();
 		final CustomFieldValue value = new CustomFieldValue();
 		value.setStringValue("4");
@@ -58,7 +58,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testPopulateValues() {
+	void testPopulateValues() {
 		final CustomField customField = new CustomField();
 		customField.setName("Motif suspension");
 		customField.setId(10056);
@@ -75,7 +75,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testGetMap() {
+	void testGetMap() {
 		final Map<Integer, String> items = AbstractEditor.getMap(datasource,
 				"SELECT ID AS id, customvalue AS pname, SEQUENCE FROM customfieldoption WHERE CUSTOMFIELD = ? ORDER BY SEQUENCE", 10056);
 		Assertions.assertEquals(3, items.size());
@@ -85,7 +85,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testGetInvertedMap() {
+	void testGetInvertedMap() {
 		final Map<String, Integer> items = AbstractEditor.getInvertedMap(datasource,
 				"SELECT ID AS id, customvalue AS pname, SEQUENCE FROM customfieldoption WHERE CUSTOMFIELD = ? ORDER BY SEQUENCE", 10056);
 		Assertions.assertEquals(3, items.size());
@@ -95,7 +95,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testManagedTypesUrl() {
+	void testManagedTypesUrl() {
 		final CustomField customField = new CustomField();
 		customField.setName("NAME");
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
@@ -104,12 +104,12 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testManagedTypesRadio() {
+	void testManagedTypesRadio() {
 		assertSelect("com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons");
 	}
 
 	@Test
-	public void testManagedTypesRadioNullContext() {
+	void testManagedTypesRadioNullContext() {
 		final CustomField customField = new CustomField();
 		customField.setName("Origine");
 		customField.setId(10108);
@@ -120,7 +120,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testManagedTypesRadioFailContext() {
+	void testManagedTypesRadioFailContext() {
 		final CustomField customField = new CustomField();
 		customField.setName("Origine");
 		customField.setId(10108);
@@ -133,7 +133,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testManagedTypesRadioExactContext() {
+	void testManagedTypesRadioExactContext() {
 		final CustomField customField = new CustomField();
 		customField.setName("Origine");
 		customField.setId(10108);
@@ -147,7 +147,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	 * This a special custom field, not yet managed string to id operations.
 	 */
 	@Test
-	public void testNotManagedFromString() {
+	void testNotManagedFromString() {
 		final CustomField customField = new CustomField();
 		customField.setName("cf-cascading");
 		customField.setId(19003);
@@ -158,7 +158,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testNotManagedFromStringButFromId() {
+	void testNotManagedFromStringButFromId() {
 		final CustomField customField = new CustomField();
 		customField.setName("cf-cascading");
 		customField.setId(19003);
@@ -170,7 +170,7 @@ public class IdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testManagedTypesSelect() {
+	void testManagedTypesSelect() {
 		assertSelect("com.atlassian.jira.plugin.system.customfieldtypes:select");
 	}
 

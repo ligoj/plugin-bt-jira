@@ -19,15 +19,15 @@ import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 /**
  * test class of {@link MultipleIdEditor}
  */
-public class MultipleIdEditorTest extends AbstractEditorUploadTest {
+class MultipleIdEditorTest extends AbstractEditorUploadTest {
 
 	@Test
-	public void testCustomColumn() {
+	void testCustomColumn() {
 		Assertions.assertEquals("STRINGVALUE", new MultipleIdEditor().getCustomColumn());
 	}
 
 	@Test
-	public void testGetValueInvalid() {
+	void testGetValueInvalid() {
 		final CustomField customField = new CustomField();
 		final Map<String, Integer> values = new LinkedHashMap<>();
 		values.put("keyA", 1);
@@ -40,7 +40,7 @@ public class MultipleIdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testGetValue() {
+	void testGetValue() {
 		final CustomField customField = new CustomField();
 		final Map<String, Integer> values = new LinkedHashMap<>();
 		values.put("keyA", 1);
@@ -56,12 +56,12 @@ public class MultipleIdEditorTest extends AbstractEditorUploadTest {
 	}
 
 	@Test
-	public void testManagedTypesMultiCheckboxes() {
+	void testManagedTypesMultiCheckboxes() {
 		assertMulti("com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes");
 	}
 
 	@Test
-	public void testManagedTypesMultiSelect() {
+	void testManagedTypesMultiSelect() {
 		assertMulti("com.atlassian.jira.plugin.system.customfieldtypes:multiselect");
 	}
 

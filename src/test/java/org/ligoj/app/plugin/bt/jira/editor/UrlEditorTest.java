@@ -13,15 +13,15 @@ import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 /**
  * test class of {@link UrlEditor}
  */
-public class UrlEditorTest extends AbstractDataGeneratorTest {
+class UrlEditorTest extends AbstractDataGeneratorTest {
 
 	@Test
-	public void testGetValue() {
+	void testGetValue() {
 		Assertions.assertEquals("http://www.google.fr", new UrlEditor().getValue(null, "http://www.google.fr"));
 	}
 
 	@Test
-	public void testGetValueInvalid() {
+	void testGetValueInvalid() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			new UrlEditor().getValue(new CustomField(), "data");
 		}), "cf$null", "Invalid value 'data'. Expected : A HTTP URL");

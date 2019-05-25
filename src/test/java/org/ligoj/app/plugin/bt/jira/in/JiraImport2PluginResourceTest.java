@@ -19,10 +19,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 /**
  * Test class of {@link JiraImportPluginResource}
  */
-public class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest {
+class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest {
 
 	@Test
-	public void testZUploadWithInsertWithFailAuth() throws Exception {
+	void testZUploadWithInsertWithFailAuth() throws Exception {
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_NOT_FOUND)));
 		httpServer.start();
 
@@ -44,7 +44,7 @@ public class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResou
 	}
 
 	@Test
-	public void testZUploadWithInsertWithFailCache() throws Exception {
+	void testZUploadWithInsertWithFailCache() throws Exception {
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_OK)));
 		httpServer.stubFor(post(urlPathEqualTo("/login.jsp"))
 				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
@@ -66,7 +66,7 @@ public class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResou
 	}
 
 	@Test
-	public void testZUploadWithInsertWithFailReIndex() throws Exception {
+	void testZUploadWithInsertWithFailReIndex() throws Exception {
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_OK)));
 		httpServer.stubFor(post(urlPathEqualTo("/login.jsp"))
 				.willReturn(aResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "/")));
@@ -90,7 +90,7 @@ public class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResou
 	}
 
 	@Test
-	public void testZUploadWithInsertWithReIndex() throws Exception {
+	void testZUploadWithInsertWithReIndex() throws Exception {
 		startOperationalServer();
 
 		this.subscription = getSubscription("gStack");
@@ -106,7 +106,7 @@ public class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResou
 	}
 
 	@Test
-	public void testZUploadWithInsertNoScriptRunner() throws Exception {
+	void testZUploadWithInsertNoScriptRunner() throws Exception {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginkey=? WHERE ID = ?", "N/A", 10170);
@@ -128,7 +128,7 @@ public class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResou
 	}
 
 	@Test
-	public void testZUploadWithInsertWithFailConnect() throws Exception {
+	void testZUploadWithInsertWithFailConnect() throws Exception {
 		// No started server
 		this.subscription = getSubscription("gStack");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete7.csv").getInputStream(), ENCODING, subscription,
@@ -142,7 +142,7 @@ public class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResou
 	}
 
 	@Test
-	public void testZUploadWithInsertNoAssociation() throws Exception {
+	void testZUploadWithInsertNoAssociation() throws Exception {
 		startOperationalServer();
 
 		this.subscription = getSubscription("gStack");

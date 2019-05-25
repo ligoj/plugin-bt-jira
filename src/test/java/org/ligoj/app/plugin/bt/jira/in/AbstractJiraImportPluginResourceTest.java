@@ -26,7 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = "classpath:/META-INF/spring/application-context-test.xml")
 @Rollback
 @Transactional
-public abstract class AbstractJiraImportPluginResourceTest extends AbstractJiraUploadTest {
+abstract class AbstractJiraImportPluginResourceTest extends AbstractJiraUploadTest {
 
 	protected static final String ENCODING = "cp1250";
 
@@ -35,7 +35,7 @@ public abstract class AbstractJiraImportPluginResourceTest extends AbstractJiraU
 	protected JiraPluginResource jiraResource;
 
 	@BeforeEach
-	public void prepareSubscription() {
+	void prepareSubscription() {
 		this.subscription = getSubscription("MDA");
 		resource = new JiraImportPluginResource();
 		applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);

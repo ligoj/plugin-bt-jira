@@ -22,8 +22,14 @@ import lombok.Setter;
 @Getter
 public class ImportEntry {
 
+	/**
+	 * Pattern for accepted second.
+	 */
 	public static final String SECONDS_PATTERN = ":\\d\\d";
 
+	/**
+	 * Pattern for accepted hour/minute.
+	 */
 	public static final String HM_PATTERN = "\\s+\\d\\d:\\d\\d";
 
 	/**

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class BeanTest {
 
 	@Test
-	public void testUploadMode() {
+	void testUploadMode() {
 		UploadMode.valueOf(UploadMode.values()[UploadMode.FULL.ordinal()].name());
 	}
 }

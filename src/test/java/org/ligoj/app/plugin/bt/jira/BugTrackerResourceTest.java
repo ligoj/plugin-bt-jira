@@ -53,7 +53,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = "classpath:/META-INF/spring/application-context-test.xml")
 @Rollback
 @Transactional
-public class BugTrackerResourceTest extends AbstractJiraUploadTest {
+class BugTrackerResourceTest extends AbstractJiraUploadTest {
 
 	@Autowired
 	private BugTrackerResource resource;
@@ -83,14 +83,14 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	private IdentifierHelper identifierHelper;
 
 	@BeforeEach
-	public void prepareSubscription() throws IOException {
+	void prepareSubscription() throws IOException {
 		persistSystemEntities();
 		persistEntities("csv", new Class[] { DelegateOrg.class }, StandardCharsets.UTF_8.name());
 		this.subscription = getSubscription("MDA");
 	}
 
 	@Test
-	public void getConfiguration() throws Exception {
+	void getConfiguration() throws Exception {
 
 		slaRepository.findBySubscription(subscription).get(0).setTypes("Bug,New Feature");
 		slaRepository.findBySubscription(subscription).get(0).setPriorities("Blocker,Critical");
@@ -178,14 +178,14 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void deleteUnknown() {
+	void deleteUnknown() {
 		Assertions.assertThrows(JpaObjectRetrievalFailureException.class, () -> {
 			resource.delete(-1, false);
 		});
 	}
 
 	@Test
-	public void delete() {
+	void delete() {
 		final Project project = new Project();
 		project.setName("TEST");
 		project.setPkey("test");
@@ -228,7 +228,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void createCreateDefault() {
+	void createCreateDefault() {
 		slaRepository.deleteAll();
 		repository.deleteAll();
 		businessHoursRepository.deleteAll();
@@ -291,16 +291,16 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void create() {
+	void create() {
 		createOrLink(subscription -> resource.create(subscription.getId()));
 	}
 
 	@Test
-	public void link() {
+	void link() {
 		createOrLink(subscription -> resource.link(subscription.getId()));
 	}
 
-	public void createOrLink(final Consumer<Subscription> function) {
+	void createOrLink(final Consumer<Subscription> function) {
 
 		final Project project = new Project();
 		project.setName("TEST");
@@ -342,7 +342,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void addSla() {
+	void addSla() {
 		em.flush();
 		em.clear();
 		final SlaEditionVo vo = new SlaEditionVo();
@@ -370,7 +370,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void deleteSla() {
+	void deleteSla() {
 		final int id = slaRepository.findBySubscription(subscription).iterator().next().getId();
 		em.flush();
 		em.clear();
@@ -381,7 +381,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void addSlaBoundStart() {
+	void addSlaBoundStart() {
 		final SlaEditionVo vo = new SlaEditionVo();
 		vo.setName("AA");
 		vo.setStart(identifierHelper.asList("Open"));
@@ -398,7 +398,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void addSlaBoundEnd() {
+	void addSlaBoundEnd() {
 		final SlaEditionVo vo = new SlaEditionVo();
 		vo.setName("AA");
 		vo.setStart(identifierHelper.asList("Open"));
@@ -414,7 +414,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void updateSla() {
+	void updateSla() {
 		final Sla oldEntity = slaRepository.findBySubscription(subscription).get(0);
 		final SlaEditionVo vo = new SlaEditionVo();
 		vo.setName("AA");
@@ -443,7 +443,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void addBusinessHours() {
+	void addBusinessHours() {
 		final BusinessHoursEditionVo vo = new BusinessHoursEditionVo();
 		vo.setStart(1);
 		vo.setEnd(2);
@@ -461,7 +461,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void updateBusinessHours() {
+	void updateBusinessHours() {
 		final BusinessHours oldEntity = repository.findBySubscription(subscription).getBusinessHours().iterator().next();
 		final BusinessHoursEditionVo vo = new BusinessHoursEditionVo();
 		vo.setStart(1);
@@ -480,7 +480,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void addBusinessHoursOverlapsStart() {
+	void addBusinessHoursOverlapsStart() {
 		final BusinessHoursEditionVo vo = new BusinessHoursEditionVo();
 		vo.setStart(10 * DateUtils.MILLIS_PER_HOUR);
 		vo.setEnd(23 * DateUtils.MILLIS_PER_HOUR);
@@ -493,7 +493,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void addBusinessHoursOverlapsEnd() {
+	void addBusinessHoursOverlapsEnd() {
 		final BusinessHoursEditionVo vo = new BusinessHoursEditionVo();
 		vo.setStart(2 * DateUtils.MILLIS_PER_HOUR);
 		vo.setEnd(1 * DateUtils.MILLIS_PER_HOUR);
@@ -506,7 +506,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void deleteBusinessHours() {
+	void deleteBusinessHours() {
 		Assertions.assertEquals(2, repository.findBySubscription(subscription).getBusinessHours().size());
 		final int id = repository.findBySubscription(subscription).getBusinessHours().iterator().next().getId();
 		em.flush();
@@ -518,7 +518,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void deleteLastBusinessHours() {
+	void deleteLastBusinessHours() {
 		Assertions.assertEquals(2, repository.findBySubscription(subscription).getBusinessHours().size());
 		int id0 = repository.findBySubscription(subscription).getBusinessHours().iterator().next().getId();
 		em.flush();
@@ -538,7 +538,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void setCalendar() {
+	void setCalendar() {
 		final Calendar calendar = new Calendar();
 		calendar.setName("Any");
 		calendarRepository.saveAndFlush(calendar);
@@ -553,7 +553,7 @@ public class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	}
 
 	@Test
-	public void getCalendars() {
+	void getCalendars() {
 		final Calendar calendar2 = new Calendar();
 		calendar2.setName("Any2");
 		calendarRepository.saveAndFlush(calendar2);

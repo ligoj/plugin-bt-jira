@@ -33,14 +33,10 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 
 	/**
 	 *
-	 * @param priorityText
-	 *            The priority mapping: identifier to name.
-	 * @param resolutionText
-	 *            The resolution mapping: identifier to name.
-	 * @param statusText
-	 *            The status mapping: identifier to name.
-	 * @param typeText
-	 *            The issue type mapping: identifier to name.
+	 * @param priorityText   The priority mapping: identifier to name.
+	 * @param resolutionText The resolution mapping: identifier to name.
+	 * @param statusText     The status mapping: identifier to name.
+	 * @param typeText       The issue type mapping: identifier to name.
 	 */
 	protected AbstractCsvOutput(final Map<Integer, String> priorityText, final Map<Integer, String> resolutionText,
 			final Map<Integer, String> statusText, final Map<Integer, String> typeText) {
@@ -67,8 +63,8 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 	/**
 	 * Basic headers.
 	 *
-	 * @param writer
-	 *            Target output.
+	 * @param writer Target output.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeNonSlaHeaders(final Writer writer) throws IOException {
 		// Write static headers
@@ -81,34 +77,29 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 	/**
 	 * Write CSV header. Ends with new line.
 	 *
-	 * @param writer
-	 *            Target output.
+	 * @param writer Target output.
+	 * @throws IOException When data could not be written.
 	 */
 	protected abstract void writeHeaders(Writer writer) throws IOException;
 
 	/**
 	 * Write issues data. Ends with new line.
 	 *
-	 * @param writer
-	 *            Target output.
-	 * @param df
-	 *            The {@link Format} used to write the date when not <code>null</code>.
-	 * @param idf
-	 *            The identifier format.
+	 * @param writer Target output.
+	 * @param df     The {@link Format} used to write the date when not <code>null</code>.
+	 * @param idf    The identifier format.
+	 * @throws IOException When data could not be written.
 	 */
 	protected abstract void writeData(Writer writer, Format df, Format idf) throws IOException;
 
 	/**
 	 * Write issue data
 	 *
-	 * @param issue
-	 *            The issue to write.
-	 * @param writer
-	 *            Target output.
-	 * @param df
-	 *            The {@link Format} used to write the date when not <code>null</code>.
-	 * @param idf
-	 *            The identifier format.
+	 * @param issue  The issue to write.
+	 * @param writer Target output.
+	 * @param df     The {@link Format} used to write the date when not <code>null</code>.
+	 * @param idf    The identifier format.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeIssueData(final IssueDetails issue, final Writer writer, final Format df, final Format idf)
 			throws IOException {
@@ -160,12 +151,10 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 	 * Write a date using the given format and in millisecond format, so 2 strings are added in the CSV output.
 	 * <code>null</code> management is performed there. Empty {@link String} is written with <code>null</code> date.
 	 *
-	 * @param writer
-	 *            The target output.
-	 * @param df
-	 *            The {@link Format} used to write the date when not <code>null</code>.
-	 * @param date
-	 *            The {@link Date} to write.
+	 * @param writer The target output.
+	 * @param df     The {@link Format} used to write the date when not <code>null</code>.
+	 * @param date   The {@link Date} to write.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeDate(final Writer writer, final Format df, final Date date) throws IOException {
 		if (date == null) {
@@ -183,10 +172,9 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 	 * Write a duration using the "HH:mm:ss" format and in millisecond format, so 2 strings are added in the CSV output.
 	 * <code>null</code> management is performed there. Empty {@link String} is written with <code>null</code> duration.
 	 *
-	 * @param writer
-	 *            The target output.
-	 * @param duration
-	 *            The duration to write, in milliseconds.
+	 * @param writer   The target output.
+	 * @param duration The duration to write, in milliseconds.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeDuration(final Writer writer, final Long duration) throws IOException {
 		if (duration == null) {

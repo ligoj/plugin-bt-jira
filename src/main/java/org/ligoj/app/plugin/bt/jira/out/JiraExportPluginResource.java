@@ -515,7 +515,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 *            The SLA computations.
 	 * @param styleNormal
 	 *            The normal style.
-	 * @param styleNormal
+	 * @param styleOver
 	 *            The style when the SLA is over.
 	 * @return {@link SlaData} {@link Processor}.
 	 */
@@ -545,7 +545,7 @@ public class JiraExportPluginResource extends JiraBaseResource {
 	 *
 	 * @param styleNormal
 	 *            The normal style.
-	 * @param styleNormal
+	 * @param styleOver
 	 *            The style when the SLA is over.
 	 * @return {@link SlaData} {@link Processor}.
 	 */

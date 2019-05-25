@@ -24,6 +24,7 @@ public abstract class AbstractJiraUploadTest extends AbstractJiraDataTest {
 
 	/**
 	 * Initialize data base with 'MDA' JIRA project.
+	 * @throws SQLException When SQL execution failed.
 	 */
 	@BeforeAll
 	public static void initializeJiraDataBaseForImport() throws SQLException {
@@ -40,6 +41,7 @@ public abstract class AbstractJiraUploadTest extends AbstractJiraDataTest {
 
 	/**
 	 * Clean data base with 'MDA' JIRA project.
+	 * @throws SQLException When SQL execution failed.
 	 */
 	@AfterAll
 	public static void cleanJiraDataBaseForImport() throws SQLException {

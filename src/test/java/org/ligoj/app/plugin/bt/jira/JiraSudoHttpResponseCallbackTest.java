@@ -13,17 +13,17 @@ import org.mockito.Mockito;
 /**
  * Test class of {@link JiraSudoHttpResponseCallback}
  */
-public class JiraSudoHttpResponseCallbackTest {
+class JiraSudoHttpResponseCallbackTest {
 	private JiraSudoHttpResponseCallback jiraSudoHttpResponseCallback = new JiraSudoHttpResponseCallback();
 
 	@Test
-	public void acceptLocation() {
+	void acceptLocation() {
 		Assertions.assertTrue(jiraSudoHttpResponseCallback.acceptLocation(null));
 		Assertions.assertTrue(jiraSudoHttpResponseCallback.acceptLocation("/login.jsp"));
 	}
 
 	@Test
-	public void acceptResponse200() {
+	void acceptResponse200() {
 		final CloseableHttpResponse response = Mockito.mock(CloseableHttpResponse.class);
 		final StatusLine statusLine = Mockito.mock(StatusLine.class);
 		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
@@ -32,7 +32,7 @@ public class JiraSudoHttpResponseCallbackTest {
 	}
 
 	@Test
-	public void acceptResponse302() {
+	void acceptResponse302() {
 		final CloseableHttpResponse response = Mockito.mock(CloseableHttpResponse.class);
 		final StatusLine statusLine = Mockito.mock(StatusLine.class);
 		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
@@ -41,7 +41,7 @@ public class JiraSudoHttpResponseCallbackTest {
 	}
 
 	@Test
-	public void acceptResponse302WithHeader() {
+	void acceptResponse302WithHeader() {
 		final CloseableHttpResponse response = Mockito.mock(CloseableHttpResponse.class);
 		final StatusLine statusLine = Mockito.mock(StatusLine.class);
 		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
@@ -53,7 +53,7 @@ public class JiraSudoHttpResponseCallbackTest {
 	}
 
 	@Test
-	public void acceptResponse302WithCorrectHeader() {
+	void acceptResponse302WithCorrectHeader() {
 		final CloseableHttpResponse response = Mockito.mock(CloseableHttpResponse.class);
 		final StatusLine statusLine = Mockito.mock(StatusLine.class);
 		Mockito.when(response.getStatusLine()).thenReturn(statusLine);

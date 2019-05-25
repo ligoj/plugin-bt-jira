@@ -23,7 +23,7 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 /**
  * {@link JiraUpdateDao} test class.
  */
-public class JiraUpdateDaoTest {
+class JiraUpdateDaoTest {
 
 	private static DataSource datasource;
 
@@ -31,7 +31,7 @@ public class JiraUpdateDaoTest {
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
 	@BeforeAll
-	public static void initializeJiraDataBaseForImport() throws SQLException {
+	static void initializeJiraDataBaseForImport() throws SQLException {
 		datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
 		final Connection connection = datasource.getConnection();
 		try {
@@ -54,7 +54,7 @@ public class JiraUpdateDaoTest {
 	 * Clean data base with 'MDA' JIRA project.
 	 */
 	@AfterAll
-	public static void cleanJiraDataBaseForImport() throws SQLException {
+	static void cleanJiraDataBaseForImport() throws SQLException {
 		final Connection connection = datasource.getConnection();
 
 		try {
@@ -67,7 +67,7 @@ public class JiraUpdateDaoTest {
 	}
 
 	@Test
-	public void testPrepareForNextIdConcurrent() {
+	void testPrepareForNextIdConcurrent() {
 		final JiraUpdateDao dao = new JiraUpdateDao() {
 
 			private boolean mock = true;

@@ -56,6 +56,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 	 *
 	 * @param writer
 	 *            Target output.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeCountersHeaders(final Writer writer) throws IOException {
 		// Iterate over statuses of all issues to compute used statuses
@@ -70,6 +71,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 	 *
 	 * @param writer
 	 *            Target output.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeSlaHeaders(final Writer writer) throws IOException {
 		for (final SlaConfiguration sla : slaComputations.getSlaConfigurations()) {
@@ -95,6 +97,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 	 *            The SLA configuration to write.
 	 * @param suffix
 	 *            The SLA suffix of each header.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeSlaHeader(final Writer writer, final SlaConfiguration sla, final String suffix)
 			throws IOException {
@@ -124,6 +127,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 	 *            Target output.
 	 * @param df
 	 *            The {@link Format} used to write the date when not <code>null</code>.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeSlaData(final IssueSla issue, final Writer writer, final Format df) throws IOException {
 
@@ -141,6 +145,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 	 *            The issue to write.
 	 * @param writer
 	 *            Target output.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeSlaCounters(final IssueSla issue, final Writer writer) throws IOException {
 		final Map<Integer, Integer> counter = issue.getStatusCounter();
@@ -161,6 +166,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 	 *            Target output.
 	 * @param df
 	 *            The {@link Format} used to write the date when not <code>null</code>.
+	 * @throws IOException When data could not be written.
 	 */
 	protected void writeSlaDurationData(final IssueSla issue, final Writer writer, final Format df) throws IOException {
 		for (final SlaData data : issue.getData()) {

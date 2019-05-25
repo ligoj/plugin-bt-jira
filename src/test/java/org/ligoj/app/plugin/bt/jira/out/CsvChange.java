@@ -8,6 +8,9 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * A data set change.
+ */
 @Getter
 @Setter
 public class CsvChange {

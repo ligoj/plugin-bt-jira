@@ -22,7 +22,7 @@ public abstract class AbstractJiraDataTest extends AbstractJiraTest {
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
 	@BeforeAll
-	public static void initializeJiraDataBase2() throws SQLException {
+	static void initializeJiraDataBase2() throws SQLException {
 		final Connection connection = datasource.getConnection();
 		try {
 			ScriptUtils.executeSqlScript(connection,
@@ -37,7 +37,7 @@ public abstract class AbstractJiraDataTest extends AbstractJiraTest {
 	 * Clean data base with 'MDA' JIRA project.
 	 */
 	@AfterAll
-	public static void cleanJiraDataBase2() throws SQLException {
+	static void cleanJiraDataBase2() throws SQLException {
 		final Connection connection = datasource.getConnection();
 
 		try {

@@ -16,10 +16,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 /**
  * Test class of {@link JiraImportPluginResource}
  */
-public class JiraImport3PluginResourceTest extends AbstractJiraImportPluginResourceTest {
+class JiraImport3PluginResourceTest extends AbstractJiraImportPluginResourceTest {
 
 	@Test
-	public void testZUploadWithInsert() throws Exception {
+	void testZUploadWithInsert() throws Exception {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 		final int pcounter = jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10074);
 

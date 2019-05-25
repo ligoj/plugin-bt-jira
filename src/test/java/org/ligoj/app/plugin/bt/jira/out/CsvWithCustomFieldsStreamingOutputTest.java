@@ -32,10 +32,10 @@ import org.mockito.Mockito;
 /**
  * Test class of {@link CsvWithCustomFieldsStreamingOutput}
  */
-public class CsvWithCustomFieldsStreamingOutputTest {
+class CsvWithCustomFieldsStreamingOutputTest {
 
 	@Test
-	public void write() throws IOException {
+	void write() throws IOException {
 		// Prepare
 
 		final JiraSlaComputations computations = new JiraSlaComputations();

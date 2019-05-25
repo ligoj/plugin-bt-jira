@@ -57,7 +57,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = "classpath:/META-INF/spring/application-context-test.xml")
 @Rollback
 @Transactional
-public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
+class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 
 	@Autowired
 	private JiraExportPluginResource resource;
@@ -66,7 +66,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	private SlaRepository slaRepository;
 
 	@Test
-	public void getSlaComputationsNoChangeJira6() {
+	void getSlaComputationsNoChangeJira6() {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
@@ -77,7 +77,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsNoChange() {
+	void getSlaComputationsNoChange() {
 		final int subscription = getSubscription("gStack");
 		final SlaComputations computations = resource.getSlaComputations(subscription, false);
 		Assertions.assertNotNull(computations);
@@ -89,14 +89,14 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getCustomFieldsById() {
+	void getCustomFieldsById() {
 		final Map<Integer, CustomFieldEditor> customFieldsById = SpringUtils.getBean(JiraDao.class).getCustomFieldsById(null,
 				new HashSet<>(), 0);
 		Assertions.assertEquals(0, customFieldsById.size());
 	}
 
 	@Test
-	public void getSlaComputationsCsv() throws Exception {
+	void getSlaComputationsCsv() throws Exception {
 		final int subscription = getSubscription("MDA");
 		final StreamingOutput csv = (StreamingOutput) resource.getSlaComputationsCsv(subscription, "file1").getEntity();
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -198,7 +198,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSimpleCsv() throws Exception {
+	void getSimpleCsv() throws Exception {
 		final int subscription = getSubscription("MDA");
 		final StreamingOutput csv = (StreamingOutput) resource.getSimpleCsv(subscription, "file1").getEntity();
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -230,7 +230,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsCsvWithCustomFields() throws Exception {
+	void getSlaComputationsCsvWithCustomFields() throws Exception {
 		final int subscription = getSubscription("MDA");
 		final StreamingOutput csv = (StreamingOutput) resource.getSlaComputationsCsvWithCustomFields(subscription, "file1").getEntity();
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -259,7 +259,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getStatusHistory() throws Exception {
+	void getStatusHistory() throws Exception {
 		final int subscription = getSubscription("MDA");
 		final StreamingOutput csv = (StreamingOutput) resource.getStatusHistory(subscription, "file1").getEntity();
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -286,7 +286,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsCsvFiltered() throws Exception {
+	void getSlaComputationsCsvFiltered() throws Exception {
 		final int subscription = getSubscription("MDA");
 		slaRepository.findBySubscription(subscription).get(0).setTypes("Bug,New Feature");
 		slaRepository.findBySubscription(subscription).get(0).setPriorities("Blocker,Critical");
@@ -369,7 +369,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsXls() throws Exception {
+	void getSlaComputationsXls() throws Exception {
 		final int subscription = getSubscription("MDA");
 		final StreamingOutput csv = (StreamingOutput) resource.getSlaComputationsXls(subscription, "file1").getEntity();
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -377,7 +377,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsXlsNoMatchSla() throws Exception {
+	void getSlaComputationsXlsNoMatchSla() throws Exception {
 		final int subscription = getSubscription("MDA");
 		repository.findBySubscriptionFetch(subscription).getSlas().get(0).setPriorities("TRIVIAL");
 		em.flush();
@@ -388,14 +388,14 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsXlsBropenPipe() {
+	void getSlaComputationsXlsBropenPipe() {
 		Assertions.assertThrows(NullPointerException.class, () -> {
 			((StreamingOutput) resource.getSlaComputationsXls(getSubscription("MDA"), "file1").getEntity()).write(null);
 		});
 	}
 
 	@Test
-	public void getSlaConfigurations() {
+	void getSlaConfigurations() {
 		final int subscription = getSubscription("MDA");
 		final JiraSlaComputations computations = resource.getSlaComputations(subscription, true);
 		Assertions.assertNotNull(computations);
@@ -458,7 +458,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void getSlaComputationsUnknownSubscription() {
+	void getSlaComputationsUnknownSubscription() {
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
 			resource.getSlaComputations(0, false);
 		});
@@ -466,7 +466,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void toStyleProcessorNoThreshold() {
+	void toStyleProcessorNoThreshold() {
 		final Deque<Object> contextData = new ArrayDeque<>();
 		contextData.add(1); // Index
 		final SlaData data = new SlaData();
@@ -483,7 +483,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void toStyleProcessorNoDuration() {
+	void toStyleProcessorNoDuration() {
 		final Deque<Object> contextData = new LinkedList<>();
 		contextData.add(1); // Index
 		contextData.add(null); // Duration
@@ -498,7 +498,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void toStyleProcessor() {
+	void toStyleProcessor() {
 		final Deque<Object> contextData = new ArrayDeque<>();
 		contextData.add(1); // Index
 		final SlaData data = new SlaData();
@@ -514,7 +514,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void toStyleProcessorDistance() {
+	void toStyleProcessorDistance() {
 		final Deque<Object> contextData = new ArrayDeque<>();
 		final SlaData data = new SlaData();
 		data.setRevisedDueDateDistance(0L); // Perfect distance
@@ -523,14 +523,14 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void toStyleProcessorDistanceUndefined() {
+	void toStyleProcessorDistanceUndefined() {
 		final Deque<Object> contextData = new ArrayDeque<>();
 		contextData.add(new SlaData()); // No defined distance
 		Assertions.assertEquals("normal", resource.toStyleProcessorDistance("normal", "invalid").getValue(contextData));
 	}
 
 	@Test
-	public void toStyleProcessorDistanceAdvance() {
+	void toStyleProcessorDistanceAdvance() {
 		final Deque<Object> contextData = new ArrayDeque<>();
 		final SlaData data = new SlaData();
 		data.setRevisedDueDateDistance(1L); // Positive distance, advance
@@ -539,7 +539,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void toStyleProcessorDistanceLate() {
+	void toStyleProcessorDistanceLate() {
 		final Deque<Object> contextData = new ArrayDeque<>();
 		final SlaData data = new SlaData();
 		data.setRevisedDueDateDistance(-1L); // Negative distance, late
@@ -548,7 +548,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	}
 
 	@Test
-	public void toStyleProcessorOverThreshold() {
+	void toStyleProcessorOverThreshold() {
 		final Deque<Object> contextData = new ArrayDeque<>();
 		contextData.add(1); // Index
 		final SlaData data = new SlaData();
@@ -568,7 +568,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
 	@BeforeAll
-	public static void initializeJiraDataBaseForSla() throws SQLException {
+	static void initializeJiraDataBaseForSla() throws SQLException {
 		final DataSource datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
 		final Connection connection = datasource.getConnection();
 		try {
@@ -585,7 +585,7 @@ public class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 	 * Clean data base with 'MDA' JIRA project.
 	 */
 	@AfterAll
-	public static void cleanJiraDataBaseForSla() throws SQLException {
+	static void cleanJiraDataBaseForSla() throws SQLException {
 		final DataSource datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
 		final Connection connection = datasource.getConnection();
 

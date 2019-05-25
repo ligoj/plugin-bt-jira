@@ -20,6 +20,7 @@ public abstract class AbstractJiraData3Test extends AbstractJiraDataTest {
 
 	/**
 	 * Initialize data base with 'MDA' JIRA project.
+	 * @throws SQLException When SQL execution failed.
 	 */
 	@BeforeAll
 	public static void initializeJiraDataBase3() throws SQLException {
@@ -35,6 +36,7 @@ public abstract class AbstractJiraData3Test extends AbstractJiraDataTest {
 
 	/**
 	 * Clean data base with 'MDA' JIRA project.
+	 * @throws SQLException When SQL execution failed.
 	 */
 	@AfterAll
 	public static void cleanJiraDataBase3() throws SQLException {

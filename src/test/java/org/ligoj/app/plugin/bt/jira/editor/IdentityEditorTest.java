@@ -12,29 +12,29 @@ import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
 /**
  * test class of {@link IdentityEditor}
  */
-public class IdentityEditorTest extends AbstractEditorTest {
+class IdentityEditorTest extends AbstractEditorTest {
 
 	@Test
-	public void testGetValueFromString() {
+	void testGetValueFromString() {
 		Assertions.assertEquals("value", new IdentityEditor().getValue(null, "value"));
 	}
 
 	@Test
-	public void testGetValueFromDataText() {
+	void testGetValueFromDataText() {
 		final CustomFieldValue value = new CustomFieldValue();
 		value.setTextValue("value");
 		Assertions.assertEquals("value", new IdentityEditor().getValue(null, value));
 	}
 
 	@Test
-	public void testGetValueFromDataString() {
+	void testGetValueFromDataString() {
 		final CustomFieldValue value = new CustomFieldValue();
 		value.setStringValue("value");
 		Assertions.assertEquals("value", new IdentityEditor().getValue(null, value));
 	}
 
 	@Test
-	public void testManagedTypes() {
+	void testManagedTypes() {
 		final CustomField customField = new CustomField();
 		customField.setName("NAME");
 		Assertions.assertEquals(4.3,

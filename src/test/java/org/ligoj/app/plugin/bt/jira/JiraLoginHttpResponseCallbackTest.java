@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class of {@link JiraLoginHttpResponseCallback}
  */
-public class JiraLoginHttpResponseCallbackTest {
+class JiraLoginHttpResponseCallbackTest {
 
 	@Test
-	public void test() {
+	void test() {
 		Assertions.assertFalse(new JiraLoginHttpResponseCallback().acceptLocation(null));
 		Assertions.assertFalse(new JiraLoginHttpResponseCallback().acceptLocation("/login.jsp"));
 		Assertions.assertTrue(new JiraLoginHttpResponseCallback().acceptLocation("/"));

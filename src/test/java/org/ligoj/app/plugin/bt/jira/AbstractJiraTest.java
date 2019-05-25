@@ -41,7 +41,7 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 /**
  * Common JPA test utilities.
  */
-public abstract class AbstractJiraTest extends AbstractServerTest {
+abstract class AbstractJiraTest extends AbstractServerTest {
 
 	@Autowired
 	protected JiraDao dao;
@@ -60,7 +60,7 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 	protected int subscription;
 
 	@BeforeEach
-	public void prepareData() throws IOException {
+	void prepareData() throws IOException {
 		// Only with Spring context
 		if (csvForJpa != null) {
 			persistEntities("csv",
@@ -72,8 +72,11 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 	}
 
 	/**
-	 * Return the subscription identifier of a project. Assumes there is only
-	 * one subscription for a service.
+	 * Return the subscription identifier of a project. Assumes there is only one subscription for a service.
+	 * 
+	 * @param project The project key name.
+	 * @return The first subscription identifier associated to the {@link BugTrackerResource#SERVICE_KEY} service for
+	 *         the related project.
 	 */
 	protected int getSubscription(final String project) {
 		return getSubscription(project, BugTrackerResource.SERVICE_KEY);
@@ -83,7 +86,7 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 	 * Initialize data base with 'MDA' JIRA project.
 	 */
 	@BeforeAll
-	public static void initializeJiraDataBase() throws SQLException {
+	static void initializeJiraDataBase() throws SQLException {
 		datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
 		final Connection connection = datasource.getConnection();
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
@@ -102,7 +105,7 @@ public abstract class AbstractJiraTest extends AbstractServerTest {
 	 * Clean data base with 'MDA' JIRA project.
 	 */
 	@AfterAll
-	public static void cleanJiraDataBase() throws SQLException {
+	static void cleanJiraDataBase() throws SQLException {
 		final Connection connection = datasource.getConnection();
 
 		try {

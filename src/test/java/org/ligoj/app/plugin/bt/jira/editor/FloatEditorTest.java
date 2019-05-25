@@ -14,27 +14,27 @@ import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 /**
  * test class of {@link FloatEditor}
  */
-public class FloatEditorTest extends AbstractDataGeneratorTest {
+class FloatEditorTest extends AbstractDataGeneratorTest {
 
 	@Test
-	public void testGetValueFromStringDot() {
+	void testGetValueFromStringDot() {
 		Assertions.assertEquals(1.0, new FloatEditor().getValue(null, "1.0"));
 	}
 
 	@Test
-	public void testGetValueFromStringComma() {
+	void testGetValueFromStringComma() {
 		Assertions.assertEquals(1.0, new FloatEditor().getValue(null, "1,0"));
 	}
 
 	@Test
-	public void testGetValueFromStringInvalid() {
+	void testGetValueFromStringInvalid() {
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
 			new FloatEditor().getValue(new CustomField(), "a");
 		}), "cf$null", "Invalid value 'a'. Expected : A decimal value");
 	}
 
 	@Test
-	public void testGetValueFromDataText() {
+	void testGetValueFromDataText() {
 		final CustomFieldValue value = new CustomFieldValue();
 		value.setNumberValue(1.0);
 		Assertions.assertEquals(1.0, new FloatEditor().getValue(null, value));

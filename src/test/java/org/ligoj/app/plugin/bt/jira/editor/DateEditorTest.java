@@ -16,18 +16,18 @@ import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 /**
  * test class of {@link DateEditor}
  */
-public class DateEditorTest extends AbstractEditorTest {
+class DateEditorTest extends AbstractEditorTest {
 
 	private static final String D_20140521_1545 = "2014-05-21 15:45";
 	private static final String D_20140521_154556 = D_20140521_1545 + ":56";
 
 	@Test
-	public void testCustomColumn() {
+	void testCustomColumn() {
 		Assertions.assertEquals("DATEVALUE", new DateEditor().getCustomColumn());
 	}
 
 	@Test
-	public void testGetValueInvalid() {
+	void testGetValueInvalid() {
 		final CustomField customField = new CustomField();
 		customField.setName("NAME");
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
@@ -36,20 +36,20 @@ public class DateEditorTest extends AbstractEditorTest {
 	}
 
 	@Test
-	public void testPostTreatment() {
+	void testPostTreatment() {
 		final Date newDate = new Date();
 		Assertions.assertEquals(newDate, new DateEditor().postTreatment(newDate));
 	}
 
 	@Test
-	public void testGetValueFromString() {
+	void testGetValueFromString() {
 		final CustomField customField = new CustomField();
 		customField.setName("NAME");
 		Assertions.assertEquals(getDate(2014, 5, 21, 15, 45, 56), new DateEditor().getValue(customField, "2014-05-21 15:45:56"));
 	}
 
 	@Test
-	public void testGetValueFromData() {
+	void testGetValueFromData() {
 		final CustomField customField = new CustomField();
 		final CustomFieldValue value = new CustomFieldValue();
 		final Date date = getDate(2014, 5, 21, 15, 45, 56);
@@ -58,7 +58,7 @@ public class DateEditorTest extends AbstractEditorTest {
 	}
 
 	@Test
-	public void testToDate() {
+	void testToDate() {
 		Assertions.assertEquals(getDate(2014, 5, 21, 15, 45, 56), DateEditor.toDate("2014-05-21 15:45:56"));
 		Assertions.assertEquals(getDate(2014, 5, 21, 15, 45, 00), DateEditor.toDate(D_20140521_1545));
 		Assertions.assertEquals(getDate(2014, 5, 21, 15, 45, 56), DateEditor.toDate(D_20140521_154556));
@@ -78,12 +78,12 @@ public class DateEditorTest extends AbstractEditorTest {
 	}
 
 	@Test
-	public void testManagedTypesDateTime() {
+	void testManagedTypesDateTime() {
 		assertDate(getDate(2014, 05, 21, 15, 45, 56), "com.atlassian.jira.plugin.system.customfieldtypes:datetime");
 	}
 
 	@Test
-	public void testManagedTypesDatePicker() {
+	void testManagedTypesDatePicker() {
 		assertDate(getDate(2014, 05, 21, 0, 0, 0), "com.atlassian.jira.plugin.system.customfieldtypes:datepicker");
 	}
 
