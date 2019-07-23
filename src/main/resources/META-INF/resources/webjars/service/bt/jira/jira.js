@@ -42,13 +42,13 @@ define(function () {
 		renderFeatures: function (subscription) {
 			var result = '';
 			var params = subscription.parameters;
-			result += current.$super('renderServicelink')('home', params['service:bt:jira:url'] + '/browse/' + params['service:bt:jira:pkey'], 'service:bt:jira:url-pkey', undefined, ' target="_blank"');
+			result += current.$super('renderServiceLink')('home', params['service:bt:jira:url'] + '/browse/' + params['service:bt:jira:pkey'], 'service:bt:jira:url-pkey', undefined, ' target="_blank"');
 
 			// Add export menu
 			result += current.renderExportGroup(subscription);
 
 			// Add import link
-			result += current.$super('renderServicelink')('upload', '#importPopup', 'service:bt:jira:import', undefined, ' class="dropdown-toggle" role="button" data-toggle="modal"');
+			result += current.$super('renderServiceLink')('upload', '#importPopup', 'service:bt:jira:import', undefined, ' class="dropdown-toggle" role="button" data-toggle="modal"');
 
 			// Help
 			result += current.$super('renderServiceHelpLink')(params, 'service:bt:help');
@@ -65,11 +65,11 @@ define(function () {
 		renderExportGroup: function (subscription) {
 			var now = moment();
 			var linkRoot = REST_PATH + 'service/bt/jira/' + subscription.id + '/' + subscription.parameters['service:bt:jira:pkey'] + '-' + subscription.id + '-' + now.format('YYYY-MM-DD');
-			var linkCsvSlaCf = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-full.csv', undefined, 'service:bt:jira:sla-csv-full', ' download');
-			var linkCsvSlaShort = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-short.csv', undefined, 'service:bt:jira:sla-csv', ' download');
-			var linkCsvStatus = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-status.csv', undefined, 'service:bt:jira:sla-csv-status', ' download');
-			var linkCsv = current.$super('renderServicelink')('file-text-o menu-icon', linkRoot + '-simple.csv', undefined, 'service:bt:jira:csv', ' download');
-			var linkXmlSla = current.$super('renderServicelink')('file-excel-o menu-icon', linkRoot + '.xml', undefined, 'service:bt:jira:sla-xls', ' download');
+			var linkCsvSlaCf = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-full.csv', undefined, 'service:bt:jira:sla-csv-full', ' download');
+			var linkCsvSlaShort = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-short.csv', undefined, 'service:bt:jira:sla-csv', ' download');
+			var linkCsvStatus = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-status.csv', undefined, 'service:bt:jira:sla-csv-status', ' download');
+			var linkCsv = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-simple.csv', undefined, 'service:bt:jira:csv', ' download');
+			var linkXmlSla = current.$super('renderServiceLink')('file-excel-o menu-icon', linkRoot + '.xml', undefined, 'service:bt:jira:sla-xls', ' download');
 			return '<div class="btn-group btn-link feature" data-container="body" data-toggle="tooltip" title="' + current.$messages['export'] + '"><i class="fas fa-download" data-toggle="dropdown"></i>'
 			 + '<ul class="dropdown-menu dropdown-menu-right"><li>' + linkCsvSlaShort + '</li><li>' + linkCsvSlaCf + '</li><li>' + linkCsv + '</li><li>' + linkCsvStatus + '</li><li>' + linkXmlSla + '</li></ul></div>';
 		},
