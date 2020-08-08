@@ -8,7 +8,6 @@ import java.util.TreeMap;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.ligoj.app.plugin.bt.jira.model.CustomField;
 import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
 
@@ -21,7 +20,7 @@ public class IdEditor extends AbstractEditor {
 	public Object getValue(final CustomField customField, final String value) {
 		final Integer id = customField.getInvertValues().get(value);
 		if (id == null) {
-			throw newValidationException(customField, value, StringUtils.join(customField.getInvertValues().keySet(), ','));
+			throw newValidationException(customField, value, String.join(",", customField.getInvertValues().keySet()));
 		}
 		return id;
 	}

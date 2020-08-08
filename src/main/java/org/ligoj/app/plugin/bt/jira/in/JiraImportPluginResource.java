@@ -105,6 +105,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		public Set<String> newVersionsAsSet;
 		public Set<String> newComponentsAsSet;
 	}
+
 	private static final String FIELD_ISSUE = "issue";
 	private static final String FIELD_STATUS = "status";
 
@@ -125,10 +126,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Prepare an authenticated connection to JIRA
 	 *
-	 * @param context
-	 *            Import context.
-	 * @param processor
-	 *            The CURL processor for REST calls.
+	 * @param context   Import context.
+	 * @param processor The CURL processor for REST calls.
 	 * @return <code>true</code> when authenticating as administrator succeed.
 	 */
 	protected boolean authenticateAdmin(final ImportContext context, final CurlProcessor processor) {
@@ -356,7 +355,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		if (!copy.isEmpty()) {
 			// Not existing priorities have been found during the import
 			throw new ValidationJsonException(field,
-					"Some " + errorString + " (" + copy.size() + ") do not exist : " + StringUtils.join(copy, ','));
+					"Some " + errorString + " (" + copy.size() + ") do not exist : " + String.join(",", copy));
 		}
 	}
 
@@ -413,7 +412,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 		if (!copyOfRequired.isEmpty()) {
 			throw new ValidationJsonException(FIELD_STATUS,
 					"At least one specified status exists but is not managed in the workflow : "
-							+ StringUtils.join(copyOfRequired, ','));
+							+ String.join(",", copyOfRequired));
 		}
 	}
 
@@ -452,12 +451,9 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Clear JIRA Cache.
 	 *
-	 * @param context
-	 *            Import context.
-	 * @param result
-	 *            The import result.
-	 * @param processor
-	 *            The CURL processor for REST calls.
+	 * @param context   Import context.
+	 * @param result    The import result.
+	 * @param processor The CURL processor for REST calls.
 	 * @return <code>true</code> when JIRA cache failed.
 	 * @see "http://localhost:6080/plugins/servlet/scriptrunner/builtin?section=builtin_scripts#"
 	 * @see "https://marketplace.atlassian.com/plugins/com.onresolve.jira.groovy.groovyrunner"
@@ -732,12 +728,9 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Re-index JIRA issues.
 	 *
-	 * @param context
-	 *            Import context.
-	 * @param result
-	 *            The import result.
-	 * @param processor
-	 *            The CURL processor for REST calls.
+	 * @param context   Import context.
+	 * @param result    The import result.
+	 * @param processor The CURL processor for REST calls.
 	 * @return <code>true</code> when JIRA re-index failed.
 	 * @see "http://localhost:6080/secure/admin/IndexProject.jspa?pid=10000"
 	 * @see "http://localhost:6080/secure/admin/jira/IndexReIndex.jspa"
@@ -753,10 +746,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Synchronize JIRA.
 	 *
-	 * @param context
-	 *            Import context.
-	 * @param result
-	 *            The import result.
+	 * @param context Import context.
+	 * @param result  The import result.
 	 */
 	protected void synchronizeJira(final ImportContext context, final ImportStatus result) {
 		if (result.getCanSynchronizeJira()) {
@@ -781,17 +772,12 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Import CSV data into a JIRA project
 	 *
-	 * @param csvInput
-	 *            the CSV to import.
-	 * @param encoding
-	 *            the encoding of CSV file.
-	 * @param subscription
-	 *            the subscription identifier.
-	 * @param mode
-	 *            the upload mode.
+	 * @param csvInput     the CSV to import.
+	 * @param encoding     the encoding of CSV file.
+	 * @param subscription the subscription identifier.
+	 * @param mode         the upload mode.
 	 * @return the the import result.
-	 * @throws IOException
-	 *             When CSV cannot be read.
+	 * @throws IOException When CSV cannot be read.
 	 */
 	@POST
 	@Path("{mode}/{encoding}")
@@ -848,10 +834,8 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	/**
 	 * Import CSV data into a JIRA project
 	 *
-	 * @param result
-	 *            the import result.
-	 * @param csvInput
-	 *            the CSV to import.
+	 * @param result   the import result.
+	 * @param csvInput the CSV to import.
 	 */
 	private void uploadPriv(final ImportStatus result, final Reader csvInput) throws IOException {
 		final ImportContext context = new ImportContext();
