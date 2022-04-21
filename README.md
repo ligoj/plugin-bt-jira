@@ -6,7 +6,7 @@
 [![Build Status](https://ci.appveyor.com/api/projects/status/5926fmf0p5qp9j16/branch/master?svg=true)](https://ci.appveyor.com/project/ligoj/plugin-bt-jira/branch/master)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.ligoj.plugin%3Aplugin-bt-jira&metric=coverage)](https://sonarcloud.io/dashboard?id=org.ligoj.plugin%3Aplugin-bt-jira)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?metric=alert_status&project=org.ligoj.plugin:plugin-bt-jira)](https://sonarcloud.io/dashboard/index/org.ligoj.plugin:plugin-bt-jira)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/310da2c543c84d23a4d9a38ecef27b3f)](https://www.codacy.com/app/ligoj/plugin-bt-jira?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ligoj/plugin-bt-jira&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/310da2c543c84d23a4d9a38ecef27b3f)](https://www.codacy.com/gh/ligoj/plugin-bt-jira?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ligoj/plugin-bt-jira&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/ligoj/plugin-bt-jira/badge)](https://www.codefactor.io/repository/github/ligoj/plugin-bt-jira)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://fabdouglas.mit-license.org/)
 
