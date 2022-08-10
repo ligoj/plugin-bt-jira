@@ -614,7 +614,7 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 * Convert text to identifier. Return the identifier list, in the same order of given texts.
 	 */
 	private List<Integer> convertTextToId(final Map<String, Integer> allItems, final Collection<String> itemsAsText) {
-		return itemsAsText.stream().map(allItems::get).collect(Collectors.toList());
+		return itemsAsText.stream().map(allItems::get).toList();
 	}
 
 	/**
