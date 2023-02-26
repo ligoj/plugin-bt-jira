@@ -35,7 +35,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 		this.slaComputations = slaComputations;
 
 		// Sort the computation by identifier instead of creation date
-		slaComputations.getIssues().sort(Comparator.comparing(AbstractPersistable::getId));
+		slaComputations.setIssues(slaComputations.getIssues().stream().sorted(Comparator.comparing(AbstractPersistable::getId)).toList());
 	}
 
 	@Override

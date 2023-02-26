@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 import javax.sql.DataSource;
 
 import org.ligoj.app.plugin.bt.SlaComputations;

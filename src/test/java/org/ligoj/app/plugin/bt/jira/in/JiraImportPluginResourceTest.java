@@ -3,7 +3,7 @@
  */
 package org.ligoj.app.plugin.bt.jira.in;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 import org.hsqldb.lib.StringInputStream;
 import org.junit.jupiter.api.Assertions;

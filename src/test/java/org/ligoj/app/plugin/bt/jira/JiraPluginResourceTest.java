@@ -3,30 +3,15 @@
  */
 package org.ligoj.app.plugin.bt.jira;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-import javax.transaction.Transactional;
-
+import jakarta.transaction.Transactional;
 import org.apache.http.HttpStatus;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.ligoj.app.api.SubscriptionStatusWithData;
 import org.ligoj.app.dao.NodeRepository;
 import org.ligoj.app.dao.ParameterRepository;
-import org.ligoj.app.iam.Activity;
 import org.ligoj.app.model.Parameter;
 import org.ligoj.app.model.ParameterValue;
 import org.ligoj.app.model.Project;
@@ -46,6 +31,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 /**
  * Test class of {@link JiraPluginResource}
@@ -80,6 +72,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@BeforeEach
 	void prepareSubscription() {
 		persistSystemEntities();
+		em.flush();
 		this.subscription = getSubscription("MDA");
 
 		// Clear the cache
@@ -91,13 +84,13 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void getJiraVersion() {
-		final DataSource datasource = resource.getDataSource(subscription);
+		final var datasource = resource.getDataSource(subscription);
 		Assertions.assertEquals("4.4.1", dao.getJiraVersion(datasource));
 	}
 
 	@Test
 	void deleteTask() {
-		final long initCount = importStatusRepository.count();
+		final var initCount = importStatusRepository.count();
 		em.clear();
 		resource.deleteTask(subscription);
 		em.flush();
@@ -108,27 +101,27 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void validateDataBaseConnectivity() {
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		addJdbcParameter(parameters);
-		final String version = resource.validateDataBaseConnectivity(parameters);
+		final var version = resource.validateDataBaseConnectivity(parameters);
 		Assertions.assertEquals("4.4.1", version);
 	}
 
 	@Test
 	void getVersion() {
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		addJdbcParameter(parameters);
-		final String version = resource.getVersion(parameters);
+		final var version = resource.getVersion(parameters);
 		Assertions.assertEquals("4.4.1", version);
 	}
 
 	@Test
 	void checkSubscriptionStatus() throws Exception {
-		final SubscriptionStatusWithData checkSubscriptionStatus = resource.checkSubscriptionStatus(null,
+		final var checkSubscriptionStatus = resource.checkSubscriptionStatus(null,
 				subscriptionResource.getParametersNoCheck(subscription));
 		Assertions.assertNotNull(checkSubscriptionStatus);
 		Assertions.assertTrue(checkSubscriptionStatus.getStatus().isUp());
-		final JiraProject project = (JiraProject) checkSubscriptionStatus.getData().get("project");
+		final var project = (JiraProject) checkSubscriptionStatus.getData().get("project");
 		Assertions.assertNotNull(project);
 		Assertions.assertEquals("MDA", project.getName());
 		Assertions.assertEquals(1, project.getPriorities().size());
@@ -139,7 +132,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void checkStatusNoAdmin() throws Exception {
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		addJdbcParameter(parameters);
 		Assertions.assertTrue(resource.checkStatus(null, parameters));
 	}
@@ -147,7 +140,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	void checkStatusWithAdmin() throws Exception {
 		prepareJiraServer();
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		parameters.put(JiraBaseResource.PARAMETER_URL, "http://localhost:" + MOCK_PORT);
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_PASSWORD, "any");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_USER, "one");
@@ -158,7 +151,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	void checkStatusWithAdminFailed() throws Exception {
 		prepareJiraServer();
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		parameters.put(JiraBaseResource.PARAMETER_URL, "any");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_PASSWORD, "any");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_USER, "one");
@@ -168,7 +161,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void getLastVersion() throws Exception {
-		final String lastVersion = resource.getLastVersion();
+		final var lastVersion = resource.getLastVersion();
 		Assertions.assertNotNull(lastVersion);
 		Assertions.assertTrue(
 				new DefaultArtifactVersion(lastVersion).compareTo(new DefaultArtifactVersion("6.3.3")) >= 0);
@@ -176,18 +169,17 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void validateDataBaseConnectivityRes() {
-		final String version = resource.validateDataBaseConnectivity(pvResource.getNodeParameters("service:bt:jira:6"));
+		final var version = resource.validateDataBaseConnectivity(pvResource.getNodeParameters("service:bt:jira:6"));
 		Assertions.assertEquals("4.4.1", version);
 	}
 
 	@Test
 	void validateDataBaseConnectivityFailed() {
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		addJdbcParameter(parameters);
 		parameters.put(JiraBaseResource.PARAMETER_JDBC_DRIVER, "org.hsqldb.jdbc.JDBCDriverAny");
-		Assertions.assertEquals(Assertions.assertThrows(TechnicalException.class, () -> {
-			resource.validateDataBaseConnectivity(parameters);
-		}).getMessage(), "Database connection issue for JIRA");
+		Assertions.assertEquals(Assertions.assertThrows(TechnicalException.class, () ->
+				resource.validateDataBaseConnectivity(parameters)).getMessage(), "Database connection issue for JIRA");
 	}
 
 	@Test
@@ -197,7 +189,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void validateProjectRes() {
-		final Map<String, String> parameters = pvResource.getNodeParameters("service:bt:jira:6");
+		final var parameters = pvResource.getNodeParameters("service:bt:jira:6");
 		parameters.put(JiraBaseResource.PARAMETER_PKEY, "MDA");
 		parameters.put(JiraBaseResource.PARAMETER_PROJECT, "10074");
 		checkProjectValidation(resource.validateProject(parameters));
@@ -212,7 +204,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	private Map<String, String> getProjectValidationParameters() {
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		addJdbcParameter(parameters);
 		parameters.put(JiraBaseResource.PARAMETER_PKEY, "MDA");
 		parameters.put(JiraBaseResource.PARAMETER_PROJECT, "10074");
@@ -233,18 +225,18 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void getActivitiesNoUser() {
-		final Collection<String> users = new ArrayList<>();
-		final Map<String, Activity> activities = resource.getActivities(subscription, users);
+		final var users = new ArrayList<String>();
+		final var activities = resource.getActivities(subscription, users);
 		Assertions.assertTrue(activities.isEmpty());
 	}
 
 	@Test
 	void getActivities() {
-		final Collection<String> users = new ArrayList<>();
+		final var users = new ArrayList<String>();
 		users.add("fdaugan");
 		users.add("alocquet");
 		users.add("any");
-		final Map<String, Activity> activities = resource.getActivities(subscription, users);
+		final var activities = resource.getActivities(subscription, users);
 		Assertions.assertEquals(1, activities.size());
 		Assertions.assertTrue(activities.containsKey("fdaugan"));
 		Assertions.assertNotNull(activities.get("fdaugan").getLastConnection());
@@ -267,19 +259,17 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void validateProjectFailed() {
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		addJdbcParameter(parameters);
 		parameters.put(JiraBaseResource.PARAMETER_PKEY, "MDA");
 		parameters.put(JiraBaseResource.PARAMETER_PROJECT, "100740");
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.validateProject(parameters);
-		}), JiraBaseResource.PARAMETER_PKEY, "jira-project");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.validateProject(parameters)), JiraBaseResource.PARAMETER_PKEY, "jira-project");
 	}
 
 	@Test
 	void validateAdminConnectivity() {
 		prepareJiraServer();
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		parameters.put(JiraBaseResource.PARAMETER_URL, "http://localhost:" + MOCK_PORT);
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_PASSWORD, "any");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_USER, "one");
@@ -290,13 +280,13 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	void validateAdminConnectivityRes() {
 		prepareJiraServer();
-		final Map<String, String> parameters = pvResource.getNodeParameters("service:bt:jira:6");
+		final var parameters = pvResource.getNodeParameters("service:bt:jira:6");
 		parameters.put(JiraBaseResource.PARAMETER_URL, "http://localhost:" + MOCK_PORT);
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_PASSWORD, "any");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_USER, "one");
 		parameters.put(JiraBaseResource.PARAMETER_CACHE_VERSION, "4");
 
-		final JiraPluginResource jiraPluginResource = new JiraPluginResource();
+		final var jiraPluginResource = new JiraPluginResource();
 		jiraPluginResource.subscriptionResource = subscriptionResource;
 		Assertions.assertTrue(jiraPluginResource.validateAdminConnectivity(parameters));
 	}
@@ -313,7 +303,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void validateAdminConnectivityFailed() {
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		parameters.put(JiraBaseResource.PARAMETER_URL, "any:dummy");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_PASSWORD, "");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_USER, "");
@@ -324,7 +314,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	void validateAdminConnectivityAdminJira3() {
 		prepareJiraServer();
-		final Map<String, String> parameters = new HashMap<>();
+		final var parameters = new HashMap<String, String>();
 		parameters.put(JiraBaseResource.PARAMETER_URL, "http://localhost:" + MOCK_PORT);
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_PASSWORD, "any");
 		parameters.put(JiraBaseResource.PARAMETER_ADMIN_USER, "one");
@@ -334,43 +324,42 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void validateAdminConnectivityFailedClose() {
-		Assertions.assertThrows(IllegalStateException.class, () -> {
-			new JiraPluginResource() {
+		Assertions.assertThrows(IllegalStateException.class, () ->
+				new JiraPluginResource() {
 
-				@Override
-				protected boolean authenticateAdmin(final Map<String, String> parameters,
-						final CurlProcessor processor) {
-					throw new IllegalStateException();
-				}
+					@Override
+					protected boolean authenticateAdmin(final Map<String, String> parameters,
+							final CurlProcessor processor) {
+						throw new IllegalStateException();
+					}
 
-			}.validateAdminConnectivity(null);
-		});
+				}.validateAdminConnectivity(null));
 	}
 
 	@Test
 	void linkInvalidDatabase() {
 
-		final Project project = new Project();
+		final var project = new Project();
 		project.setName("TEST");
 		project.setPkey("test");
 		project.setTeamLeader(getAuthenticationName());
 		em.persist(project);
 
-		final Subscription subscription = new Subscription();
+		final var subscription = new Subscription();
 		subscription.setProject(project);
 		subscription.setNode(nodeRepository.findOneExpected(JiraBaseResource.KEY));
 		em.persist(subscription);
-		final ParameterValue parameterValueEntity = new ParameterValue();
+		final var parameterValueEntity = new ParameterValue();
 		parameterValueEntity.setParameter(parameterRepository.findOne(JiraBaseResource.PARAMETER_JDBC_URL));
 		parameterValueEntity.setData("jdbc:hsqldb:mem:dataSource");
 		parameterValueEntity.setSubscription(subscription);
 		em.persist(parameterValueEntity);
-		final ParameterValue parameterValueEntity2 = new ParameterValue();
+		final var parameterValueEntity2 = new ParameterValue();
 		parameterValueEntity2.setParameter(parameterRepository.findOneExpected(JiraBaseResource.PARAMETER_JDBC_DRIVER));
 		parameterValueEntity2.setData("org.hsqldb.jdbc.JDBCDriver");
 		parameterValueEntity2.setSubscription(subscription);
 		em.persist(parameterValueEntity2);
-		final ParameterValue parameterValueEntity3 = new ParameterValue();
+		final var parameterValueEntity3 = new ParameterValue();
 		parameterValueEntity3
 				.setParameter(parameterRepository.findOneExpected(JiraBaseResource.PARAMETER_JDBC_PASSSWORD));
 		parameterValueEntity3.setData("invalid");
@@ -379,19 +368,17 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		em.flush();
 		em.clear();
 
-		Assertions.assertThrows(CannotGetJdbcConnectionException.class, () -> {
-			resource.link(subscription.getId());
-		});
+		Assertions.assertThrows(CannotGetJdbcConnectionException.class, () -> resource.link(subscription.getId()));
 	}
 
 	@Test
 	void linkInvalidAdmin() {
-		final Project project = new Project();
+		final var project = new Project();
 		project.setName("TEST");
 		project.setPkey("test");
 		project.setTeamLeader(getAuthenticationName());
 		em.persist(project);
-		final Subscription subscription = new Subscription();
+		final var subscription = new Subscription();
 		subscription.setProject(project);
 		subscription.setNode(nodeRepository.findOneExpected("service:bt:jira:6"));
 		em.persist(subscription);
@@ -415,32 +402,31 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void linkInvalidProject() {
-		final Project project = new Project();
+		final var project = new Project();
 		project.setName("TEST");
 		project.setPkey("test");
 		project.setTeamLeader(getAuthenticationName());
 		em.persist(project);
-		final Subscription subscription = new Subscription();
+		final var subscription = new Subscription();
 		subscription.setProject(project);
 		subscription.setNode(nodeRepository.findOneExpected("service:bt:jira:6"));
 		em.persist(subscription);
 		addProjectParameters(subscription, 11111);
 		em.flush();
 		em.clear();
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.link(subscription.getId());
-		}), JiraBaseResource.PARAMETER_PKEY, "jira-project");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class,
+				() -> resource.link(subscription.getId())), JiraBaseResource.PARAMETER_PKEY, "jira-project");
 	}
 
 	@Test
 	void linkNotAdmin() throws Exception {
-		final long initCount = importStatusRepository.count();
-		final Project project = new Project();
+		final var initCount = importStatusRepository.count();
+		final var project = new Project();
 		project.setName("TEST");
 		project.setPkey("test");
 		project.setTeamLeader(getAuthenticationName());
 		em.persist(project);
-		final Subscription subscription = new Subscription();
+		final var subscription = new Subscription();
 		subscription.setProject(project);
 		subscription.setNode(nodeRepository.findOneExpected("service:bt:jira:6"));
 		em.persist(subscription);
@@ -460,13 +446,13 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	void link() throws Exception {
 		prepareJiraServer();
 
-		final long initCount = importStatusRepository.count();
-		final Project project = new Project();
+		final var initCount = importStatusRepository.count();
+		final var project = new Project();
 		project.setName("TEST");
 		project.setPkey("test");
 		project.setTeamLeader(getAuthenticationName());
 		em.persist(project);
-		final Subscription subscription = new Subscription();
+		final var subscription = new Subscription();
 		subscription.setProject(project);
 		subscription.setNode(nodeRepository.findOneExpected("service:bt:jira:6"));
 		em.persist(subscription);
@@ -480,12 +466,12 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	}
 
 	private void addProjectParameters(final Subscription subscription, final int jira) {
-		final ParameterValue parameterValueEntity = new ParameterValue();
+		final var parameterValueEntity = new ParameterValue();
 		parameterValueEntity.setParameter(parameterRepository.findOneExpected(JiraBaseResource.PARAMETER_PKEY));
 		parameterValueEntity.setData("MDA");
 		parameterValueEntity.setSubscription(subscription);
 		em.persist(parameterValueEntity);
-		final ParameterValue parameterValueEntity2 = new ParameterValue();
+		final var parameterValueEntity2 = new ParameterValue();
 		parameterValueEntity2.setParameter(parameterRepository.findOneExpected(JiraBaseResource.PARAMETER_PROJECT));
 		parameterValueEntity2.setData(String.valueOf(jira));
 		parameterValueEntity2.setSubscription(subscription);
@@ -494,14 +480,12 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void createNotSupported() {
-		Assertions.assertThrows(IllegalStateException.class, () -> {
-			resource.create(0);
-		});
+		Assertions.assertThrows(IllegalStateException.class, () -> resource.create(0));
 	}
 
 	@Test
 	void clearLoginFailedNoUser() {
-		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
+		final var jdbcTemplate = new JdbcTemplate(datasource);
 		Assertions.assertEquals("1", jdbcTemplate
 				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		try {
@@ -518,7 +502,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void clearLoginFailedOtherUser() {
-		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
+		final var jdbcTemplate = new JdbcTemplate(datasource);
 		Assertions.assertEquals("1", jdbcTemplate
 				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		try {
@@ -538,7 +522,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	 */
 	@Test
 	void clearLoginFailedJira4() {
-		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
+		final var jdbcTemplate = new JdbcTemplate(datasource);
 		Assertions.assertEquals("1", jdbcTemplate
 				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		dao.clearLoginFailed(datasource, "fdaugan");
@@ -548,7 +532,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void clearLoginFailed() {
-		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
+		final var jdbcTemplate = new JdbcTemplate(datasource);
 		Assertions.assertEquals("1", jdbcTemplate
 				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 

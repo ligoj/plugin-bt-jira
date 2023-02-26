@@ -19,33 +19,26 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 public abstract class AbstractJiraData3Test extends AbstractJiraDataTest {
 
 	/**
-	 * Initialize data base with 'MDA' JIRA project.
+	 * Initialize database with 'MDA' JIRA project.
 	 * @throws SQLException When SQL execution failed.
 	 */
 	@BeforeAll
 	public static void initializeJiraDataBase3() throws SQLException {
-		final Connection connection = datasource.getConnection();
-		try {
+		try(final var connection = datasource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection,
 					new EncodedResource(new ClassPathResource("sql/base-3/jira-create.sql"), StandardCharsets.UTF_8));
 			ScriptUtils.executeSqlScript(connection, new EncodedResource(new ClassPathResource("sql/base-3/jira.sql"), StandardCharsets.UTF_8));
-		} finally {
-			connection.close();
 		}
 	}
 
 	/**
-	 * Clean data base with 'MDA' JIRA project.
+	 * Clean database with 'MDA' JIRA project.
 	 * @throws SQLException When SQL execution failed.
 	 */
 	@AfterAll
 	public static void cleanJiraDataBase3() throws SQLException {
-		final Connection connection = datasource.getConnection();
-
-		try {
+		try(final var connection = datasource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new EncodedResource(new ClassPathResource("sql/base-3/jira-drop.sql"), StandardCharsets.UTF_8));
-		} finally {
-			connection.close();
 		}
 	}
 }

@@ -17,10 +17,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
-import javax.ws.rs.core.StreamingOutput;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.hsqldb.jdbc.JDBCDriver;

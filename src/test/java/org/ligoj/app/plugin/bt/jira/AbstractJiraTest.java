@@ -83,36 +83,29 @@ abstract class AbstractJiraTest extends AbstractServerTest {
 	}
 
 	/**
-	 * Initialize data base with 'MDA' JIRA project.
+	 * Initialize database with 'MDA' JIRA project.
 	 */
 	@BeforeAll
 	static void initializeJiraDataBase() throws SQLException {
 		datasource = new SimpleDriverDataSource(new JDBCDriver(), "jdbc:hsqldb:mem:dataSource", null, null);
-		final Connection connection = datasource.getConnection();
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		try {
+		try (final var connection = datasource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection,
 					new EncodedResource(new ClassPathResource("sql/base-1/jira-create.sql"), StandardCharsets.UTF_8));
 			ScriptUtils.executeSqlScript(connection,
 					new EncodedResource(new ClassPathResource("sql/base-1/jira.sql"), StandardCharsets.UTF_8));
 			jdbcTemplate.queryForList("SELECT * FROM pluginversion WHERE ID = 10075");
-		} finally {
-			connection.close();
 		}
 	}
 
 	/**
-	 * Clean data base with 'MDA' JIRA project.
+	 * Clean database with 'MDA' JIRA project.
 	 */
 	@AfterAll
 	static void cleanJiraDataBase() throws SQLException {
-		final Connection connection = datasource.getConnection();
-
-		try {
+		try (final var connection = datasource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection,
 					new EncodedResource(new ClassPathResource("sql/base-1/jira-drop.sql"), StandardCharsets.UTF_8));
-		} finally {
-			connection.close();
 		}
 	}
 
