@@ -26,7 +26,7 @@ class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest
 		httpServer.stubFor(get(urlPathEqualTo("/login.jsp")).willReturn(aResponse().withStatus(HttpStatus.SC_NOT_FOUND)));
 		httpServer.start();
 
-		this.subscription = getSubscription("gStack");
+		this.subscription = getSubscription("Jupiter");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete2.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
 		final ImportStatus result = jiraResource.getTask(subscription);
@@ -54,7 +54,7 @@ class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest
 				.willReturn(aResponse().withStatus(HttpStatus.SC_NOT_FOUND)));
 		httpServer.start();
 
-		this.subscription = getSubscription("gStack");
+		this.subscription = getSubscription("Jupiter");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete3.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
 		final ImportStatus result = jiraResource.getTask(subscription);
@@ -78,7 +78,7 @@ class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest
 				get(urlPathEqualTo("/secure/admin/IndexProject.jspa")).willReturn(aResponse().withStatus(HttpStatus.SC_NOT_FOUND)));
 		httpServer.start();
 
-		this.subscription = getSubscription("gStack");
+		this.subscription = getSubscription("Jupiter");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete4.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
 		final ImportStatus result = jiraResource.getTask(subscription);
@@ -93,7 +93,7 @@ class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest
 	void testZUploadWithInsertWithReIndex() throws Exception {
 		startOperationalServer();
 
-		this.subscription = getSubscription("gStack");
+		this.subscription = getSubscription("Jupiter");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete5.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
 		final ImportStatus result = jiraResource.getTask(subscription);
@@ -113,7 +113,7 @@ class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest
 
 			startOperationalServer();
 
-			this.subscription = getSubscription("gStack");
+			this.subscription = getSubscription("Jupiter");
 			resource.upload(new ClassPathResource("csv/upload/nominal-complete6.csv").getInputStream(), ENCODING, subscription,
 					UploadMode.FULL);
 			final ImportStatus result = jiraResource.getTask(subscription);
@@ -130,7 +130,7 @@ class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest
 	@Test
 	void testZUploadWithInsertWithFailConnect() throws Exception {
 		// No started server
-		this.subscription = getSubscription("gStack");
+		this.subscription = getSubscription("Jupiter");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete7.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
 		final ImportStatus result = jiraResource.getTask(subscription);
@@ -145,7 +145,7 @@ class JiraImport2PluginResourceTest extends AbstractJiraImportPluginResourceTest
 	void testZUploadWithInsertNoAssociation() throws Exception {
 		startOperationalServer();
 
-		this.subscription = getSubscription("gStack");
+		this.subscription = getSubscription("Jupiter");
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete-no-association.csv").getInputStream(), ENCODING, subscription,
 				UploadMode.FULL);
 		final ImportStatus result = jiraResource.getTask(subscription);

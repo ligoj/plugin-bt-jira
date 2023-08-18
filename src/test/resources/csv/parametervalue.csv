@@ -14,4 +14,4 @@ service:bt:jira:url;http://localhost:8120;service:bt:jira:6;
 service:bt:jira:project;10074;;1
 service:bt:jira:pkey;MDA;;1
 service:bt:jira:project;10000;;2
-service:bt:jira:pkey;GSTACK;;2
+service:bt:jira:pkey;JUPITER;;2

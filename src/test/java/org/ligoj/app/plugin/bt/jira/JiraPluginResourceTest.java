@@ -219,8 +219,8 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	@Test
 	void findProjectsByName() {
 		assertGstack(resource.findAllByName("service:bt:jira:6", "10000"));
-		assertGstack(resource.findAllByName("service:bt:jira:6", "gStack"));
-		assertGstack(resource.findAllByName("service:bt:jira:6", "GSTACK"));
+		assertGstack(resource.findAllByName("service:bt:jira:6", "Jupiter"));
+		assertGstack(resource.findAllByName("service:bt:jira:6", "JUPITER"));
 	}
 
 	@Test
@@ -246,8 +246,8 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		Assertions.assertEquals(1, projects.size());
 		// HSQLDB issue for conversions....
 		Assertions.assertEquals(10000, projects.get(0).getId().intValue());
-		Assertions.assertEquals("GSTACK", projects.get(0).getName());
-		Assertions.assertEquals("gStack", projects.get(0).getDescription());
+		Assertions.assertEquals("jupiter", projects.get(0).getName());
+		Assertions.assertEquals("Jupiter", projects.get(0).getDescription());
 	}
 
 	private void addJdbcParameter(final Map<String, String> parameters) {

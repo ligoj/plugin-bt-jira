@@ -7,7 +7,7 @@ insert  into resolution(ID,SEQUENCE,pname,DESCRIPTION,ICONURL) values ('5','5','
 
 insert into project_key (ID, PROJECT_ID, PROJECT_KEY) values('1','10074','MDA');
 insert into project (ID, pname, URL, LEAD, DESCRIPTION, pkey, pcounter, ASSIGNEETYPE, AVATAR) values('10074','MDA','','fdaugan','Solution MDA. Ce produit est une suite de plugins Eclipse destinée à mettre en œuvre la démarche MDA dans les projets forfait, TMA et migration technologique. La génération de code (M2T)  inclus les tests, la transformation de modèle (M2M) inclus l expérience de modèles dynamiques et exécutables, la génération de documentation (M2D) permet d obtenir des sorties au format  Word.','MDA','1299','2','10520');
-insert into project (ID, pname, URL, LEAD, DESCRIPTION, pkey, pcounter, ASSIGNEETYPE, AVATAR) values('10000','gStack','','fdaugan','Pile Web','GSTACK','1299','2','10520');
+insert into project (ID, pname, URL, LEAD, DESCRIPTION, pkey, pcounter, ASSIGNEETYPE, AVATAR) values('10000','Jupiter','','fdaugan','Pile Web','JUPITER','1299','2','10520');
 
 insert  into priority(ID,SEQUENCE,pname,DESCRIPTION,ICONURL,STATUS_COLOR) values ('1','1','Blocker','Blocks development and/or testing work, production could not run.','/images/icons/priority_blocker.gif','#cc0000');
 insert  into priority(ID,SEQUENCE,pname,DESCRIPTION,ICONURL,STATUS_COLOR) values ('2','2','Critical','Crashes, loss of data, severe memory leak.','/images/icons/priority_critical.gif','#ff0000');

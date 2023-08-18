@@ -78,7 +78,7 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 
 	@Test
 	void getSlaComputationsNoChange() {
-		final int subscription = getSubscription("gStack");
+		final int subscription = getSubscription("Jupiter");
 		final SlaComputations computations = resource.getSlaComputations(subscription, false);
 		Assertions.assertNotNull(computations);
 		final List<IssueSla> issues = computations.getIssues();
