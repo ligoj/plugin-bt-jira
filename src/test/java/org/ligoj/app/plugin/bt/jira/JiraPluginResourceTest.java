@@ -4,7 +4,7 @@
 package org.ligoj.app.plugin.bt.jira;
 
 import jakarta.transaction.Transactional;
-import org.apache.http.HttpStatus;
+import org.apache.hc.core5.http.HttpStatus;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,7 +79,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		pvResource.getNodeParameters("service:bt:jira:6").remove(JiraBaseResource.PARAMETER_CACHE_VERSION);
 
 		// For coverage
-		resource.getKey();
+		Assertions.assertEquals("service:bt:jira",resource.getKey());
 	}
 
 	@Test
@@ -234,7 +234,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 	void getActivities() {
 		final var users = new ArrayList<String>();
 		users.add("fdaugan");
-		users.add("alocquet");
+		users.add("admin-test");
 		users.add("any");
 		final var activities = resource.getActivities(subscription, users);
 		Assertions.assertEquals(1, activities.size());
@@ -507,7 +507,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 				.queryForObject("SELECT attribute_value FROM cwd_user_attributes WHERE ID=212", String.class));
 		try {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
-			dao.clearLoginFailed(datasource, "alocquet");
+			dao.clearLoginFailed(datasource, "admin-test");
 		} finally {
 			jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "4.4.1", 10075);
 		}

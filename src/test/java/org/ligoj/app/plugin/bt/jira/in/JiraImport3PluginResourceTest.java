@@ -20,8 +20,8 @@ class JiraImport3PluginResourceTest extends AbstractJiraImportPluginResourceTest
 
 	@Test
 	void testZUploadWithInsert() throws Exception {
-		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		final int pcounter = jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10074);
+		final var jdbcTemplate = new JdbcTemplate(datasource);
+		final var pCounter = jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10074);
 
 		resource.upload(new ClassPathResource("csv/upload/nominal-complete.csv").getInputStream(), ENCODING, subscription, UploadMode.FULL);
 		final ImportStatus result = jiraResource.getTask(subscription);
@@ -56,7 +56,7 @@ class JiraImport3PluginResourceTest extends AbstractJiraImportPluginResourceTest
 		Assertions.assertNull(result.getSynchronizedJira());
 
 		// Lesser than the maximal "pcounter"
-		Assertions.assertEquals(pcounter,
+		Assertions.assertEquals(pCounter,
 				jdbcTemplate.queryForObject("SELECT pcounter FROM project WHERE ID = ?", Integer.class, 10074).intValue());
 
 		// Check sequences
@@ -74,7 +74,7 @@ class JiraImport3PluginResourceTest extends AbstractJiraImportPluginResourceTest
 		final int workflowId = jdbcTemplate
 				.queryForObject("SELECT WORKFLOW_ID FROM jiraissue WHERE issuenum=? AND project=? AND issuestatus=? AND priority=?"
 						+ " AND RESOLUTION=? AND RESOLUTIONDATE IS NOT NULL AND issuetype=? AND DESCRIPTION=? AND SUMMARY=? AND REPORTER=?"
-						+ " AND ASSIGNEE=?", Integer.class, 3, 10074, 6, 3, 1, 1, "DESCRIPTION-34", "SUMMARY-34", "alocquet", "fdaugan");
+						+ " AND ASSIGNEE=?", Integer.class, 3, 10074, 6, 3, 1, 1, "DESCRIPTION-34", "SUMMARY-34", "admin-test", "fdaugan");
 		Assertions.assertEquals(10201, workflowId);
 
 		final String workflow = jdbcTemplate.queryForObject("SELECT NAME FROM OS_WFENTRY WHERE ID=? AND STATE=?", String.class, workflowId,

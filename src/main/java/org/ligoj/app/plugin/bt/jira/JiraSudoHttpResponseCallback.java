@@ -3,7 +3,7 @@
  */
 package org.ligoj.app.plugin.bt.jira;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.ligoj.bootstrap.core.curl.OnlyRedirectHttpResponseCallback;
 
 /**
@@ -12,7 +12,7 @@ import org.ligoj.bootstrap.core.curl.OnlyRedirectHttpResponseCallback;
 public class JiraSudoHttpResponseCallback extends OnlyRedirectHttpResponseCallback {
 
 	@Override
-	protected boolean acceptResponse(final CloseableHttpResponse response) {
+	protected boolean acceptResponse(final ClassicHttpResponse response) {
 		// Check "X-Atlassian-WebSudo" header value equals to "Has-Authentication"
 		return super.acceptResponse(response) && response.getFirstHeader("X-Atlassian-WebSudo") != null
 				&& "Has-Authentication".equals(response.getFirstHeader("X-Atlassian-WebSudo").getValue());

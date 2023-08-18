@@ -3,9 +3,8 @@
  */
 package org.ligoj.app.plugin.bt.jira;
 
-import org.apache.http.Header;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.Header;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,7 +13,7 @@ import org.mockito.Mockito;
  * Test class of {@link JiraSudoHttpResponseCallback}
  */
 class JiraSudoHttpResponseCallbackTest {
-	private JiraSudoHttpResponseCallback jiraSudoHttpResponseCallback = new JiraSudoHttpResponseCallback();
+	private final JiraSudoHttpResponseCallback jiraSudoHttpResponseCallback = new JiraSudoHttpResponseCallback();
 
 	@Test
 	void acceptLocation() {
@@ -24,29 +23,23 @@ class JiraSudoHttpResponseCallbackTest {
 
 	@Test
 	void acceptResponse200() {
-		final CloseableHttpResponse response = Mockito.mock(CloseableHttpResponse.class);
-		final StatusLine statusLine = Mockito.mock(StatusLine.class);
-		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
-		Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+		final var response = Mockito.mock(ClassicHttpResponse.class);
+		Mockito.when(response.getCode()).thenReturn(200);
 		Assertions.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
 	}
 
 	@Test
 	void acceptResponse302() {
-		final CloseableHttpResponse response = Mockito.mock(CloseableHttpResponse.class);
-		final StatusLine statusLine = Mockito.mock(StatusLine.class);
-		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
-		Mockito.when(statusLine.getStatusCode()).thenReturn(302);
+		final var response = Mockito.mock(ClassicHttpResponse.class);
+		Mockito.when(response.getCode()).thenReturn(302);
 		Assertions.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
 	}
 
 	@Test
 	void acceptResponse302WithHeader() {
-		final CloseableHttpResponse response = Mockito.mock(CloseableHttpResponse.class);
-		final StatusLine statusLine = Mockito.mock(StatusLine.class);
-		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
-		Mockito.when(statusLine.getStatusCode()).thenReturn(302);
-		final Header header = Mockito.mock(Header.class);
+		final var response = Mockito.mock(ClassicHttpResponse.class);
+		Mockito.when(response.getCode()).thenReturn(302);
+		final var header = Mockito.mock(Header.class);
 		Mockito.when(header.getValue()).thenReturn("any");
 		Mockito.when(response.getFirstHeader("X-Atlassian-WebSudo")).thenReturn(header);
 		Assertions.assertFalse(jiraSudoHttpResponseCallback.acceptResponse(response));
@@ -54,11 +47,9 @@ class JiraSudoHttpResponseCallbackTest {
 
 	@Test
 	void acceptResponse302WithCorrectHeader() {
-		final CloseableHttpResponse response = Mockito.mock(CloseableHttpResponse.class);
-		final StatusLine statusLine = Mockito.mock(StatusLine.class);
-		Mockito.when(response.getStatusLine()).thenReturn(statusLine);
-		Mockito.when(statusLine.getStatusCode()).thenReturn(302);
-		final Header header = Mockito.mock(Header.class);
+		final var response = Mockito.mock(ClassicHttpResponse.class);
+		Mockito.when(response.getCode()).thenReturn(302);
+		final var header = Mockito.mock(Header.class);
 		Mockito.when(header.getValue()).thenReturn("Has-Authentication");
 		Mockito.when(response.getFirstHeader("X-Atlassian-WebSudo")).thenReturn(header);
 		Assertions.assertTrue(jiraSudoHttpResponseCallback.acceptResponse(response));
