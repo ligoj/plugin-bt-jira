@@ -1,5 +1,5 @@
 define(function () {
-	var current = {
+	const current = {
 
 		/**
 		 * Interval identifier for the refresh
@@ -25,8 +25,8 @@ define(function () {
 				// Reset the form but previous values
 				validationManager.mapping.DEFAULT = 'csv-file';
 				_('csv-upload-step-last').find('i').addClass('hide');
-				var $source = $(event.relatedTarget);
-				var uc = $source && current.$super('subscriptions').fnGetData($source.closest('tr')[0]);
+				let $source = $(event.relatedTarget);
+				let uc = $source && current.$super('subscriptions').fnGetData($source.closest('tr')[0]);
 				current.subscription = uc.id;
 				current.resetUploadError();
 			});
@@ -40,8 +40,8 @@ define(function () {
 		 * Render Bug tracking JIRA data.
 		 */
 		renderFeatures: function (subscription) {
-			var result = '';
-			var params = subscription.parameters;
+			let result = '';
+			let params = subscription.parameters;
 			result += current.$super('renderServiceLink')('home', params['service:bt:jira:url'] + '/browse/' + params['service:bt:jira:pkey'], 'service:bt:jira:url-pkey', undefined, ' target="_blank"');
 
 			// Add export menu
@@ -63,13 +63,13 @@ define(function () {
 		},
 
 		renderExportGroup: function (subscription) {
-			var now = moment();
-			var linkRoot = REST_PATH + 'service/bt/jira/' + subscription.id + '/' + subscription.parameters['service:bt:jira:pkey'] + '-' + subscription.id + '-' + now.format('YYYY-MM-DD');
-			var linkCsvSlaCf = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-full.csv', undefined, 'service:bt:jira:sla-csv-full', ' download');
-			var linkCsvSlaShort = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-short.csv', undefined, 'service:bt:jira:sla-csv', ' download');
-			var linkCsvStatus = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-status.csv', undefined, 'service:bt:jira:sla-csv-status', ' download');
-			var linkCsv = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-simple.csv', undefined, 'service:bt:jira:csv', ' download');
-			var linkXmlSla = current.$super('renderServiceLink')('file-excel-o menu-icon', linkRoot + '.xml', undefined, 'service:bt:jira:sla-xls', ' download');
+			const now = moment();
+			const linkRoot = REST_PATH + 'service/bt/jira/' + subscription.id + '/' + subscription.parameters['service:bt:jira:pkey'] + '-' + subscription.id + '-' + now.format('YYYY-MM-DD');
+			const linkCsvSlaCf = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-full.csv', undefined, 'service:bt:jira:sla-csv-full', ' download');
+			const linkCsvSlaShort = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-short.csv', undefined, 'service:bt:jira:sla-csv', ' download');
+			const linkCsvStatus = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-status.csv', undefined, 'service:bt:jira:sla-csv-status', ' download');
+			const linkCsv = current.$super('renderServiceLink')('file-text-o menu-icon', linkRoot + '-simple.csv', undefined, 'service:bt:jira:csv', ' download');
+			const linkXmlSla = current.$super('renderServiceLink')('file-excel-o menu-icon', linkRoot + '.xml', undefined, 'service:bt:jira:sla-xls', ' download');
 			return '<div class="btn-group btn-link feature" data-container="body" data-toggle="tooltip" title="' + current.$messages['export'] + '"><i class="fas fa-download" data-toggle="dropdown"></i>'
 			 + '<ul class="dropdown-menu dropdown-menu-right"><li>' + linkCsvSlaShort + '</li><li>' + linkCsvSlaCf + '</li><li>' + linkCsv + '</li><li>' + linkCsvStatus + '</li><li>' + linkXmlSla + '</li></ul></div>';
 		},
@@ -96,7 +96,7 @@ define(function () {
 		},
 
 		resetUploadError: function () {
-			var $container = _('importPopup').find('.form-horizontal');
+			const $container = _('importPopup').find('.form-horizontal');
 			$container.find('.step').remove();
 			$container.find('.alert.static').addClass('hide').removeClass('in');
 			validationManager.reset($('#importPopup'));
@@ -143,15 +143,15 @@ define(function () {
 		 * Update the upload result. The history is shorten to maximum 4 items.
 		 */
 		displayUploadResult: function (data) {
-			var $container = _('importPopup').find('.form-horizontal');
+			const $container = _('importPopup').find('.form-horizontal');
 			_('csv-upload-step-last').find('i').addClass('hide');
 			$container.find('.step').remove();
-			var lastIndex = data.step;
-			var firstIndex = data.step > 4 ? data.step - 3 : 1;
-			var i;
+			const lastIndex = data.step;
+			const firstIndex = data.step > 4 ? data.step - 3 : 1;
+			let i;
 			if (firstIndex > 1) {
 				$container.append('<div class="form-group step"><label class="control-label"><i class="fas fa-check" title="succeed"></i></label><div class="toggle-visibility"><strong>[...]</strong></div></div>');
-				var $moreContainer = $container.find('.toggle-visibility');
+				const $moreContainer = $container.find('.toggle-visibility');
 				for (i = 1; i < firstIndex; i++) {
 					$moreContainer.append('<div class="toggle-visibility-content">' + current.$messages.steps[i - 1] + '</div>');
 				}
@@ -160,8 +160,8 @@ define(function () {
 				$container.append('<div class="form-group step"><label class="control-label"><i class="fas fa-check" title="succeed"></i></label><div>' + current.$messages.steps[i - 1] + '</div></div>');
 			}
 
-			var errorField = _('csv-file').closest('.form-group').attr('data-error-property');
-			var errorMessage = errorField && $('#csv-file').closest('.form-group').attr('title');
+			const errorField = _('csv-file').closest('.form-group').attr('data-error-property');
+			const errorMessage = errorField && $('#csv-file').closest('.form-group').attr('title');
 
 			// Last failure step
 			if (data.failed || errorField) {
@@ -184,7 +184,7 @@ define(function () {
 			}
 
 			// Add the summary
-			var summary = '<div class="alert alert-info step"><button class="close" data-dismiss="alert" type="button">&times;</button>Démarré ';
+			let summary = '<div class="alert alert-info step"><button class="close" data-dismiss="alert" type="button">&times;</button>Démarré ';
 			summary += moment(data.start).format(formatManager.messages.shortdateMomentJs);
 			if (data.end) {
 				summary += ', terminé ' + moment(data.end).format(formatManager.messages.shortdateMomentJs) + ' (' + momentManager.duration(moment().valueOf() - data.start) + ')';
@@ -230,7 +230,7 @@ define(function () {
 		 */
 		addRequiredDependenciesMessage: function (data) {
 			if (data.priorities || data.statuses || data.types || data.resolutions) {
-				var dataAsArray = [];
+				const dataAsArray = [];
 				data.priorities && dataAsArray.push(data.priorities + ' priorités');
 				data.statuses && dataAsArray.push(data.statuses + ' statuts');
 				data.types && dataAsArray.push(data.types + ' types');
@@ -247,7 +247,7 @@ define(function () {
 		 */
 		addNewDependenciesMessage: function (data) {
 			if (data.newVersions || data.newComponents || data.newIssues || data.newLabels) {
-				var dataAsArray = [];
+				const dataAsArray = [];
 				data.newComponents && dataAsArray.push(data.newComponents + ' composants');
 				data.newVersions && dataAsArray.push(data.newVersions + ' versions');
 				data.newIssues && dataAsArray.push(data.newIssues + ' issues');
@@ -262,7 +262,7 @@ define(function () {
 		 */
 		addCompletedDependenciesMessage: function (data) {
 			if (data.components || data.versions || data.labels) {
-				var dataAsArray = [];
+				const dataAsArray = [];
 				data.components && dataAsArray.push(data.components + ' components');
 				data.versions && dataAsArray.push(data.versions + ' versions');
 				data.labels && dataAsArray.push(data.labels + ' labels');
@@ -294,11 +294,10 @@ define(function () {
 		 * Render BT priorities icon and text
 		 */
 		iconPriorities: function (subscription) {
-			var buffer = '';
-			var params = subscription.parameters;
-			var priorities = subscription.data.project.priorities;
-			var priority;
-			for (priority in priorities) {
+			let buffer = '';
+			const params = subscription.parameters;
+			const priorities = subscription.data.project.priorities;
+			for (let priority in priorities) {
 				if (priorities.hasOwnProperty(priority)) {
 					if (buffer) {
 						buffer += ' - ';
@@ -314,18 +313,17 @@ define(function () {
 		 * there is not enough space.
 		 */
 		pieStatuses: function (subscription, $td) {
-			var amount;
-			var filteredAmounts = [];
-			var filteredStatuses = [];
-			var min = {
+			let amount = 0;
+			const filteredAmounts = [];
+			const filteredStatuses = [];
+			const min = {
 				amount: 100000,
 				index: 0
 			};
-			var params = subscription.parameters;
-			var statuses = subscription.data.project.statuses;
-			var status;
-			var total = 0;
-			for (status in statuses) {
+			const params = subscription.parameters;
+			const statuses = subscription.data.project.statuses;
+			let total = 0;
+			for (let status in statuses) {
 				if (statuses.hasOwnProperty(status)) {
 					amount = statuses[status];
 					total += amount;
@@ -334,7 +332,7 @@ define(function () {
 			}
 
 			// Build the pie chart
-			var $spark = $td.find('.bt-jira-issues');
+			const $spark = $td.find('.bt-jira-issues');
 			current.$super('sparklinePieZoom')($spark, filteredAmounts, {
 				sliceColors: ['#EA632B', '#205081', '#D04437', '#A7A7A7'],
 				zoomSize: $spark.closest('.masonry-container').length && '64px',
@@ -345,20 +343,19 @@ define(function () {
 					return Handlebars.compile(current.$messages['service:bt:jira:status'])([fields.color, filteredStatuses[fields.offset].join(', '), fields.value, total, current.$super('roundPercent')(fields.percent)]);
 				},
 				sparklineClick: function (ev) {
-					var offset = ev.sparklines[0].getCurrentRegionFields().offset;
+					const offset = ev.sparklines[0].getCurrentRegionFields().offset;
 					if (typeof offset === 'undefined') {
 						// Ignore this out of bound click
 						return;
 					}
-					var multiple = '';
-					var url = params['service:bt:jira:url'] + '/issues/?jql=project%20%3D%20' + params['service:bt:jira:pkey'] + '%20AND%20resolution%20%3D%20NULL%20AND%20';
-					var index;
+					let multiple = '';
+					let url = params['service:bt:jira:url'] + '/issues/?jql=project%20%3D%20' + params['service:bt:jira:pkey'] + '%20AND%20resolution%20%3D%20NULL%20AND%20';
 					if (offset < 5) {
 						// Single status
 						url += 'status%20%3D%20%22' + filteredStatuses[offset] + '%22';
 					} else if (offset) {
 						// Multiple statuses, build "AND"
-						for (index = 0; index < filteredStatuses[4].length; index++) {
+						for (let index = 0; index < filteredStatuses[4].length; index++) {
 							if (multiple) {
 								multiple += '%20OR';
 							} else {
@@ -373,8 +370,7 @@ define(function () {
 					}
 	
 					// Open a new tag with the right filters
-					var win = window.open(url, '_blank');
-					win && win.focus();
+					window.open(url, '_blank')?.focus();
 				}
 			});
 		},
@@ -388,7 +384,6 @@ define(function () {
 		 * @param {[type]} filteredStatuses  Pie chart data of index of computed statues.
 		 */
 		addStatusToPie: function (status, amount, min, filteredAmounts, filteredStatuses) {
-			var index;
 			if (filteredStatuses.length < 4) {
 				// Simply add the value, there is a place for this value
 				current.updateMinStatus(amount, filteredAmounts.length, min);
@@ -414,7 +409,7 @@ define(function () {
 
 					// Recompute the minimal values
 					min.amount = 100000;
-					for (index = 0; index < 4; index++) {
+					for (let index = 0; index < 4; index++) {
 						current.updateMinStatus(filteredAmounts[index], index, min);
 					}
 				}
@@ -440,16 +435,16 @@ define(function () {
 		 * project selection.
 		 */
 		registerJiraProjectSelect2: function (configuration, id) {
-			var cProviders = configuration.providers['form-group'];
-			var previousProvider = cProviders[id] || cProviders.standard;
+			const cProviders = configuration.providers['form-group'];
+			const previousProvider = cProviders[id] || cProviders.standard;
 			cProviders[id] = function (parameter, container, $input) {
 				// Disable computed parameters and remove the useless 'validate' button
-				var $fieldset = previousProvider(parameter, container, $input).parent();
+				const $fieldset = previousProvider(parameter, container, $input).parent();
 				_('service:bt:jira:pkey').attr('disabled', 'disabled');
 				_('service:bt:jira:project').attr('disabled', 'disabled');
 
 				// Create the select2 suggestion a LIKE %criteria% for project name and pkey
-				var $select = $('<input class="form-control" type="text" id="service:bt:jira:pkey-project" autocomplete="off">');
+				const $select = $('<input class="form-control" type="text" id="service:bt:jira:pkey-project" autocomplete="off">');
 				cProviders.standard({
 					id: 'service:bt:jira:pkey-project'
 				}, $fieldset, $select);
