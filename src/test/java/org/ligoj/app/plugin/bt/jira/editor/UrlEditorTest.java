@@ -22,8 +22,6 @@ class UrlEditorTest extends AbstractDataGeneratorTest {
 
 	@Test
 	void testGetValueInvalid() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			new UrlEditor().getValue(new CustomField(), "data");
-		}), "cf$null", "Invalid value 'data'. Expected : A HTTP URL");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> new UrlEditor().getValue(new CustomField(), "data")), "cf$null", "Invalid value 'data'. Expected : A HTTP URL");
 	}
 }

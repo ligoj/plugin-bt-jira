@@ -28,31 +28,23 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 
 	@Test
 	void testUploadEmptyFile() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new StringInputStream("id;"), ENCODING, subscription, UploadMode.VALIDATION);
-		}), "id", "Empty file, no change found");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new StringInputStream("id;"), ENCODING, subscription, UploadMode.VALIDATION)), "id", "Empty file, no change found");
 	}
 
 	@Test
 	void testUploadInvalidSubscription() {
-		Assertions.assertThrows(JpaObjectRetrievalFailureException.class, () -> {
-			resource.upload(new StringInputStream("id;"), ENCODING, -1, UploadMode.VALIDATION);
-		});
+		Assertions.assertThrows(JpaObjectRetrievalFailureException.class, () -> resource.upload(new StringInputStream("id;"), ENCODING, -1, UploadMode.VALIDATION));
 	}
 
 	@Test
 	void testUploadNoChange() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/nochange.csv").getInputStream(), ENCODING, subscription, UploadMode.PREVIEW);
-		}), "issue", "No change detected detected for issue 2(id=2) for changes between 01/03/2014 12:01 and 01/03/2014 12:01");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/nochange.csv").getInputStream(), ENCODING, subscription, UploadMode.PREVIEW)), "issue", "No change detected detected for issue 2(id=2) for changes between 01/03/2014 12:01 and 01/03/2014 12:01");
 	}
 
 	@Test
 	void testUploadBrokenHistory() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/broken-history.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "date", "Broken history for issue 2(id=2) Sat Mar 01 12:01:00 CET 2014 and 1.3.2014 12:00:59");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/broken-history.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "date", "Broken history for issue 2(id=2) Sat Mar 01 12:01:00 CET 2014 and 1.3.2014 12:00:59");
 	}
 
 	@Test
@@ -142,10 +134,8 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 
 	@Test
 	void testUploadTranslatedAmbiguousCf() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-cf-ambiguous.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "cf$cf-conflictB", "There are several custom fields named 'cf-conflictB', ambiguous identifier : 10001, 10003");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-ambiguous.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "cf$cf-conflictB", "There are several custom fields named 'cf-conflictB', ambiguous identifier : 10001, 10003");
 	}
 
 	@Test
@@ -156,10 +146,8 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 
 	@Test
 	void testUploadNotManagedCfType() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-cf-not-managed-type.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "cf$SLA_PEC",
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-not-managed-type.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "cf$SLA_PEC",
 				"Custom field 'SLA_PEC' has a not yet managed type 'com.valiantys.jira.plugins.vertygo.jira-vertygosla-plugin:sla.be.cf'");
 	}
 
@@ -181,10 +169,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		Assertions.assertEquals(1, result.getTypes().intValue());
 		Assertions.assertEquals(2, result.getUsers().intValue());
 		Assertions.assertEquals(0, result.getVersions().intValue());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueFrom());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueFrom());
 		Assertions.assertEquals(UploadMode.PREVIEW, result.getMode());
 		Assertions.assertEquals("MDA", result.getPkey());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueTo());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueTo());
 		Assertions.assertEquals(0, result.getLabels().intValue());
 
 		Assertions.assertEquals(1, result.getNewIssues().intValue());
@@ -208,114 +196,86 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 
 	@Test
 	void testUploadInvalidPkey() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-pkey.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "issue", "Used issue prefix in import is SIOP, but associated project is MDA, are you importing the correct file?");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-pkey.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "issue", "Used issue prefix in import is SIOP, but associated project is MDA, are you importing the correct file?");
 	}
 
 	@Test
 	void testUploadUpdate() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-update.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "issue", "Updating issues is not yet implemented. 2 issues are concerned. First one is issue 1 (id=13402)");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-update.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "issue", "Updating issues is not yet implemented. 2 issues are concerned. First one is issue 1 (id=13402)");
 	}
 
 	@Test
 	void testUploadMissingResolutionForResolved() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-resolution-resolved.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "resolution", "Resolution is provided but has never been resolved for issue 2(id=2)");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-resolution-resolved.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "resolution", "Resolution is provided but has never been resolved for issue 2(id=2)");
 	}
 
 	@Test
 	void testUploadInvalidResolutionDate() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "resolutionDate", "Resolution date must be greater or equals to the change date for issue 2(id=1)");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "resolutionDate", "Resolution date must be greater or equals to the change date for issue 2(id=1)");
 	}
 
 	@Test
 	void testUploadInvalidResolutionDateNoId() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date-no-id.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "resolutionDate", "Resolution date must be greater or equals to the change date for issue 2");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date-no-id.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "resolutionDate", "Resolution date must be greater or equals to the change date for issue 2");
 	}
 
 	@Test
 	void testUploadInvalidDueDate() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-duedate.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "dueDate", "Due date must be greater or equals to the creation date for issue 2(id=4)");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-duedate.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "dueDate", "Due date must be greater or equals to the creation date for issue 2(id=4)");
 	}
 
 	@Test
 	void testUploadInvalidInput() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ConstraintViolationException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-input.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "type", "NotBlank");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ConstraintViolationException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-input.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "type", "NotBlank");
 	}
 
 	@Test
 	void testUploadInvalidCfSelectValue() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-cf-select.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "cf$Motif suspension", "Invalid value 'Demande'. Expected : Autre (à préciser),Demande révisée,Décalage planning");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-select.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "cf$Motif suspension", "Invalid value 'Demande'. Expected : Autre (à préciser),Demande révisée,Décalage planning");
 	}
 
 	@Test
 	void testUploadInvalidCfDateValue() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-cf-date.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "cf$Date démarrage prévue", "Invalid value 'Value'. Expected : A valid date");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-date.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "cf$Date démarrage prévue", "Invalid value 'Value'. Expected : A valid date");
 	}
 
 	@Test
 	void testUploadInvalidCfDatePickerValue() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-cf-datepicker.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "cf$Date de livraison", "Invalid value 'VALUE'. Expected : A valid date");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-datepicker.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "cf$Date de livraison", "Invalid value 'VALUE'. Expected : A valid date");
 	}
 
 	@Test
 	void testUploadInvalidCfFloatValue() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-cf-float.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "cf$Délai levée réserves (jrs)", "Invalid value 'A'. Expected : A decimal value");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-float.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "cf$Délai levée réserves (jrs)", "Invalid value 'A'. Expected : A decimal value");
 	}
 
 	@Test
 	void testUploadInvalidStatus() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-status.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "status", "Some statuses (1) do not exist : VALUE");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-status.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "status", "Some statuses (1) do not exist : VALUE");
 	}
 
 	@Test
 	void testUploadInvalidWorkflowStatus() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-workflow-status.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "status", "At least one specified status exists but is not managed in the workflow : Assigned");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-workflow-status.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "status", "At least one specified status exists but is not managed in the workflow : Assigned");
 	}
 
 	@Test
 	void testUploadInvalidType() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-type.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "type", "Some types (1) do not exist : VALUE");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-type.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "type", "Some types (1) do not exist : VALUE");
 	}
 
 	@Test
@@ -395,18 +355,14 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 
 	@Test
 	void testUploadInvalidPriority() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-priority.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "priority", "Some priorities (1) do not exist : VALUE");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-priority.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "priority", "Some priorities (1) do not exist : VALUE");
 	}
 
 	@Test
 	void testUploadInvalidUser() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new ClassPathResource("csv/upload/invalid-assignee.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
-		}), "assignee", "Some assignee/reporters/authors (1) do not exist : VALUE");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-assignee.csv").getInputStream(), ENCODING, subscription,
+				UploadMode.PREVIEW)), "assignee", "Some assignee/reporters/authors (1) do not exist : VALUE");
 	}
 
 	@Test
@@ -414,16 +370,12 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		em.createQuery("UPDATE ImportStatus i SET i.end = NULL WHERE i.locked.id  = ?1").setParameter(1, subscription).executeUpdate();
 		em.flush();
 		em.clear();
-		Assertions.assertEquals(Assertions.assertThrows(BusinessException.class, () -> {
-			resource.upload(null, ENCODING, subscription, UploadMode.PREVIEW);
-		}).getMessage(), "concurrent-task");
+		Assertions.assertEquals(Assertions.assertThrows(BusinessException.class, () -> resource.upload(null, ENCODING, subscription, UploadMode.PREVIEW)).getMessage(), "concurrent-task");
 	}
 
 	@Test
 	void testUploadFailed() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.upload(new StringInputStream("id;"), ENCODING, subscription, UploadMode.VALIDATION);
-		}), "id", "Empty file, no change found");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new StringInputStream("id;"), ENCODING, subscription, UploadMode.VALIDATION)), "id", "Empty file, no change found");
 		em.flush();
 		em.clear();
 		final ImportStatus result = jiraResource.getTask(subscription);
@@ -455,10 +407,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		Assertions.assertEquals(2, result.getTypes().intValue());
 		Assertions.assertEquals(2, result.getUsers().intValue());
 		Assertions.assertEquals(2, result.getVersions().intValue());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueFrom());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueFrom());
 		Assertions.assertEquals(UploadMode.PREVIEW, result.getMode());
 		Assertions.assertEquals("MDA", result.getPkey());
-		Assertions.assertEquals(getDate(2014, 04, 15, 12, 01, 00), result.getIssueTo());
+		Assertions.assertEquals(getDate(2014, 4, 15, 12, 1, 0), result.getIssueTo());
 		Assertions.assertEquals(2, result.getLabels().intValue());
 
 		Assertions.assertEquals(1, result.getNewIssues().intValue());
@@ -485,10 +437,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		Assertions.assertNull(result.getTypes());
 		Assertions.assertNull(result.getUsers());
 		Assertions.assertNull(result.getVersions());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueFrom());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueFrom());
 		Assertions.assertEquals(UploadMode.SYNTAX, result.getMode());
 		Assertions.assertEquals("MDA", result.getPkey());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueTo());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueTo());
 		Assertions.assertNull(result.getLabels());
 
 		Assertions.assertNull(result.getNewIssues());
@@ -514,10 +466,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		Assertions.assertEquals(1, result.getTypes().intValue());
 		Assertions.assertEquals(2, result.getUsers().intValue());
 		Assertions.assertEquals(0, result.getVersions().intValue());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueFrom());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueFrom());
 		Assertions.assertEquals(UploadMode.VALIDATION, result.getMode());
 		Assertions.assertEquals("MDA", result.getPkey());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueTo());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueTo());
 		Assertions.assertEquals(0, result.getLabels().intValue());
 
 		Assertions.assertNull(result.getNewIssues());
@@ -544,10 +496,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		Assertions.assertEquals(1, result.getTypes().intValue());
 		Assertions.assertEquals(2, result.getUsers().intValue());
 		Assertions.assertEquals(0, result.getVersions().intValue());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueFrom());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueFrom());
 		Assertions.assertEquals(UploadMode.PREVIEW, result.getMode());
 		Assertions.assertEquals("MDA", result.getPkey());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueTo());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueTo());
 		Assertions.assertEquals(0, result.getLabels().intValue());
 
 		Assertions.assertEquals(1, result.getNewIssues().intValue());
@@ -579,10 +531,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		Assertions.assertEquals(2, result.getTypes().intValue());
 		Assertions.assertEquals(2, result.getUsers().intValue());
 		Assertions.assertEquals(4, result.getVersions().intValue());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueFrom());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueFrom());
 		Assertions.assertEquals(UploadMode.PREVIEW, result.getMode());
 		Assertions.assertEquals("MDA", result.getPkey());
-		Assertions.assertEquals(getDate(2014, 03, 02, 12, 01, 00), result.getIssueTo());
+		Assertions.assertEquals(getDate(2014, 3, 2, 12, 1, 0), result.getIssueTo());
 		Assertions.assertEquals(2, result.getLabels().intValue());
 
 		Assertions.assertEquals(2, result.getNewIssues().intValue());

@@ -39,8 +39,8 @@ class JiraImport3PluginResourceTest extends AbstractJiraImportPluginResourceTest
 		Assertions.assertEquals(2, result.getTypes().intValue());
 		Assertions.assertEquals(2, result.getUsers().intValue());
 		Assertions.assertEquals(5, result.getVersions().intValue());
-		Assertions.assertEquals(getDate(2014, 03, 01, 12, 01, 00), result.getIssueFrom());
-		Assertions.assertEquals(getDate(2014, 04, 11, 12, 01, 00), result.getIssueTo());
+		Assertions.assertEquals(getDate(2014, 3, 1, 12, 1, 0), result.getIssueFrom());
+		Assertions.assertEquals(getDate(2014, 4, 11, 12, 1, 0), result.getIssueTo());
 		Assertions.assertEquals(UploadMode.FULL, result.getMode());
 		Assertions.assertEquals("MDA", result.getPkey());
 		Assertions.assertEquals(6, result.getLabels().intValue());
