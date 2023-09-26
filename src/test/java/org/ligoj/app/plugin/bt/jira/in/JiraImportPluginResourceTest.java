@@ -21,6 +21,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
+import java.io.IOException;
+
 /**
  * Test class of {@link JiraImportPluginResource}
  */
@@ -133,9 +135,11 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 	}
 
 	@Test
-	void testUploadTranslatedAmbiguousCf() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-ambiguous.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "cf$cf-conflictB", "There are several custom fields named 'cf-conflictB', ambiguous identifier : 10001, 10003");
+	void testUploadTranslatedAmbiguousCf() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-cf-ambiguous.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "cf$cf-conflictB", "There are several custom fields named 'cf-conflictB', ambiguous identifier : 10001, 10003");
+		}
 	}
 
 	@Test
@@ -145,10 +149,12 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 	}
 
 	@Test
-	void testUploadNotManagedCfType() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-not-managed-type.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "cf$SLA_PEC",
-				"Custom field 'SLA_PEC' has a not yet managed type 'com.valiantys.jira.plugins.vertygo.jira-vertygosla-plugin:sla.be.cf'");
+	void testUploadNotManagedCfType() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-cf-not-managed-type.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+							UploadMode.PREVIEW)), "cf$SLA_PEC",
+					"Custom field 'SLA_PEC' has a not yet managed type 'com.valiantys.jira.plugins.vertygo.jira-vertygosla-plugin:sla.be.cf'");
+		}
 	}
 
 	@Test
@@ -181,127 +187,156 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 	}
 
 	@Test
-	void testUploadInvalidVersion() {
-		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			try {
-				jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "4.4.2", 10075);
-				resource.upload(new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream(), ENCODING, subscription,
-						UploadMode.PREVIEW);
-			} finally {
-				jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
-			}
-		}), "jira", "Required JIRA version is 6.0.0, and the current version is 4.4.2");
+	void testUploadInvalidVersion() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream()) {
+			final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
+				try {
+					jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "4.4.2", 10075);
+					resource.upload(input, ENCODING, subscription,
+							UploadMode.PREVIEW);
+				} finally {
+					jdbcTemplate.update("update pluginversion SET pluginversion=? WHERE ID = ?", "6.0.1", 10075);
+				}
+			}), "jira", "Required JIRA version is 6.0.0, and the current version is 4.4.2");
+		}
 	}
 
 	@Test
-	void testUploadInvalidPkey() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-pkey.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "issue", "Used issue prefix in import is SIOP, but associated project is MDA, are you importing the correct file?");
+	void testUploadInvalidPkey() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-pkey.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "issue", "Used issue prefix in import is SIOP, but associated project is MDA, are you importing the correct file?");
+		}
 	}
 
 	@Test
-	void testUploadUpdate() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-update.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "issue", "Updating issues is not yet implemented. 2 issues are concerned. First one is issue 1 (id=13402)");
+	void testUploadUpdate() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-update.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "issue", "Updating issues is not yet implemented. 2 issues are concerned. First one is issue 1 (id=13402)");
+		}
 	}
 
 	@Test
-	void testUploadMissingResolutionForResolved() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-resolution-resolved.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "resolution", "Resolution is provided but has never been resolved for issue 2(id=2)");
+	void testUploadMissingResolutionForResolved() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-resolution-resolved.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "resolution", "Resolution is provided but has never been resolved for issue 2(id=2)");
+		}
 	}
 
 	@Test
-	void testUploadInvalidResolutionDate() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "resolutionDate", "Resolution date must be greater or equals to the change date for issue 2(id=1)");
+	void testUploadInvalidResolutionDate() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-resolution-date.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "resolutionDate", "Resolution date must be greater or equals to the change date for issue 2(id=1)");
+		}
 	}
 
 	@Test
-	void testUploadInvalidResolutionDateNoId() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-resolution-date-no-id.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "resolutionDate", "Resolution date must be greater or equals to the change date for issue 2");
+	void testUploadInvalidResolutionDateNoId() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-resolution-date-no-id.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "resolutionDate", "Resolution date must be greater or equals to the change date for issue 2");
+		}
 	}
 
 	@Test
-	void testUploadInvalidDueDate() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-duedate.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "dueDate", "Due date must be greater or equals to the creation date for issue 2(id=4)");
+	void testUploadInvalidDueDate() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-duedate.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "dueDate", "Due date must be greater or equals to the creation date for issue 2(id=4)");
+		}
 	}
 
 	@Test
-	void testUploadInvalidInput() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ConstraintViolationException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-input.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "type", "NotBlank");
+	void testUploadInvalidInput() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-input.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ConstraintViolationException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "type", "NotBlank");
+		}
 	}
 
 	@Test
-	void testUploadInvalidCfSelectValue() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-select.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "cf$Motif suspension", "Invalid value 'Demande'. Expected : Autre (à préciser),Demande révisée,Décalage planning");
+	void testUploadInvalidCfSelectValue() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-cf-select.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "cf$Motif suspension", "Invalid value 'Demande'. Expected : Autre (à préciser),Demande révisée,Décalage planning");
+		}
 	}
 
 	@Test
-	void testUploadInvalidCfDateValue() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-date.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "cf$Date démarrage prévue", "Invalid value 'Value'. Expected : A valid date");
+	void testUploadInvalidCfDateValue() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-cf-date.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "cf$Date démarrage prévue", "Invalid value 'Value'. Expected : A valid date");
+		}
 	}
 
 	@Test
-	void testUploadInvalidCfDatePickerValue() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-datepicker.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "cf$Date de livraison", "Invalid value 'VALUE'. Expected : A valid date");
+	void testUploadInvalidCfDatePickerValue() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-cf-datepicker.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "cf$Date de livraison", "Invalid value 'VALUE'. Expected : A valid date");
+		}
 	}
 
 	@Test
-	void testUploadInvalidCfFloatValue() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-cf-float.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "cf$Délai levée réserves (jrs)", "Invalid value 'A'. Expected : A decimal value");
+	void testUploadInvalidCfFloatValue() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-cf-float.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "cf$Délai levée réserves (jrs)", "Invalid value 'A'. Expected : A decimal value");
+		}
 	}
 
 	@Test
-	void testUploadInvalidStatus() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-status.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "status", "Some statuses (1) do not exist : VALUE");
+	void testUploadInvalidStatus() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-status.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "status", "Some statuses (1) do not exist : VALUE");
+		}
 	}
 
 	@Test
-	void testUploadInvalidWorkflowStatus() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-workflow-status.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "status", "At least one specified status exists but is not managed in the workflow : Assigned");
+	void testUploadInvalidWorkflowStatus() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-workflow-status.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "status", "At least one specified status exists but is not managed in the workflow : Assigned");
+		}
 	}
 
 	@Test
-	void testUploadInvalidType() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-type.csv").getInputStream(), ENCODING, subscription,
+	void testUploadInvalidType() throws IOException {
+		var input = new ClassPathResource("csv/upload/invalid-type.csv").getInputStream();
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
 				UploadMode.PREVIEW)), "type", "Some types (1) do not exist : VALUE");
 	}
 
 	@Test
-	void testUploadInvalidWorkflowType() {
-		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			try {
-				// Delete the default workflow mapping, where type = '0'
-				jdbcTemplate.update("update workflowschemeentity SET SCHEME=? WHERE ID = ?", 1, 10272);
-				resource.upload(new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream(), ENCODING, subscription,
-						UploadMode.PREVIEW);
-			} finally {
-				jdbcTemplate.update("update workflowschemeentity SET SCHEME=? WHERE ID = ?", 10025, 10272);
-			}
-		}), "type", "Specified type 'Bug' exists but is not mapped to a workflow and there is no default association");
+	void testUploadInvalidWorkflowType() throws IOException {
+		final var jdbcTemplate = new JdbcTemplate(datasource);
+		try (var input = new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream()) {
+			jdbcTemplate.update("update workflowschemeentity SET SCHEME=? WHERE ID = ?", 1, 10272);
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
+				try {
+					// Delete the default workflow mapping, where type = '0'
+					resource.upload(input, ENCODING, subscription, UploadMode.PREVIEW);
+				} finally {
+					jdbcTemplate.update("update workflowschemeentity SET SCHEME=? WHERE ID = ?", 10025, 10272);
+				}
+			}), "type", "Specified type 'Bug' exists but is not mapped to a workflow and there is no default association");
+		}
 	}
 
 	@Test
 	void testUploadDefaultWorkflowType() throws Exception {
-		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		try {
+		final var jdbcTemplate = new JdbcTemplate(datasource);
+		jdbcTemplate.update("update workflowschemeentity SET issuetype=? WHERE ID = ?", 1, 10302);
+		jdbcTemplate.update("update workflowschemeentity SET SCHEME=? WHERE ID = ?", 1, 10272);
+		try (var input = new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream()) {
 			// Delete the default workflow mapping, where type = '0'
-			jdbcTemplate.update("update workflowschemeentity SET issuetype=? WHERE ID = ?", 1, 10302);
-			jdbcTemplate.update("update workflowschemeentity SET SCHEME=? WHERE ID = ?", 1, 10272);
-			resource.upload(new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
+			resource.upload(input, ENCODING, subscription, UploadMode.PREVIEW);
 		} finally {
 			jdbcTemplate.update("update workflowschemeentity SET issuetype=? WHERE ID = ?", 6, 10302);
 			jdbcTemplate.update("update workflowschemeentity SET SCHEME=? WHERE ID = ?", 10025, 10272);
@@ -316,13 +351,12 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 	@Test
 	void testUploadDefaultWorkflowScheme() throws Exception {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		try {
+		jdbcTemplate.update(
+				"update nodeassociation SET SOURCE_NODE_ID=? WHERE SOURCE_NODE_ID=? AND SOURCE_NODE_ENTITY=? AND SINK_NODE_ID=? AND SINK_NODE_ENTITY=? AND ASSOCIATION_TYPE=?",
+				1, 10074, "Project", 10025, "WorkflowScheme", "ProjectScheme");
+		try (var input = new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream()) {
 			// Delete the default project/workflow mapping, where type = '0'
-			jdbcTemplate.update(
-					"update nodeassociation SET SOURCE_NODE_ID=? WHERE SOURCE_NODE_ID=? AND SOURCE_NODE_ENTITY=? AND SINK_NODE_ID=? AND SINK_NODE_ENTITY=? AND ASSOCIATION_TYPE=?",
-					1, 10074, "Project", 10025, "WorkflowScheme", "ProjectScheme");
-			resource.upload(new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
+			resource.upload(input, ENCODING, subscription, UploadMode.PREVIEW);
 		} finally {
 			jdbcTemplate.update(
 					"update nodeassociation SET SOURCE_NODE_ID=? WHERE SOURCE_NODE_ID=? AND SOURCE_NODE_ENTITY=? AND SINK_NODE_ID=? AND SINK_NODE_ENTITY=? AND ASSOCIATION_TYPE=?",
@@ -338,11 +372,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 	@Test
 	void testUploadDefaultWorkflow() throws Exception {
 		final JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-		try {
-			// Delete the default project/workflow mapping, where type = '0'
-			jdbcTemplate.update("update workflowschemeentity SET WORKFLOW=? WHERE ID=?", "jira", 10302);
-			resource.upload(new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream(), ENCODING, subscription,
-					UploadMode.PREVIEW);
+		// Delete the default project/workflow mapping, where type = '0'
+		jdbcTemplate.update("update workflowschemeentity SET WORKFLOW=? WHERE ID=?", "jira", 10302);
+		try (var input = new ClassPathResource("csv/upload/nominal-simple.csv").getInputStream()) {
+			resource.upload(input, ENCODING, subscription, UploadMode.PREVIEW);
 		} finally {
 			jdbcTemplate.update("update workflowschemeentity SET WORKFLOW=? WHERE ID=?", "CSN", 10302);
 		}
@@ -354,15 +387,19 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 	}
 
 	@Test
-	void testUploadInvalidPriority() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-priority.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "priority", "Some priorities (1) do not exist : VALUE");
+	void testUploadInvalidPriority() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-priority.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "priority", "Some priorities (1) do not exist : VALUE");
+		}
 	}
 
 	@Test
-	void testUploadInvalidUser() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/invalid-assignee.csv").getInputStream(), ENCODING, subscription,
-				UploadMode.PREVIEW)), "assignee", "Some assignee/reporters/authors (1) do not exist : VALUE");
+	void testUploadInvalidUser() throws IOException {
+		try (var input = new ClassPathResource("csv/upload/invalid-assignee.csv").getInputStream()) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
+					UploadMode.PREVIEW)), "assignee", "Some assignee/reporters/authors (1) do not exist : VALUE");
+		}
 	}
 
 	@Test
@@ -374,8 +411,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 	}
 
 	@Test
-	void testUploadFailed() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new StringInputStream("id;"), ENCODING, subscription, UploadMode.VALIDATION)), "id", "Empty file, no change found");
+	void testUploadFailed() throws IOException {
+		try (var input = new StringInputStream("id;")) {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription, UploadMode.VALIDATION)), "id", "Empty file, no change found");
+		}
 		em.flush();
 		em.clear();
 		final ImportStatus result = jiraResource.getTask(subscription);

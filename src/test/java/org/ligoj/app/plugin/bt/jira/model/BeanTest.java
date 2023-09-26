@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Simple test of API beans.
  */
-public class BeanTest {
+class BeanTest {
 
 	@Test
 	void testUploadMode() {
