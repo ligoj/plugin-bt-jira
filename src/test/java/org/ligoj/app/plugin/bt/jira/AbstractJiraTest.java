@@ -3,13 +3,6 @@
  */
 package org.ligoj.app.plugin.bt.jira;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
 import org.hsqldb.jdbc.JDBCDriver;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,26 +10,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.ligoj.app.AbstractServerTest;
 import org.ligoj.app.dao.ProjectRepository;
 import org.ligoj.app.iam.IamProvider;
-import org.ligoj.app.model.Node;
-import org.ligoj.app.model.Parameter;
-import org.ligoj.app.model.ParameterValue;
-import org.ligoj.app.model.Project;
-import org.ligoj.app.model.Subscription;
+import org.ligoj.app.model.*;
 import org.ligoj.app.plugin.bt.BugTrackerResource;
 import org.ligoj.app.plugin.bt.dao.BugTrackerConfigurationRepository;
 import org.ligoj.app.plugin.bt.jira.dao.JiraDao;
 import org.ligoj.app.plugin.bt.jira.model.ImportStatus;
-import org.ligoj.app.plugin.bt.model.BugTrackerConfiguration;
-import org.ligoj.app.plugin.bt.model.BusinessHours;
-import org.ligoj.app.plugin.bt.model.Calendar;
-import org.ligoj.app.plugin.bt.model.Holiday;
-import org.ligoj.app.plugin.bt.model.Sla;
+import org.ligoj.app.plugin.bt.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 
 /**
  * Common JPA test utilities.
@@ -64,10 +54,10 @@ abstract class AbstractJiraTest extends AbstractServerTest {
 		// Only with Spring context
 		if (csvForJpa != null) {
 			persistEntities("csv",
-					new Class[] { Calendar.class, Holiday.class, Node.class, Parameter.class, Project.class,
+					new Class<?>[] { Calendar.class, Holiday.class, Node.class, Parameter.class, Project.class,
 							Subscription.class, ParameterValue.class, BugTrackerConfiguration.class,
 							BusinessHours.class, Sla.class, ImportStatus.class },
-					StandardCharsets.UTF_8.name());
+					StandardCharsets.UTF_8);
 		}
 	}
 

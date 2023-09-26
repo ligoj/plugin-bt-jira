@@ -3,14 +3,7 @@
  */
 package org.ligoj.app.plugin.bt.jira;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import jakarta.transaction.Transactional;
-
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,17 +14,8 @@ import org.ligoj.app.dao.SubscriptionRepository;
 import org.ligoj.app.iam.model.DelegateOrg;
 import org.ligoj.app.model.Project;
 import org.ligoj.app.model.Subscription;
-import org.ligoj.app.plugin.bt.BtConfigurationVo;
-import org.ligoj.app.plugin.bt.BugTrackerResource;
-import org.ligoj.app.plugin.bt.BusinessHoursEditionVo;
-import org.ligoj.app.plugin.bt.IdentifierHelper;
-import org.ligoj.app.plugin.bt.SlaConfiguration;
-import org.ligoj.app.plugin.bt.SlaEditionVo;
-import org.ligoj.app.plugin.bt.dao.BugTrackerConfigurationRepository;
-import org.ligoj.app.plugin.bt.dao.BusinessHoursRepository;
-import org.ligoj.app.plugin.bt.dao.CalendarRepository;
-import org.ligoj.app.plugin.bt.dao.HolidayRepository;
-import org.ligoj.app.plugin.bt.dao.SlaRepository;
+import org.ligoj.app.plugin.bt.*;
+import org.ligoj.app.plugin.bt.dao.*;
 import org.ligoj.app.plugin.bt.model.BugTrackerConfiguration;
 import org.ligoj.app.plugin.bt.model.BusinessHours;
 import org.ligoj.app.plugin.bt.model.Calendar;
@@ -45,6 +29,12 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Test class of {@link BugTrackerResource}
@@ -85,7 +75,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	@BeforeEach
 	void prepareSubscription() throws IOException {
 		persistSystemEntities();
-		persistEntities("csv", new Class[] { DelegateOrg.class }, StandardCharsets.UTF_8.name());
+		persistEntities("csv", new Class<?>[] { DelegateOrg.class }, StandardCharsets.UTF_8);
 		this.subscription = getSubscription("MDA");
 	}
 
@@ -179,9 +169,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 
 	@Test
 	void deleteUnknown() {
-		Assertions.assertThrows(JpaObjectRetrievalFailureException.class, () -> {
-			resource.delete(-1, false);
-		});
+		Assertions.assertThrows(JpaObjectRetrievalFailureException.class, () ->resource.delete(-1, false));
 	}
 
 	@Test
@@ -392,9 +380,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		em.flush();
 		em.clear();
 
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.addSla(vo);
-		}), "start", "SlaBound");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.addSla(vo)), "start", "SlaBound");
 	}
 
 	@Test
@@ -408,9 +394,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		vo.setSubscription(subscription);
 		em.flush();
 		em.clear();
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.addSla(vo);
-		}), "stop", "SlaBound");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.addSla(vo)), "stop", "SlaBound");
 	}
 
 	@Test
@@ -487,22 +471,18 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		vo.setSubscription(subscription);
 		em.flush();
 		em.clear();
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.addBusinessHours(vo);
-		}), "start", "Overlap");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.addBusinessHours(vo)), "start", "Overlap");
 	}
 
 	@Test
 	void addBusinessHoursOverlapsEnd() {
 		final BusinessHoursEditionVo vo = new BusinessHoursEditionVo();
 		vo.setStart(2 * DateUtils.MILLIS_PER_HOUR);
-		vo.setEnd(1 * DateUtils.MILLIS_PER_HOUR);
+		vo.setEnd(DateUtils.MILLIS_PER_HOUR);
 		vo.setSubscription(subscription);
 		em.flush();
 		em.clear();
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			resource.addBusinessHours(vo);
-		}), "stop", "Overlap");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.addBusinessHours(vo)), "stop", "Overlap");
 	}
 
 	@Test
@@ -532,9 +512,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 
 		// Try to delete the last one
 		final int id = repository.findBySubscription(subscription).getBusinessHours().iterator().next().getId();
-		Assertions.assertThrows(BusinessException.class, () -> {
-			resource.deleteBusinessHours(id);
-		});
+		Assertions.assertThrows(BusinessException.class, () -> resource.deleteBusinessHours(id));
 	}
 
 	@Test
