@@ -189,7 +189,7 @@ public class CsvWithCustomFieldsStreamingOutput extends CsvStreamingOutput {
 			// Custom field value has been found
 			final CustomFieldValue customFieldValue = customFieldValues.get(issueAndCustomFieldsCursor);
 			if (!first) {
-				// Multi-valued custom field, append the value
+				// Multivalued custom field, append the value
 				writer.append(',');
 			}
 			final Object value = customField.getEditor().getValue(customField, customFieldValue);
