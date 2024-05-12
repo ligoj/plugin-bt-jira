@@ -54,40 +54,40 @@ public class JiraImportPluginResource extends JiraBaseResource {
 	 * Import context data.
 	 */
 	protected static class ImportContext {
-		protected Set<String> requiredStatuses = new HashSet<>();
-		protected Set<String> requiredPriorities = new HashSet<>();
-		protected Set<String> requiredTypes = new HashSet<>();
-		protected Set<String> requiredUsers = new HashSet<>();
-		protected Set<String> requiredCustomFields = new HashSet<>();
-		protected Set<String> requiredResolutions = new HashSet<>();
+		private final  Set<String> requiredStatuses = new HashSet<>();
+		private final Set<String> requiredPriorities = new HashSet<>();
+		private final Set<String> requiredTypes = new HashSet<>();
+		private final Set<String> requiredUsers = new HashSet<>();
+		private final Set<String> requiredCustomFields = new HashSet<>();
+		private final Set<String> requiredResolutions = new HashSet<>();
 
 		/**
 		 * Version to create.
 		 */
-		protected Set<String> completeVersions = new HashSet<>();
+		private final Set<String> completeVersions = new HashSet<>();
 
 		/**
 		 * Components to create.
 		 */
-		protected Set<String> completeComponents = new HashSet<>();
+		private final Set<String> completeComponents = new HashSet<>();
 
-		protected Map<Integer, String> statuses;
-		protected Map<String, Integer> invertedStatuses;
-		protected Map<String, Integer> priorities;
-		protected Map<String, Integer> resolutions;
-		protected Map<String, Integer> types;
-		protected Map<String, CustomFieldEditor> customFields;
-		protected Map<String, Integer> existingComponents;
-		protected Map<String, Integer> existingVersions;
-		protected Map<Integer, IssueWithCollections> issuesToUpdate;
-		protected DataSource dataSource;
-		protected Set<Integer> issues;
-		protected Map<Integer, List<ImportEntry>> changes;
-		protected Map<Integer, Workflow> typeToStatusToStep;
-		protected Map<String, String> parameters;
-		public List<ImportEntry> rawEntries;
-		public Set<String> newVersionsAsSet;
-		public Set<String> newComponentsAsSet;
+		private Map<Integer, String> statuses;
+		private Map<String, Integer> invertedStatuses;
+		private Map<String, Integer> priorities;
+		private Map<String, Integer> resolutions;
+		private Map<String, Integer> types;
+		private Map<String, CustomFieldEditor> customFields;
+		private Map<String, Integer> existingComponents;
+		private Map<String, Integer> existingVersions;
+		private Map<Integer, IssueWithCollections> issuesToUpdate;
+		private DataSource dataSource;
+		private Set<Integer> issues;
+		private Map<Integer, List<ImportEntry>> changes;
+		private Map<Integer, Workflow> typeToStatusToStep;
+		private Map<String, String> parameters;
+		private List<ImportEntry> rawEntries;
+		private Set<String> newVersionsAsSet;
+		private Set<String> newComponentsAsSet;
 	}
 
 	private static final String FIELD_ISSUE = "issue";
