@@ -1,3 +1,3 @@
 id;issue;status;summary;type;priority;resolution;resolutionDate;date;assignee;reporter;author
-1;2;Open;SUMMARY;Bug;Major;;;01/03/2014 12:01;fdaugan;alocquet;fdaugan
-2;2;Open;SUMMARY2;Bug;Major;Won't Fix;01/03/2014 12:02;01/03/2014 12:02;fdaugan;alocquet;fdaugan
+1;2;Open;SUMMARY;Bug;Major;;;01/03/2014 12:01;fdaugan;admin-test;fdaugan
+2;2;Open;SUMMARY2;Bug;Major;Won't Fix;01/03/2014 12:02;01/03/2014 12:02;fdaugan;admin-test;fdaugan

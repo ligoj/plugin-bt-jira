@@ -30,22 +30,26 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 
 	@Test
 	void testUploadEmptyFile() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new StringInputStream("id;"), ENCODING, subscription, UploadMode.VALIDATION)), "id", "Empty file, no change found");
+		final var input = new StringInputStream("id;");
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription, UploadMode.VALIDATION)), "id", "Empty file, no change found");
 	}
 
 	@Test
 	void testUploadInvalidSubscription() {
-		Assertions.assertThrows(JpaObjectRetrievalFailureException.class, () -> resource.upload(new StringInputStream("id;"), ENCODING, -1, UploadMode.VALIDATION));
+		final var input = new StringInputStream("id;");
+		Assertions.assertThrows(JpaObjectRetrievalFailureException.class, () -> resource.upload(input, ENCODING, -1, UploadMode.VALIDATION));
 	}
 
 	@Test
-	void testUploadNoChange() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/nochange.csv").getInputStream(), ENCODING, subscription, UploadMode.PREVIEW)), "issue", "No change detected detected for issue 2(id=2) for changes between 01/03/2014 12:01 and 01/03/2014 12:01");
+	void testUploadNoChange() throws IOException {
+		final var input = new ClassPathResource("csv/upload/no-change.csv").getInputStream();
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription, UploadMode.PREVIEW)), "issue", "No change detected detected for issue 2(id=2) for changes between 01/03/2014 12:01 and 01/03/2014 12:01");
 	}
 
 	@Test
-	void testUploadBrokenHistory() {
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(new ClassPathResource("csv/upload/broken-history.csv").getInputStream(), ENCODING, subscription,
+	void testUploadBrokenHistory() throws IOException {
+		final var input = new ClassPathResource("csv/upload/broken-history.csv").getInputStream();
+		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.upload(input, ENCODING, subscription,
 				UploadMode.PREVIEW)), "date", "Broken history for issue 2(id=2) Sat Mar 01 12:01:00 CET 2014 and 1.3.2014 12:00:59");
 	}
 
@@ -407,7 +411,7 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		em.createQuery("UPDATE ImportStatus i SET i.end = NULL WHERE i.locked.id  = ?1").setParameter(1, subscription).executeUpdate();
 		em.flush();
 		em.clear();
-		Assertions.assertEquals(Assertions.assertThrows(BusinessException.class, () -> resource.upload(null, ENCODING, subscription, UploadMode.PREVIEW)).getMessage(), "concurrent-task");
+		Assertions.assertEquals("concurrent-task", Assertions.assertThrows(BusinessException.class, () -> resource.upload(null, ENCODING, subscription, UploadMode.PREVIEW)).getMessage());
 	}
 
 	@Test

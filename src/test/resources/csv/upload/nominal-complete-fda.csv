@@ -1,4 +1,4 @@
 id;issue;status;summary;type;priority;components;resolution;resolutionDate;description;labels;fixedVersion;version;date;assignee;reporter;author
-1;40;Open;SUMMARY-1;Bug;Major;Javascript,CSS;;;DESCRIPTION-1;Label1,Label88;1.1.0,5.0.0;1.2.0;01/03/2014 12:01;fdaugan;alocquet;fdaugan
-2;40;Resolved;SUMMARY-21;Bug;Major;Javascript,CSS;Fixed;01/03/2014 12:01;DESCRIPTION-1;Label1,Label88;1.1.0,5.0.0;1.2.0;01/03/2014 12:01;fdaugan;alocquet;fdaugan
-3;40;Closed;SUMMARY-3;Bug;Major;Javascript,CSS;Fixed;01/03/2014 12:01;DESCRIPTION-1;Label1,Label88;1.1.0,5.0.0;1.2.0;01/03/2014 12:01;fdaugan;alocquet;fdaugan
+1;40;Open;SUMMARY-1;Bug;Major;Javascript,CSS;;;DESCRIPTION-1;Label1,Label88;1.1.0,5.0.0;1.2.0;01/03/2014 12:01;fdaugan;admin-test;fdaugan
+2;40;Resolved;SUMMARY-21;Bug;Major;Javascript,CSS;Fixed;01/03/2014 12:01;DESCRIPTION-1;Label1,Label88;1.1.0,5.0.0;1.2.0;01/03/2014 12:01;fdaugan;admin-test;fdaugan
+3;40;Closed;SUMMARY-3;Bug;Major;Javascript,CSS;Fixed;01/03/2014 12:01;DESCRIPTION-1;Label1,Label88;1.1.0,5.0.0;1.2.0;01/03/2014 12:01;fdaugan;admin-test;fdaugan

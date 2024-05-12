@@ -355,13 +355,13 @@ define(function () {
 						url += 'status%20%3D%20%22' + filteredStatuses[offset] + '%22';
 					} else if (offset) {
 						// Multiple statuses, build "AND"
-						for (let index = 0; index < filteredStatuses[4].length; index++) {
+						for(let status of filteredStatuses[4]) {
 							if (multiple) {
 								multiple += '%20OR';
 							} else {
 								multiple += '(';
 							}
-							multiple += 'status%20%3D%20%22' + filteredStatuses[4][index];
+							multiple += 'status%20%3D%20%22' + status;
 						}
 						if (multiple) {
 							multiple += ')';

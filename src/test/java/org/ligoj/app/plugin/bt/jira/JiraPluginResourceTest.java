@@ -79,7 +79,7 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		pvResource.getNodeParameters("service:bt:jira:6").remove(JiraBaseResource.PARAMETER_CACHE_VERSION);
 
 		// For coverage
-		Assertions.assertEquals("service:bt:jira",resource.getKey());
+		Assertions.assertEquals("service:bt:jira", resource.getKey());
 	}
 
 	@Test
@@ -178,8 +178,8 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		final var parameters = new HashMap<String, String>();
 		addJdbcParameter(parameters);
 		parameters.put(JiraBaseResource.PARAMETER_JDBC_DRIVER, "org.hsqldb.jdbc.JDBCDriverAny");
-		Assertions.assertEquals(Assertions.assertThrows(TechnicalException.class, () ->
-				resource.validateDataBaseConnectivity(parameters)).getMessage(), "Database connection issue for JIRA");
+		Assertions.assertEquals("Database connection issue for JIRA", Assertions.assertThrows(TechnicalException.class, () ->
+				resource.validateDataBaseConnectivity(parameters)).getMessage());
 	}
 
 	@Test
@@ -218,9 +218,9 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void findProjectsByName() {
-		assertGstack(resource.findAllByName("service:bt:jira:6", "10000"));
-		assertGstack(resource.findAllByName("service:bt:jira:6", "Jupiter"));
-		assertGstack(resource.findAllByName("service:bt:jira:6", "JUPITER"));
+		assertGStack(resource.findAllByName("service:bt:jira:6", "10000"));
+		assertGStack(resource.findAllByName("service:bt:jira:6", "Jupiter"));
+		assertGStack(resource.findAllByName("service:bt:jira:6", "JUPITER"));
 	}
 
 	@Test
@@ -242,12 +242,12 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		Assertions.assertNotNull(activities.get("fdaugan").getLastConnection());
 	}
 
-	private void assertGstack(final List<JiraProject> projects) {
+	private void assertGStack(final List<JiraProject> projects) {
 		Assertions.assertEquals(1, projects.size());
 		// HSQLDB issue for conversions....
-		Assertions.assertEquals(10000, projects.get(0).getId().intValue());
-		Assertions.assertEquals("jupiter", projects.get(0).getName());
-		Assertions.assertEquals("Jupiter", projects.get(0).getDescription());
+		Assertions.assertEquals(10000, projects.getFirst().getId().intValue());
+		Assertions.assertEquals("JUPITER", projects.getFirst().getName());
+		Assertions.assertEquals("Jupiter", projects.getFirst().getDescription());
 	}
 
 	private void addJdbcParameter(final Map<String, String> parameters) {
@@ -324,16 +324,15 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 
 	@Test
 	void validateAdminConnectivityFailedClose() {
-		Assertions.assertThrows(IllegalStateException.class, () ->
-				new JiraPluginResource() {
+		final var processor = new JiraPluginResource() {
 
-					@Override
-					protected boolean authenticateAdmin(final Map<String, String> parameters,
-							final CurlProcessor processor) {
-						throw new IllegalStateException();
-					}
-
-				}.validateAdminConnectivity(null));
+			@Override
+			protected boolean authenticateAdmin(final Map<String, String> parameters,
+					final CurlProcessor processor) {
+				throw new IllegalStateException();
+			}
+		};
+		Assertions.assertThrows(IllegalStateException.class, () -> processor.validateAdminConnectivity(null));
 	}
 
 	@Test
@@ -368,7 +367,8 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		em.flush();
 		em.clear();
 
-		Assertions.assertThrows(CannotGetJdbcConnectionException.class, () -> resource.link(subscription.getId()));
+		final var subscriptionId = subscription.getId();
+		Assertions.assertThrows(CannotGetJdbcConnectionException.class, () -> resource.link(subscriptionId));
 	}
 
 	@Test
@@ -391,13 +391,12 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		em.flush();
 		em.clear();
 		cacheManager.getCache("subscription-parameters").clear();
-		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> {
-			try {
-				resource.link(subscription.getId());
-			} finally {
-				cacheManager.getCache("subscription-parameters").clear();
-			}
-		}), JiraBaseResource.PARAMETER_ADMIN_USER, "jira-admin");
+		final var subscriptionId = subscription.getId();
+		try {
+			MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class, () -> resource.link(subscriptionId)), JiraBaseResource.PARAMETER_ADMIN_USER, "jira-admin");
+		} finally {
+			cacheManager.getCache("subscription-parameters").clear();
+		}
 	}
 
 	@Test
@@ -414,8 +413,10 @@ class JiraPluginResourceTest extends AbstractJiraData3Test {
 		addProjectParameters(subscription, 11111);
 		em.flush();
 		em.clear();
+
+		final var subscriptionId = subscription.getId();
 		MatcherUtil.assertThrows(Assertions.assertThrows(ValidationJsonException.class,
-				() -> resource.link(subscription.getId())), JiraBaseResource.PARAMETER_PKEY, "jira-project");
+				() -> resource.link(subscriptionId)), JiraBaseResource.PARAMETER_PKEY, "jira-project");
 	}
 
 	@Test

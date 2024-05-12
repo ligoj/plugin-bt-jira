@@ -1,5 +1,5 @@
 id;issue;status;summary;type;priority;date;dueDate;assignee;reporter;author
-1;2;Open;SUMMARY;Bug;Major;01/02/2014 12:01;01/03/2014 12:01;fdaugan;alocquet;fdaugan
-2;2;Open;SUMMARY;Bug;Major;02/02/2014 12:01;;fdaugan;alocquet;fdaugan
-3;2;Open;SUMMARY;Bug;Major;03/02/2014 12:01;01/02/2014 12:01;fdaugan;alocquet;fdaugan
-4;2;Open;SUMMARY;Bug;Major;04/02/2014 12:01;01/01/2014 12:01;fdaugan;alocquet;fdaugan
+1;2;Open;SUMMARY;Bug;Major;01/02/2014 12:01;01/03/2014 12:01;fdaugan;admin-test;fdaugan
+2;2;Open;SUMMARY;Bug;Major;02/02/2014 12:01;;fdaugan;admin-test;fdaugan
+3;2;Open;SUMMARY;Bug;Major;03/02/2014 12:01;01/02/2014 12:01;fdaugan;admin-test;fdaugan
+4;2;Open;SUMMARY;Bug;Major;04/02/2014 12:01;01/01/2014 12:01;fdaugan;admin-test;fdaugan
