@@ -153,7 +153,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 			writer.write(';');
 
 			// Write counters
-			writer.write(ObjectUtils.defaultIfNull(counter.get(status), "0").toString());
+			writer.write(ObjectUtils.getIfNull(counter.get(status), "0").toString());
 		}
 	}
 

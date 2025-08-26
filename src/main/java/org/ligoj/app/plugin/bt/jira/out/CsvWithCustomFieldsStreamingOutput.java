@@ -3,6 +3,17 @@
  */
 package org.ligoj.app.plugin.bt.jira.out;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.Strings;
+import org.ligoj.app.plugin.bt.IssueSla;
+import org.ligoj.app.plugin.bt.jira.JiraSlaComputations;
+import org.ligoj.app.plugin.bt.jira.editor.CustomFieldEditor;
+import org.ligoj.app.plugin.bt.jira.model.CustomField;
+import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
+import org.ligoj.app.plugin.bt.model.IssueDetails;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.text.Format;
@@ -11,18 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.ligoj.app.plugin.bt.IssueSla;
-import org.ligoj.app.plugin.bt.jira.JiraSlaComputations;
-import org.ligoj.app.plugin.bt.jira.editor.CustomFieldEditor;
-import org.ligoj.app.plugin.bt.jira.model.CustomField;
-import org.ligoj.app.plugin.bt.jira.model.CustomFieldValue;
-import org.ligoj.app.plugin.bt.model.IssueDetails;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * CSV output writer from Jira issues data and custom field values.
@@ -119,21 +118,21 @@ public class CsvWithCustomFieldsStreamingOutput extends CsvStreamingOutput {
 
 		// Time spent
 		writer.write(';');
-		writer.write(String.valueOf(ObjectUtils.defaultIfNull((Object) issue.getTimeSpent(), "")));
+		writer.write(String.valueOf(ObjectUtils.getIfNull((Object) issue.getTimeSpent(), "")));
 
 		// Time estimate
 		writer.write(';');
-		writer.write(String.valueOf(ObjectUtils.defaultIfNull((Object) issue.getTimeEstimate(), "")));
+		writer.write(String.valueOf(ObjectUtils.getIfNull((Object) issue.getTimeEstimate(), "")));
 
 		// Time initial estimate
 		writer.write(';');
-		writer.write(String.valueOf(ObjectUtils.defaultIfNull((Object) issue.getTimeEstimateInit(), "")));
+		writer.write(String.valueOf(ObjectUtils.getIfNull((Object) issue.getTimeEstimateInit(), "")));
 
 		// Optional parent
 		writer.write(';');
-		writer.write(String.valueOf(ObjectUtils.defaultIfNull(subTasks.get(issue.getId()), "")));
+		writer.write(String.valueOf(ObjectUtils.getIfNull(subTasks.get(issue.getId()), "")));
 
-		// Custom non fixed fields
+		// Custom non-fixed fields
 		writeCustomData((IssueSla) issue, writer, df);
 	}
 
@@ -204,7 +203,7 @@ public class CsvWithCustomFieldsStreamingOutput extends CsvStreamingOutput {
 				writer.append(df.format(value));
 			} else if (value instanceof Number) {
 				// Simple number, no escape
-				writer.append(StringUtils.removeEnd(value.toString().replace('.', ','), ",0"));
+				writer.append(Strings.CS.removeEnd(value.toString().replace('.', ','), ",0"));
 			} else {
 				if (!stringData) {
 					// Add the cell protection

@@ -509,7 +509,7 @@ public class JiraDao {
 	private void buildEditor(final DataSource dataSource, final CustomFieldEditor customField, final int project) {
 		// Get editor for this custom field
 		updateCustomFieldEditor(dataSource, customField, project,
-				ObjectUtils.defaultIfNull(MANAGED_TYPE.get(customField.getFieldType()), FAILSAFE_TYPE));
+				ObjectUtils.getIfNull(MANAGED_TYPE.get(customField.getFieldType()), FAILSAFE_TYPE));
 	}
 
 	/**

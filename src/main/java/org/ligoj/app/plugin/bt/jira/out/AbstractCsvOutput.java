@@ -122,15 +122,15 @@ public abstract class AbstractCsvOutput implements StreamingOutput {
 
 		// Priority
 		writer.write(';');
-		writer.write(String.valueOf(ObjectUtils.defaultIfNull(issue.getPriority(), "")));
+		writer.write(String.valueOf(ObjectUtils.getIfNull(issue.getPriority(), "")));
 		writer.write(';');
-		writer.write(ObjectUtils.defaultIfNull(priorityText.get(issue.getPriority()), ""));
+		writer.write(ObjectUtils.getIfNull(priorityText.get(issue.getPriority()), ""));
 
 		// Resolution
 		writer.write(';');
-		writer.write(String.valueOf(ObjectUtils.defaultIfNull(issue.getResolution(), "")));
+		writer.write(String.valueOf(ObjectUtils.getIfNull(issue.getResolution(), "")));
 		writer.write(';');
-		writer.write(ObjectUtils.defaultIfNull(resolutionText.get(issue.getResolution()), ""));
+		writer.write(ObjectUtils.getIfNull(resolutionText.get(issue.getResolution()), ""));
 
 		// Creation
 		writeDate(writer, df, issue.getCreated());

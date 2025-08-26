@@ -24,6 +24,7 @@ import jakarta.ws.rs.HttpMethod;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.ligoj.app.plugin.bt.BugTrackerResource;
 import org.ligoj.app.plugin.bt.IdentifierHelper;
 import org.ligoj.app.plugin.bt.jira.dao.JiraDao;
@@ -246,7 +247,7 @@ public class JiraBaseResource {
 
 		// Get the project if it exists and with some statistics
 		final JiraProject project = jiraDao.getProject(getDataSource(parameters),
-				Integer.parseInt(ObjectUtils.defaultIfNull(parameters.get(PARAMETER_PROJECT), "0")));
+				Integer.parseInt(ObjectUtils.getIfNull(parameters.get(PARAMETER_PROJECT), "0")));
 		if (project == null) {
 			// Invalid couple PKEY and id
 			throw new ValidationJsonException(PARAMETER_PKEY, "jira-project",
@@ -269,7 +270,7 @@ public class JiraBaseResource {
 		final String user = parameters.get(PARAMETER_ADMIN_USER);
 		final String password = StringUtils.trimToEmpty(parameters.get(PARAMETER_ADMIN_PASSWORD));
 		final String baseUrl = parameters.get(PARAMETER_URL);
-		final String url = StringUtils.appendIfMissing(baseUrl, "/") + "login.jsp";
+		final String url = Strings.CS.appendIfMissing(baseUrl, "/") + "login.jsp";
 		final List<CurlRequest> requests = new ArrayList<>();
 		requests.add(new CurlRequest(HttpMethod.GET, url, null));
 		requests.add(new CurlRequest(HttpMethod.POST, url,
@@ -279,7 +280,7 @@ public class JiraBaseResource {
 		// Sudoing is only required for JIRA 4+
 		if ("4".compareTo(getVersion(parameters)) <= 0) {
 			requests.add(
-					new CurlRequest(HttpMethod.POST, StringUtils.appendIfMissing(baseUrl, "/") + "secure/admin/WebSudoAuthenticate.jspa",
+					new CurlRequest(HttpMethod.POST, Strings.CS.appendIfMissing(baseUrl, "/") + "secure/admin/WebSudoAuthenticate.jspa",
 							"webSudoIsPost=false&os_cookie=true&authenticate=Confirm&webSudoPassword=" + password,
 							JiraCurlProcessor.SUDO_CALLBACK, "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
 		}
@@ -404,7 +405,7 @@ public class JiraBaseResource {
 	 */
 	private Map<String, INamableBean<Integer>> getWorkflowSteps(final String workflowXml, final Map<Integer, String> statuses) {
 		final Map<String, INamableBean<Integer>> workflowSteps = new HashMap<>();
-		final String[] lines = StringUtils.replace(StringUtils.replace(workflowXml, "\\\"", "\""), "\\n", "\n").split("\\r?\\n");
+		final String[] lines = Strings.CS.replace(Strings.CS.replace(workflowXml, "\\\"", "\""), "\\n", "\n").split("\\r?\\n");
 		NamedBean<Integer> currentStep = null;
 		for (String line : lines) {
 			line = line.trim();

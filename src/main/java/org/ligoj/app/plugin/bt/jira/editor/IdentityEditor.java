@@ -19,7 +19,7 @@ public class IdentityEditor extends AbstractEditor {
 	
 	@Override
 	public Object getValue(final CustomField customField, final CustomFieldValue value) {
-		return ObjectUtils.defaultIfNull(value.getStringValue(), value.getTextValue());
+		return ObjectUtils.getIfNull(value.getStringValue(), value.getTextValue());
 	}
 
 

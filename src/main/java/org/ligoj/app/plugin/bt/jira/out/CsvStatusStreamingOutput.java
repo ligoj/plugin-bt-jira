@@ -62,13 +62,13 @@ public class CsvStatusStreamingOutput extends AbstractCsvOutput {
 		writer.write(';');
 		writer.write(key);
 		writer.write(';');
-		writer.write(ObjectUtils.defaultIfNull(change.getAuthor(), change.getReporter()));
+		writer.write(ObjectUtils.getIfNull(change.getAuthor(), change.getReporter()));
 		writer.write(';');
-		writer.write(ObjectUtils.defaultIfNull(change.getFromStatus(), "").toString());
+		writer.write(ObjectUtils.getIfNull(change.getFromStatus(), "").toString());
 		writer.write(';');
 		writer.write(String.valueOf(change.getToStatus()));
 		writer.write(';');
-		writer.write(idf.format(ObjectUtils.defaultIfNull(statusText.get(change.getFromStatus()), "")));
+		writer.write(idf.format(ObjectUtils.getIfNull(statusText.get(change.getFromStatus()), "")));
 		writer.write(';');
 		writer.write(idf.format(statusText.get(change.getToStatus())));
 		writer.write(';');
