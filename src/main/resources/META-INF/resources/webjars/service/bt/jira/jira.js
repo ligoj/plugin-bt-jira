@@ -448,7 +448,7 @@ define(function () {
 				cProviders.standard({
 					id: 'service:bt:jira:pkey-project'
 				}, $fieldset, $select);
-				current.$super('newNodeSelect2')($select, 'service/bt/jira/', current.$super('toDescription'), function (e) {
+				current.$super('newNodeSelect2')($select, 'service/bt/jira/', current.$main.toDescription), function (e) {
 					// Fill the 'pkey' and 'project' parameters
 					if (e.added) {
 						_('service:bt:jira:pkey').val(e.added.name);
