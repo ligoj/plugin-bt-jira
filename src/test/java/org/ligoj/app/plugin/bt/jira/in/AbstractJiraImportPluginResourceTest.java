@@ -9,9 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.ligoj.app.plugin.bt.jira.AbstractJiraUploadTest;
 import org.ligoj.app.plugin.bt.jira.JiraPluginResource;
+import org.ligoj.app.plugin.bt.jira.model.ImportStatus;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.function.Consumer;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
@@ -37,9 +40,23 @@ abstract class AbstractJiraImportPluginResourceTest extends AbstractJiraUploadTe
 		applicationContext.getAutowireCapableBeanFactory().autowireBean(resource);
 
 		// Replace the task management to handle the inner transaction
-		resource.resource = new JiraPluginResource();
-		super.applicationContext.getAutowireCapableBeanFactory().autowireBean(resource.resource);
-		jiraResource = resource.resource;
+		jiraResource = new JiraPluginResource() {
+			public  ImportStatus startTask(final Integer lockedId, final Consumer<ImportStatus> initializer) {
+				return super.startTaskInternal(lockedId, initializer);
+			}
+
+			public ImportStatus nextStep(final Integer lockedId, final Consumer<ImportStatus> stepper) {
+				return super.nextStepInternal(lockedId, stepper);
+			}
+			public ImportStatus endTask(final Integer lockedId, final boolean failed) {
+				return endTaskInternal(lockedId, failed, t -> {
+					// Nothing to do by default
+				});
+			}
+
+		};
+		super.applicationContext.getAutowireCapableBeanFactory().autowireBean(jiraResource);
+		resource.resource = jiraResource;
 	}
 
 	protected void startOperationalServer() {
