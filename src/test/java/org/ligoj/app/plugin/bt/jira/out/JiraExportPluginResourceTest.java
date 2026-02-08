@@ -10,6 +10,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.hsqldb.jdbc.JDBCDriver;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.ligoj.app.plugin.bt.IssueSla;
 import org.ligoj.app.plugin.bt.SlaConfiguration;
 import org.ligoj.app.plugin.bt.SlaData;
 import org.ligoj.app.plugin.bt.dao.SlaRepository;
@@ -141,40 +142,28 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 			}
 			if (issue.getIssue().equals("MDA-174")) {
 				issue174 = true;
-				Assertions.assertEquals(14825, issue.getId());
-				Assertions.assertEquals("MDA-174", issue.getIssue());
-				Assertions.assertEquals("rfumery", issue.getReporter());
-				Assertions.assertEquals("fdaugan", issue.getAssignee());
-				Assertions.assertEquals(2, issue.getType());
-				Assertions.assertEquals("New Feature", issue.getTypeText());
-				Assertions.assertEquals(3, issue.getPriority());
-				Assertions.assertEquals("Major", issue.getPriorityText());
-				Assertions.assertEquals(1, issue.getResolution());
-				Assertions.assertEquals("Fixed", issue.getResolutionText());
-				Assertions.assertEquals(6, issue.getStatus());
-				Assertions.assertEquals("CLOSED", issue.getStatusText());
-				Assertions.assertEquals(getDate(2009, 11, 30, 14, 59, 11), issue.getCreated());
-				Assertions.assertEquals(1259589551000L, issue.getCreatedTimestamp());
-				Assertions.assertEquals(getDate(2009, 12, 5, 0, 0, 0), issue.getDueDate()); // Due
-				// date is a Saturday -> Monday
-				Assertions.assertEquals(1259967600000L, issue.getDueDateTimestamp());
-				Assertions.assertEquals("28:37:25", issue.getSlaLivraison());
-				Assertions.assertEquals(103045000, issue.getSlaLivraisonMs());
-				Assertions.assertEquals(getDate(2009, 12, 7, 9, 0, 4), issue.getSlaRevisedDueDate()); // Paused
-				// 4 seconds, starting from 9:00:00
-				Assertions.assertEquals(1260172804000L, issue.getSlaRevisedDueDateTimestamp());
-				Assertions.assertEquals(1, issue.getNbClosed());
-				Assertions.assertEquals(1, issue.getNbOpen());
-				Assertions.assertEquals(1, issue.getNbResolved());
-				Assertions.assertEquals(0, issue.getNbReopened());
-				Assertions.assertEquals(0, issue.getNbInProgress());
-				Assertions.assertEquals(0, issue.getNbAssigned());
+				checkIssue174b(issue);
 			}
 			count++;
 			issue = beanReader.read();
 		}
 		Assertions.assertTrue(issue174);
 		Assertions.assertEquals(197, count);
+	}
+
+
+	private void checkIssue174b(CsvChange issue) {
+		checkIssue174Base(issue);
+		Assertions.assertEquals(getDate(2009, 12, 5, 0, 0, 0), issue.getDueDate()); // Due
+		// date is a Saturday -> Monday
+		Assertions.assertEquals(1259967600000L, issue.getDueDateTimestamp());
+		Assertions.assertEquals("28:37:25", issue.getSlaLivraison());
+		Assertions.assertEquals(103045000, issue.getSlaLivraisonMs());
+		Assertions.assertEquals(getDate(2009, 12, 7, 9, 0, 4), issue.getSlaRevisedDueDate()); // Paused
+		// 4 seconds, starting from 9:00:00
+		Assertions.assertEquals(1260172804000L, issue.getSlaRevisedDueDateTimestamp());
+		Assertions.assertEquals(0, issue.getNbInProgress());
+		Assertions.assertEquals(0, issue.getNbAssigned());
 	}
 
 	@Test
@@ -232,7 +221,7 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 			lastLine = inputStreamReader.readLine();
 		}
 		Assertions.assertTrue(lastLine.startsWith(
-				"12706;MDA-41;1;OPEN;2;New Feature;4;Minor;;;2009/07/09 08:45:33;1247121933000;xsintive;fdaugan;;;;;;;Javascript,Java;\"V1.0\";1,25;\"Value\";;2014/01/30 16:57:00;\"E,A\";"));
+				"12706;MDA-41;1;OPEN;2;New Feature;4;Minor;;;2009/07/09 08:45:33;1247121933000;xeo;fdaugan;;;;;;;Javascript,Java;\"V1.0\";1,25;\"Value\";;2014/01/30 16:57:00;\"E,A\";"));
 		Assertions.assertTrue(lastLine.endsWith(";0;1;1;2;1;0"));
 	}
 
@@ -248,12 +237,12 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 		var lastLine = inputStreamReader.readLine();
 		Assertions.assertEquals("11432;MDA-1;fdaugan;;1;;OPEN;2009/03/23 15:26:43;1237818403000", lastLine);
 		lastLine = inputStreamReader.readLine();
-		Assertions.assertEquals("11437;MDA-4;xsintive;;1;;OPEN;2009/03/23 16:23:31;1237821811000", lastLine);
+		Assertions.assertEquals("11437;MDA-4;xeo;;1;;OPEN;2009/03/23 16:23:31;1237821811000", lastLine);
 		inputStreamReader.readLine();
 		inputStreamReader.readLine();
 		inputStreamReader.readLine();
 		lastLine = inputStreamReader.readLine();
-		Assertions.assertEquals("11535;MDA-8;challer;;1;;OPEN;2009/04/01 14:20:29;1238588429000", lastLine);
+		Assertions.assertEquals("11535;MDA-8;chat;;1;;OPEN;2009/04/01 14:20:29;1238588429000", lastLine);
 		inputStreamReader.readLine();
 		inputStreamReader.readLine();
 		lastLine = inputStreamReader.readLine();
@@ -292,56 +281,65 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 		var count = 0;
 		while (issue != null) {
 			if (count == 0) {
-				Assertions.assertEquals(11432, issue.getId());
-				Assertions.assertEquals("MDA-1", issue.getIssue());
-				Assertions.assertEquals("fdaugan", issue.getReporter());
-				Assertions.assertEquals("fdaugan", issue.getAssignee());
-				Assertions.assertEquals(1, issue.getType());
-				Assertions.assertEquals("Bug", issue.getTypeText());
-				Assertions.assertEquals(3, issue.getPriority());
-				Assertions.assertEquals("Major", issue.getPriorityText());
-				Assertions.assertEquals(6, issue.getStatus());
-				Assertions.assertEquals("CLOSED", issue.getStatusText());
-				Assertions.assertEquals(1, issue.getResolution());
-				Assertions.assertEquals("Fixed", issue.getResolutionText());
-				Assertions.assertEquals(getDate(2009, 3, 23, 15, 26, 43), issue.getCreated());
-				Assertions.assertEquals(1237818403000L, issue.getCreatedTimestamp());
-				Assertions.assertNull(issue.getSlaLivraison());
-				Assertions.assertEquals(0, issue.getSlaLivraisonMs());
-				Assertions.assertEquals(1, issue.getNbClosed());
-				Assertions.assertEquals(1, issue.getNbOpen());
-				Assertions.assertEquals(1, issue.getNbResolved());
-				Assertions.assertEquals(0, issue.getNbReopened());
-				Assertions.assertEquals(0, issue.getNbInProgress());
-				Assertions.assertEquals(0, issue.getNbAssigned());
+				checkIssue1(issue);
 			}
 			if (issue.getIssue().equals("MDA-174")) {
 				issue174 = true;
-				Assertions.assertEquals(14825, issue.getId());
-				Assertions.assertEquals("MDA-174", issue.getIssue());
-				Assertions.assertEquals("rfumery", issue.getReporter());
-				Assertions.assertEquals("fdaugan", issue.getAssignee());
-				Assertions.assertEquals(2, issue.getType());
-				Assertions.assertEquals("New Feature", issue.getTypeText());
-				Assertions.assertEquals(3, issue.getPriority());
-				Assertions.assertEquals("Major", issue.getPriorityText());
-				Assertions.assertEquals(1, issue.getResolution());
-				Assertions.assertEquals("Fixed", issue.getResolutionText());
-				Assertions.assertEquals(6, issue.getStatus());
-				Assertions.assertEquals("CLOSED", issue.getStatusText());
-				Assertions.assertEquals(getDate(2009, 11, 30, 14, 59, 11), issue.getCreated());
-				Assertions.assertEquals(1259589551000L, issue.getCreatedTimestamp());
-				Assertions.assertNull(issue.getSlaLivraison());
-				Assertions.assertEquals(0, issue.getSlaLivraisonMs());
-				Assertions.assertEquals(1, issue.getNbClosed());
-				Assertions.assertEquals(1, issue.getNbOpen());
-				Assertions.assertEquals(1, issue.getNbResolved());
+				checkIssue174(issue);
 			}
 			count++;
 			issue = beanReader.read();
 		}
 		Assertions.assertTrue(issue174);
 		Assertions.assertEquals(197, count);
+	}
+
+	private void checkIssue1(CsvChange issue) {
+		Assertions.assertEquals(11432, issue.getId());
+		Assertions.assertEquals("MDA-1", issue.getIssue());
+		Assertions.assertEquals("fdaugan", issue.getReporter());
+		Assertions.assertEquals("fdaugan", issue.getAssignee());
+		Assertions.assertEquals(1, issue.getType());
+		Assertions.assertEquals("Bug", issue.getTypeText());
+		Assertions.assertEquals(3, issue.getPriority());
+		Assertions.assertEquals("Major", issue.getPriorityText());
+		Assertions.assertEquals(6, issue.getStatus());
+		Assertions.assertEquals("CLOSED", issue.getStatusText());
+		Assertions.assertEquals(1, issue.getResolution());
+		Assertions.assertEquals("Fixed", issue.getResolutionText());
+		Assertions.assertEquals(getDate(2009, 3, 23, 15, 26, 43), issue.getCreated());
+		Assertions.assertEquals(1237818403000L, issue.getCreatedTimestamp());
+		Assertions.assertNull(issue.getSlaLivraison());
+		Assertions.assertEquals(0, issue.getSlaLivraisonMs());
+		Assertions.assertEquals(0, issue.getNbInProgress());
+		Assertions.assertEquals(0, issue.getNbAssigned());
+	}
+
+	private void checkIssue174Base(CsvChange issue) {
+		Assertions.assertEquals(14825, issue.getId());
+		Assertions.assertEquals("MDA-174", issue.getIssue());
+		Assertions.assertEquals("rfi", issue.getReporter());
+		Assertions.assertEquals("fdaugan", issue.getAssignee());
+		Assertions.assertEquals(2, issue.getType());
+		Assertions.assertEquals("New Feature", issue.getTypeText());
+		Assertions.assertEquals(3, issue.getPriority());
+		Assertions.assertEquals("Major", issue.getPriorityText());
+		Assertions.assertEquals(1, issue.getResolution());
+		Assertions.assertEquals("Fixed", issue.getResolutionText());
+		Assertions.assertEquals(6, issue.getStatus());
+		Assertions.assertEquals("CLOSED", issue.getStatusText());
+		Assertions.assertEquals(getDate(2009, 11, 30, 14, 59, 11), issue.getCreated());
+		Assertions.assertEquals(1259589551000L, issue.getCreatedTimestamp());
+		Assertions.assertEquals(1, issue.getNbClosed());
+		Assertions.assertEquals(1, issue.getNbOpen());
+		Assertions.assertEquals(1, issue.getNbResolved());
+		Assertions.assertEquals(0, issue.getNbReopened());
+	}
+
+	private void checkIssue174(CsvChange issue) {
+		checkIssue174Base(issue);
+		Assertions.assertNull(issue.getSlaLivraison());
+		Assertions.assertEquals(0, issue.getSlaLivraisonMs());
 	}
 
 	@Test
@@ -404,6 +402,10 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 		Assertions.assertEquals("CLOSED", slaConfiguration.getStop().getFirst());
 		Assertions.assertEquals("RESOLVED", slaConfiguration.getPause().getFirst());
 
+		checkSlaIssue(issues);
+	}
+
+	private void checkSlaIssue(List<IssueSla> issues) {
 		for (final var issueSlaNotEnded : issues) {
 			if (issueSlaNotEnded.getPkey().equals("MDA-174")) {
 				Assertions.assertEquals(14825, issueSlaNotEnded.getId().intValue());
@@ -439,7 +441,7 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 		final var contextData = new ArrayDeque<>();
 		contextData.add(1); // Index
 		final var data = new SlaData();
-		data.setDuration(10L); // Duration;
+		data.setDuration(10L); // Duration
 		contextData.add(data);
 		final var slaComputations = new JiraSlaComputations();
 		final var slaConfiguration0 = new SlaConfiguration();
@@ -469,7 +471,7 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 		final var contextData = new ArrayDeque<>();
 		contextData.add(1); // Index
 		final var data = new SlaData();
-		data.setDuration(10L); // Duration;
+		data.setDuration(10L); // Duration
 		contextData.add(data);
 		final var slaComputations = new JiraSlaComputations();
 		final var slaConfiguration0 = new SlaConfiguration();
@@ -519,7 +521,7 @@ class JiraExportPluginResourceTest extends AbstractJiraDataTest {
 		final var contextData = new ArrayDeque<>();
 		contextData.add(1); // Index
 		final var data = new SlaData();
-		data.setDuration(13L); // Duration;
+		data.setDuration(13L); // Duration
 		contextData.add(data);
 		final var slaComputations = new JiraSlaComputations();
 		final var slaConfiguration0 = new SlaConfiguration();
