@@ -4,7 +4,6 @@
 package org.ligoj.app.plugin.bt.jira;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.junit.jupiter.api.AfterAll;
@@ -24,8 +23,7 @@ public abstract class AbstractJiraDataTest extends AbstractJiraTest {
 	@BeforeAll
 	static void initializeJiraDataBase2() throws SQLException {
 		try (final var connection = datasource.getConnection()) {
-			ScriptUtils.executeSqlScript(connection,
-					new EncodedResource(new ClassPathResource("sql/base-2/jira-create.sql"), StandardCharsets.UTF_8));
+			ScriptUtils.executeSqlScript(connection, new EncodedResource(new ClassPathResource("sql/base-2/jira-create.sql"), StandardCharsets.UTF_8));
 			ScriptUtils.executeSqlScript(connection, new EncodedResource(new ClassPathResource("sql/base-2/jira.sql"), StandardCharsets.UTF_8));
 		}
 	}
