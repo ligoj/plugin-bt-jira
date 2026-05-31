@@ -1,0 +1,20 @@
+// Traductions JIRA du plugin bt-jira. Voir en.js pour le contrat de clés.
+export default {
+  'service:bt:jira': 'JIRA',
+  'service:bt:jira:jdbc-url': 'URL JDBC',
+  'service:bt:jira:jdbc-driver': 'Pilote JDBC',
+  'service:bt:jira:jdbc-user': 'Utilisateur JDBC',
+  'service:bt:jira:jdbc-password': 'Mot de passe JDBC',
+  'service:bt:jira:url': 'URL de base JIRA',
+  'service:bt:jira:url-pkey': 'Ouvrir le projet JIRA',
+  'service:bt:jira:project': 'Identifiant numérique du projet',
+  'service:bt:jira:pkey': 'Clé du projet (PKEY)',
+  'service:bt:jira:user': 'Login du compte',
+  'service:bt:jira:password': 'Mot de passe du compte',
+  'service:bt:jira:version': 'Version',
+  'service:bt:jira:status': 'Statut',
+  'service:bt:jira:statuses': 'Statuts',
+  'service:bt:jira:nb-issues': "Nombre d'anomalies",
+  'service:bt:jira:project-not-found': 'Projet introuvable ou aucune anomalie',
+  'service:bt:jira:pkey-discovery': 'Découverte automatique de la PKEY',
+}
