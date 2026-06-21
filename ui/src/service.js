@@ -10,8 +10,7 @@
  *
  * Kept free of Vue SFC imports so it can be unit-tested without a DOM.
  */
-import { h } from 'vue'
-import { VBtn, VChip, VIcon, useI18nStore } from '@ligoj/host'
+import { renderServiceLink, renderDetailsChip, useI18nStore } from '@ligoj/host'
 
 const PARAM_URL = 'service:bt:jira:url'
 const PARAM_PKEY = 'service:bt:jira:pkey'
@@ -27,21 +26,7 @@ function renderFeatures(subscription) {
   const pkey = params?.[PARAM_PKEY]
   if (!url || !pkey) return []
   const { t } = useI18nStore()
-  return [
-    h(
-      VBtn,
-      {
-        icon: true,
-        size: 'small',
-        variant: 'text',
-        href: `${url.replace(/\/$/, '')}/browse/${pkey}`,
-        target: '_blank',
-        rel: 'noopener noreferrer',
-        title: t('service:bt:jira:url-pkey'),
-      },
-      () => h(VIcon, { size: 'small' }, () => 'mdi-home'),
-    ),
-  ]
+  return [renderServiceLink({ icon: 'mdi-home', href: `${url.replace(/\/$/, '')}/browse/${pkey}`, title: t('service:bt:jira:url-pkey') })]
 }
 
 /**
@@ -52,11 +37,7 @@ function renderDetailsKey(subscription) {
   const pkey = subscription?.parameters?.[PARAM_PKEY]
   if (!pkey) return null
   const { t } = useI18nStore()
-  return h(
-    VChip,
-    { size: 'small', variant: 'tonal', class: 'mr-1', title: t('service:bt:jira:pkey') },
-    () => [h(VIcon, { start: true, size: 'small' }, () => 'mdi-jira'), ' ', String(pkey)],
-  )
+  return renderDetailsChip({ icon: 'mdi-jira', text: pkey, title: t('service:bt:jira:pkey') })
 }
 
 export default { renderFeatures, renderDetailsKey }
