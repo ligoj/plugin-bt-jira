@@ -1,0 +1,20 @@
+/*
+ * Licensed under MIT (https://github.com/ligoj/ligoj/blob/master/LICENSE)
+ */
+package org.ligoj.app.plugin.jira;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+/**
+ * Test class of {@link JiraLoginHttpResponseCallback}
+ */
+class JiraLoginHttpResponseCallbackTest {
+
+	@Test
+	void test() {
+		Assertions.assertFalse(new JiraLoginHttpResponseCallback().acceptLocation(null));
+		Assertions.assertFalse(new JiraLoginHttpResponseCallback().acceptLocation("/login.jsp"));
+		Assertions.assertTrue(new JiraLoginHttpResponseCallback().acceptLocation("/"));
+	}
+}
