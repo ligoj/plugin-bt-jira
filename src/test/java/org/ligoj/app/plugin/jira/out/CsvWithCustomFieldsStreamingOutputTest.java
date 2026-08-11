@@ -3,31 +3,26 @@
  */
 package org.ligoj.app.plugin.jira.out;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.ligoj.app.plugin.bt.IssueSla;
 import org.ligoj.app.plugin.bt.SlaData;
+import org.ligoj.app.plugin.bt.model.BugTrackerConfiguration;
 import org.ligoj.app.plugin.jira.JiraSlaComputations;
 import org.ligoj.app.plugin.jira.editor.AbstractEditor;
 import org.ligoj.app.plugin.jira.editor.CustomFieldEditor;
 import org.ligoj.app.plugin.jira.model.CustomFieldValue;
-import org.ligoj.app.plugin.bt.model.BugTrackerConfiguration;
 import org.ligoj.bootstrap.core.DescribedBean;
-import org.mockito.Mockito;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class of {@link CsvWithCustomFieldsStreamingOutput}
@@ -152,10 +147,6 @@ class CsvWithCustomFieldsStreamingOutputTest {
 		customfieldValue2NoValue.setIssue(1000);
 		customfieldValue2NoValue.setCustomField(4);
 		customFieldValues.add(customfieldValue2NoValue);
-		final CustomFieldValue customfieldValue2NoCf = new CustomFieldValue();
-		customfieldValue2NoCf.setIssue(1000);
-		customfieldValue2NoCf.setCustomField(6000);
-		customFieldValues.add(customfieldValue2NoValue);
 		final CustomFieldValue customfieldValueNoIssue = new CustomFieldValue();
 		customfieldValueNoIssue.setIssue(1005);
 		customfieldValueNoIssue.setCustomField(6000);
@@ -163,7 +154,7 @@ class CsvWithCustomFieldsStreamingOutputTest {
 
 		// Custom field definition
 		final Map<Integer, CustomFieldEditor> customFieldEditors = new HashMap<>();
-		final AbstractEditor editor = Mockito.mock(AbstractEditor.class);
+		final AbstractEditor editor = mock(AbstractEditor.class);
 
 		final CustomFieldEditor customFieldEditor1 = new CustomFieldEditor();
 		customFieldEditor1.setEditor(editor);
@@ -188,9 +179,9 @@ class CsvWithCustomFieldsStreamingOutputTest {
 		customFieldEditorNoValue.setName("CF4");
 		customFieldEditorNoValue.setId(4);
 		customFieldEditors.put(4, customFieldEditorNoValue);
-		Mockito.when(editor.getValue(customFieldEditor1, customfieldValue2)).thenReturn("V2");
-		Mockito.when(editor.getValue(customFieldEditorMultiple, customfieldValue2b)).thenReturn("V2b");
-		Mockito.when(editor.getValue(customFieldEditorMultiple, customfieldValue2c)).thenReturn("V2c");
+		when(editor.getValue(customFieldEditor1, customfieldValue2)).thenReturn("V2");
+		when(editor.getValue(customFieldEditorMultiple, customfieldValue2b)).thenReturn("V2b");
+		when(editor.getValue(customFieldEditorMultiple, customfieldValue2c)).thenReturn("V2c");
 
 		// Subtasks
 		final Map<Integer, Integer> subtasks = new HashMap<>();

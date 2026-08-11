@@ -4,7 +4,6 @@
 package org.ligoj.app.plugin.jira.in;
 
 import jakarta.validation.ConstraintViolationException;
-
 import org.hsqldb.lib.StringInputStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,12 +15,13 @@ import org.ligoj.bootstrap.core.curl.CurlProcessor;
 import org.ligoj.bootstrap.core.resource.BusinessException;
 import org.ligoj.bootstrap.core.validation.ValidationJsonException;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import java.io.IOException;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Test class of {@link JiraImportPluginResource}
@@ -58,10 +58,10 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(false);
-		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
-		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
+		final JiraImportPluginResource resource = mock(JiraImportPluginResource.class);
+		doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
 		resource.synchronizeJira(context, result);
-		Mockito.verify(resource, Mockito.never()).authenticateAdmin(ArgumentMatchers.same(context),
+		verify(resource, never()).authenticateAdmin(ArgumentMatchers.same(context),
 				ArgumentMatchers.any(CurlProcessor.class));
 		Assertions.assertNull(result.getSynchronizedJira());
 	}
@@ -71,12 +71,12 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(true);
-		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
-		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
+		final JiraImportPluginResource resource = mock(JiraImportPluginResource.class);
+		doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
 		resource.synchronizeJira(context, result);
-		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context),
+		verify(resource, times(1)).authenticateAdmin(ArgumentMatchers.same(context),
 				ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.never()).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+		verify(resource, never()).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
 				ArgumentMatchers.any(CurlProcessor.class));
 		Assertions.assertFalse(result.getSynchronizedJira());
 	}
@@ -86,16 +86,16 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(true);
-		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
-		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
-		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
+		final JiraImportPluginResource resource = mock(JiraImportPluginResource.class);
+		doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
+		when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
 				.thenReturn(true);
 		resource.synchronizeJira(context, result);
-		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context),
+		verify(resource, times(1)).authenticateAdmin(ArgumentMatchers.same(context),
 				ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.times(1)).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+		verify(resource, times(1)).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
 				ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.never()).reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+		verify(resource, never()).reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
 				ArgumentMatchers.any(CurlProcessor.class));
 		Assertions.assertFalse(result.getSynchronizedJira());
 	}
@@ -105,18 +105,18 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(true);
-		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
-		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
-		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
+		final JiraImportPluginResource resource = mock(JiraImportPluginResource.class);
+		doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
+		when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
 				.thenReturn(true);
-		Mockito.when(resource.clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+		when(resource.clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
 				ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
 		resource.synchronizeJira(context, result);
-		Mockito.verify(resource, Mockito.times(1)).authenticateAdmin(ArgumentMatchers.same(context),
+		verify(resource, times(1)).authenticateAdmin(ArgumentMatchers.same(context),
 				ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.times(1)).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+		verify(resource, times(1)).clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
 				ArgumentMatchers.any(CurlProcessor.class));
-		Mockito.verify(resource, Mockito.times(1)).reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+		verify(resource, times(1)).reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
 				ArgumentMatchers.any(CurlProcessor.class));
 		Assertions.assertFalse(result.getSynchronizedJira());
 	}
@@ -126,13 +126,13 @@ class JiraImportPluginResourceTest extends AbstractJiraImportPluginResourceTest 
 		final ImportContext context = new ImportContext();
 		final ImportStatus result = new ImportStatus();
 		result.setCanSynchronizeJira(true);
-		final JiraImportPluginResource resource = Mockito.mock(JiraImportPluginResource.class);
-		Mockito.doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
-		Mockito.when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
+		final JiraImportPluginResource resource = mock(JiraImportPluginResource.class);
+		doCallRealMethod().when(resource).synchronizeJira(ArgumentMatchers.same(context), ArgumentMatchers.same(result));
+		when(resource.authenticateAdmin(ArgumentMatchers.same(context), ArgumentMatchers.any(CurlProcessor.class)))
 				.thenReturn(true);
-		Mockito.when(resource.clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+		when(resource.clearJiraCache(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
 				ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
-		Mockito.when(resource.reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
+		when(resource.reIndexProject(ArgumentMatchers.same(context), ArgumentMatchers.same(result),
 				ArgumentMatchers.any(CurlProcessor.class))).thenReturn(true);
 		resource.synchronizeJira(context, result);
 		Assertions.assertTrue(result.getSynchronizedJira());
