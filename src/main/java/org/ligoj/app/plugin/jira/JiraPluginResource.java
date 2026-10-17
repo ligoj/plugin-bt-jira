@@ -75,7 +75,7 @@ public class JiraPluginResource extends JiraBaseResource
 	protected VersionUtils versionUtils;
 
 	@Override
-	public void link(final int subscription) throws Exception {
+	public void link(final int subscription) {
 		final Map<String, String> parameters = subscriptionResource.getParameters(subscription);
 
 		// Validate the project identifier an PKEY
@@ -164,7 +164,7 @@ public class JiraPluginResource extends JiraBaseResource
 
 	@Override
 	@Transactional(value = TxType.SUPPORTS)
-	public String getLastVersion() throws Exception {
+	public String getLastVersion() {
 		// Get the download json from the default repository
 		return versionUtils.getLatestReleasedVersionName("https://jira.atlassian.com", "JRA");
 	}
