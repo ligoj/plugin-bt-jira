@@ -82,38 +82,38 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	@Test
 	void getConfiguration() throws Exception {
 
-		slaRepository.findBySubscription(subscription).get(0).setTypes("Bug,New Feature");
-		slaRepository.findBySubscription(subscription).get(0).setPriorities("Blocker,Critical");
-		slaRepository.findBySubscription(subscription).get(0).setResolutions("Fixed,Won't Fix");
+		slaRepository.findBySubscription(subscription).getFirst().setTypes("Bug,New Feature");
+		slaRepository.findBySubscription(subscription).getFirst().setPriorities("Blocker,Critical");
+		slaRepository.findBySubscription(subscription).getFirst().setResolutions("Fixed,Won't Fix");
 
 		final BtConfigurationVo configurationVo = resource.getConfiguration(subscription);
 
 		// Check SLAs
 		final List<SlaConfiguration> slas = configurationVo.getSlas();
 		Assertions.assertEquals(1, slas.size());
-		final SlaConfiguration sla = slas.get(0);
+		final SlaConfiguration sla = slas.getFirst();
 		Assertions.assertEquals("Délais de fermeture", sla.getDescription());
 		Assertions.assertEquals("Livraison", sla.getName());
 		Assertions.assertTrue(sla.getId() > 0);
 		Assertions.assertEquals(1, sla.getPause().size());
-		Assertions.assertEquals("RESOLVED", sla.getPause().get(0));
-		Assertions.assertEquals("OPEN", sla.getStart().get(0));
-		Assertions.assertEquals("CLOSED", sla.getStop().get(0));
+		Assertions.assertEquals("RESOLVED", sla.getPause().getFirst());
+		Assertions.assertEquals("OPEN", sla.getStart().getFirst());
+		Assertions.assertEquals("CLOSED", sla.getStop().getFirst());
 		Assertions.assertEquals(36000000L, sla.getThreshold());
 
 		// Check SLA types
 		Assertions.assertEquals(2, sla.getTypes().size());
-		Assertions.assertEquals("Bug", sla.getTypes().get(0));
+		Assertions.assertEquals("Bug", sla.getTypes().getFirst());
 		Assertions.assertEquals("New Feature", sla.getTypes().get(1));
 
 		// Check SLA priorities
 		Assertions.assertEquals(2, sla.getPriorities().size());
-		Assertions.assertEquals("Blocker", sla.getPriorities().get(0));
+		Assertions.assertEquals("Blocker", sla.getPriorities().getFirst());
 		Assertions.assertEquals("Critical", sla.getPriorities().get(1));
 
 		// Check SLA resolutions
 		Assertions.assertEquals(2, sla.getResolutions().size());
-		Assertions.assertEquals("Fixed", sla.getResolutions().get(0));
+		Assertions.assertEquals("Fixed", sla.getResolutions().getFirst());
 		Assertions.assertEquals("Won't Fix", sla.getResolutions().get(1));
 
 		// Check business ranges
@@ -122,26 +122,26 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		Assertions.assertTrue(calendar.getId() > 0);
 		final List<BusinessHours> businessHours = configurationVo.getBusinessHours();
 		Assertions.assertEquals(2, businessHours.size());
-		Assertions.assertEquals(9 * DateUtils.MILLIS_PER_HOUR, businessHours.get(0).getStart());
-		Assertions.assertEquals(12 * DateUtils.MILLIS_PER_HOUR, businessHours.get(0).getEnd());
+		Assertions.assertEquals(9 * DateUtils.MILLIS_PER_HOUR, businessHours.getFirst().getStart());
+		Assertions.assertEquals(12 * DateUtils.MILLIS_PER_HOUR, businessHours.getFirst().getEnd());
 		Assertions.assertEquals(13 * DateUtils.MILLIS_PER_HOUR, businessHours.get(1).getStart());
 		Assertions.assertEquals(18 * DateUtils.MILLIS_PER_HOUR, businessHours.get(1).getEnd());
-		Assertions.assertEquals(9 * DateUtils.MILLIS_PER_HOUR, businessHours.get(0).getStart());
+		Assertions.assertEquals(9 * DateUtils.MILLIS_PER_HOUR, businessHours.getFirst().getStart());
 
 		// Check available statuses
 		final List<String> statuses = configurationVo.getStatuses();
 		Assertions.assertEquals(5, statuses.size());
-		Assertions.assertEquals("CLOSED", statuses.get(0));
+		Assertions.assertEquals("CLOSED", statuses.getFirst());
 		Assertions.assertEquals("IN PROGRESS", statuses.get(1));
 		Assertions.assertEquals("OPEN", statuses.get(2));
 		Assertions.assertEquals("REOPENED", statuses.get(3));
 		Assertions.assertEquals("RESOLVED", statuses.get(4));
-		Assertions.assertEquals(9 * DateUtils.MILLIS_PER_HOUR, businessHours.get(0).getStart());
+		Assertions.assertEquals(9 * DateUtils.MILLIS_PER_HOUR, businessHours.getFirst().getStart());
 
 		// Check available types
 		final List<String> types = configurationVo.getTypes();
 		Assertions.assertEquals(5, types.size());
-		Assertions.assertEquals("Bug", types.get(0));
+		Assertions.assertEquals("Bug", types.getFirst());
 		Assertions.assertEquals("New Feature", types.get(1));
 		Assertions.assertEquals("Question", types.get(2));
 		Assertions.assertEquals("Sub-task", types.get(3));
@@ -150,7 +150,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		// Check available priorities
 		final List<String> priorities = configurationVo.getPriorities();
 		Assertions.assertEquals(5, priorities.size());
-		Assertions.assertEquals("Blocker", priorities.get(0));
+		Assertions.assertEquals("Blocker", priorities.getFirst());
 		Assertions.assertEquals("Critical", priorities.get(1));
 		Assertions.assertEquals("Major", priorities.get(2));
 		Assertions.assertEquals("Minor", priorities.get(3));
@@ -159,7 +159,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		// Check available resolutions
 		final List<String> resolutions = configurationVo.getResolutions();
 		Assertions.assertEquals(6, resolutions.size());
-		Assertions.assertEquals("Cannot Reproduce", resolutions.get(0));
+		Assertions.assertEquals("Cannot Reproduce", resolutions.getFirst());
 		Assertions.assertEquals("Done", resolutions.get(1));
 		Assertions.assertEquals("Duplicate", resolutions.get(2));
 		Assertions.assertEquals("Fixed", resolutions.get(3));
@@ -252,13 +252,13 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		Assertions.assertNotNull(calendar);
 		Assertions.assertEquals(4, calendar.getHolidays().size());
 		Assertions.assertEquals("Default", calendar.getName());
-		Assertions.assertNotNull(calendar.getHolidays().get(0).getName());
-		Assertions.assertNotNull(calendar.getHolidays().get(0).getDate());
+		Assertions.assertNotNull(calendar.getHolidays().getFirst().getName());
+		Assertions.assertNotNull(calendar.getHolidays().getFirst().getDate());
 
 		// Check default business hours
 		Assertions.assertEquals(1, configuration.getBusinessHours().size());
-		Assertions.assertEquals(8 * DateUtils.MILLIS_PER_HOUR, configuration.getBusinessHours().get(0).getStart());
-		Assertions.assertEquals(18 * DateUtils.MILLIS_PER_HOUR, configuration.getBusinessHours().get(0).getEnd());
+		Assertions.assertEquals(8 * DateUtils.MILLIS_PER_HOUR, configuration.getBusinessHours().getFirst().getStart());
+		Assertions.assertEquals(18 * DateUtils.MILLIS_PER_HOUR, configuration.getBusinessHours().getFirst().getEnd());
 
 		em.flush();
 		em.clear();
@@ -269,7 +269,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		Assertions.assertNotNull(configuration);
 		final List<Sla> slas = slaRepository.findBySubscription(configuration.getSubscription().getId());
 		Assertions.assertEquals(1, slas.size());
-		final Sla sla = slas.get(0);
+		final Sla sla = slas.getFirst();
 		Assertions.assertEquals("Closing", sla.getName());
 		Assertions.assertEquals("Closing : Open->Closed", sla.getDescription());
 		Assertions.assertEquals(0, sla.getThreshold());
@@ -316,13 +316,13 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		Assertions.assertNotNull(calendar);
 		Assertions.assertEquals(44, calendar.getHolidays().size());
 		Assertions.assertEquals("France", calendar.getName());
-		Assertions.assertEquals("Jour de l'an", calendar.getHolidays().get(0).getName());
-		Assertions.assertNotNull(calendar.getHolidays().get(0).getDate());
+		Assertions.assertEquals("Jour de l'an", calendar.getHolidays().getFirst().getName());
+		Assertions.assertNotNull(calendar.getHolidays().getFirst().getDate());
 
 		// Check default business hours
 		Assertions.assertEquals(1, configuration.getBusinessHours().size());
-		Assertions.assertEquals(8 * DateUtils.MILLIS_PER_HOUR, configuration.getBusinessHours().get(0).getStart());
-		Assertions.assertEquals(18 * DateUtils.MILLIS_PER_HOUR, configuration.getBusinessHours().get(0).getEnd());
+		Assertions.assertEquals(8 * DateUtils.MILLIS_PER_HOUR, configuration.getBusinessHours().getFirst().getStart());
+		Assertions.assertEquals(18 * DateUtils.MILLIS_PER_HOUR, configuration.getBusinessHours().getFirst().getEnd());
 
 		em.flush();
 		em.clear();
@@ -347,7 +347,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		Assertions.assertTrue(id > 0);
 		em.flush();
 		em.clear();
-		final Sla sla = slaRepository.findBySubscription(subscription).iterator().next();
+		final Sla sla = slaRepository.findBySubscription(subscription).getFirst();
 		Assertions.assertEquals(sla.getId().intValue(), id);
 		Assertions.assertEquals("AA", sla.getName());
 		Assertions.assertEquals("ADescription", sla.getDescription());
@@ -359,7 +359,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 
 	@Test
 	void deleteSla() {
-		final int id = slaRepository.findBySubscription(subscription).iterator().next().getId();
+		final int id = slaRepository.findBySubscription(subscription).getFirst().getId();
 		em.flush();
 		em.clear();
 		resource.deleteSla(id);
@@ -399,7 +399,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 
 	@Test
 	void updateSla() {
-		final Sla oldEntity = slaRepository.findBySubscription(subscription).get(0);
+		final Sla oldEntity = slaRepository.findBySubscription(subscription).getFirst();
 		final SlaEditionVo vo = new SlaEditionVo();
 		vo.setName("AA");
 		vo.setDescription("ADescription");
@@ -416,7 +416,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		resource.updateSla(vo);
 		em.flush();
 		em.clear();
-		final Sla sla = slaRepository.findBySubscription(subscription).iterator().next();
+		final Sla sla = slaRepository.findBySubscription(subscription).getFirst();
 		Assertions.assertEquals(sla.getId(), vo.getId());
 		Assertions.assertEquals("AA", sla.getName());
 		Assertions.assertEquals("ADescription", sla.getDescription());
@@ -438,7 +438,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		Assertions.assertTrue(id > 0);
 		em.flush();
 		em.clear();
-		final BusinessHours entity = repository.findBySubscription(subscription).getBusinessHours().iterator().next();
+		final BusinessHours entity = repository.findBySubscription(subscription).getBusinessHours().getFirst();
 		Assertions.assertEquals(entity.getId().intValue(), id);
 		Assertions.assertEquals(1, entity.getStart());
 		Assertions.assertEquals(2, entity.getEnd());
@@ -446,7 +446,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 
 	@Test
 	void updateBusinessHours() {
-		final BusinessHours oldEntity = repository.findBySubscription(subscription).getBusinessHours().iterator().next();
+		final BusinessHours oldEntity = repository.findBySubscription(subscription).getBusinessHours().getFirst();
 		final BusinessHoursEditionVo vo = new BusinessHoursEditionVo();
 		vo.setStart(1);
 		vo.setEnd(2);
@@ -457,7 +457,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		resource.updateBusinessHours(vo);
 		em.flush();
 		em.clear();
-		final BusinessHours entity = repository.findBySubscription(subscription).getBusinessHours().iterator().next();
+		final BusinessHours entity = repository.findBySubscription(subscription).getBusinessHours().getFirst();
 		Assertions.assertEquals(entity.getId(), vo.getId());
 		Assertions.assertEquals(1, entity.getStart());
 		Assertions.assertEquals(2, entity.getEnd());
@@ -488,7 +488,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	@Test
 	void deleteBusinessHours() {
 		Assertions.assertEquals(2, repository.findBySubscription(subscription).getBusinessHours().size());
-		final int id = repository.findBySubscription(subscription).getBusinessHours().iterator().next().getId();
+		final int id = repository.findBySubscription(subscription).getBusinessHours().getFirst().getId();
 		em.flush();
 		em.clear();
 		resource.deleteBusinessHours(id);
@@ -500,7 +500,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 	@Test
 	void deleteLastBusinessHours() {
 		Assertions.assertEquals(2, repository.findBySubscription(subscription).getBusinessHours().size());
-		int id0 = repository.findBySubscription(subscription).getBusinessHours().iterator().next().getId();
+		int id0 = repository.findBySubscription(subscription).getBusinessHours().getFirst().getId();
 		em.flush();
 		em.clear();
 		resource.deleteBusinessHours(id0);
@@ -511,7 +511,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		em.clear();
 
 		// Try to delete the last one
-		final int id = repository.findBySubscription(subscription).getBusinessHours().iterator().next().getId();
+		final int id = repository.findBySubscription(subscription).getBusinessHours().getFirst().getId();
 		Assertions.assertThrows(BusinessException.class, () -> resource.deleteBusinessHours(id));
 	}
 
@@ -542,7 +542,7 @@ class BugTrackerResourceTest extends AbstractJiraUploadTest {
 		em.clear();
 
 		Assertions.assertEquals(3, resource.getAllCalendars().size());
-		Assertions.assertEquals("Any1", resource.getAllCalendars().iterator().next().getName());
+		Assertions.assertEquals("Any1", resource.getAllCalendars().getFirst().getName());
 
 	}
 }

@@ -109,7 +109,7 @@ public class CsvWithCustomFieldsStreamingOutput extends CsvStreamingOutput {
 	}
 
 	/**
-	 * Complete the standard data with temporal data (not SLA), sub task, and components
+	 * Complete the standard data with temporal data (not SLA), subtask, and components
 	 */
 	@Override
 	protected void writeIssueData(final IssueDetails issue, final Writer writer, final Format df, final Format idf) throws IOException {
@@ -173,7 +173,7 @@ public class CsvWithCustomFieldsStreamingOutput extends CsvStreamingOutput {
 	}
 
 	/**
-	 * Write all custom field values attached to given issue and custom field. Multi-valued custom fields use ',' as
+	 * Write all custom field values attached to given issue and custom field. Multivalued custom fields use ',' as
 	 * separator.
 	 */
 	private void writeCustomFieldData(final int issue, final CustomFieldEditor customField, final Writer writer, final Format df) throws IOException {

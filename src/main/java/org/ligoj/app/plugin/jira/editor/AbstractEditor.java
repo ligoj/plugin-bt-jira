@@ -22,7 +22,7 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 public abstract class AbstractEditor {
 
 	/**
-	 * Return a map with K is result identifier, and V is the string value. Assumes there is a 'id' and a 'pname'
+	 * Return a map with K is result identifier, and V is the string value. Assumes there is an 'id' and a 'pname'
 	 * column. Name is trimmed.
 	 * 
 	 * @param dataSource
@@ -42,7 +42,7 @@ public abstract class AbstractEditor {
 	}
 
 	/**
-	 * Return a map with V is result identifier, and K is the string value. Assumes there is a 'id' and a 'pname'
+	 * Return a map with V is result identifier, and K is the string value. Assumes there is an 'id' and a 'pname'
 	 * column. Name is trimmed.
 	 * 
 	 * @param dataSource

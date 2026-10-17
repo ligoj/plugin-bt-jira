@@ -13,7 +13,7 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 /**
- * Common JIRA test utilities with more data required to validate and get some statistics..
+ * Common JIRA test utilities with more data required to validate and get some statistics.
  */
 public abstract class AbstractJiraData3Test extends AbstractJiraDataTest {
 

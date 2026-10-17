@@ -165,7 +165,7 @@ public class JiraPluginResource extends JiraBaseResource
 	@Override
 	@Transactional(value = TxType.SUPPORTS)
 	public String getLastVersion() {
-		// Get the download json from the default repository
+		// Get the download JSON from the default repository
 		return versionUtils.getLatestReleasedVersionName("https://jira.atlassian.com", "JRA");
 	}
 

@@ -23,7 +23,7 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 public abstract class AbstractJiraUploadTest extends AbstractJiraDataTest {
 
 	/**
-	 * Initialize data base with 'MDA' JIRA project.
+	 * Initialize database with 'MDA' JIRA project.
 	 * @throws SQLException When SQL execution failed.
 	 */
 	@BeforeAll
@@ -40,7 +40,7 @@ public abstract class AbstractJiraUploadTest extends AbstractJiraDataTest {
 	}
 
 	/**
-	 * Clean data base with 'MDA' JIRA project.
+	 * Clean database with 'MDA' JIRA project.
 	 * @throws SQLException When SQL execution failed.
 	 */
 	@AfterAll

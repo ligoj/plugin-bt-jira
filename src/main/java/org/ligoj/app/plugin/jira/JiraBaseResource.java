@@ -73,7 +73,7 @@ public class JiraBaseResource {
 	public static final String PARAMETER_JDBC_DRIVER = KEY + ":jdbc-driver";
 
 	/**
-	 * Database user name
+	 * Database username
 	 */
 	public static final String PARAMETER_JDBC_USER = KEY + ":jdbc-user";
 
@@ -83,7 +83,7 @@ public class JiraBaseResource {
 	public static final String PARAMETER_JDBC_PASSSWORD = KEY + ":jdbc-password";
 
 	/**
-	 * Web site URL
+	 * Website URL
 	 */
 	public static final String PARAMETER_URL = KEY + ":url";
 
@@ -98,7 +98,7 @@ public class JiraBaseResource {
 	public static final String PARAMETER_PKEY = KEY + ":pkey";
 
 	/**
-	 * JIRA user name able to perform index.
+	 * JIRA username able to perform index.
 	 */
 	public static final String PARAMETER_ADMIN_USER = KEY + ":user";
 
@@ -161,7 +161,7 @@ public class JiraBaseResource {
 	 * Return the data source of JIRA database server.
 	 *
 	 * @param subscription
-	 *            The subscription used to retrieved the database parameters to
+	 *            The subscription used to retrieve the database parameters to
 	 *            build the datasource.
 	 * @return the data source of JIRA database server.
 	 */

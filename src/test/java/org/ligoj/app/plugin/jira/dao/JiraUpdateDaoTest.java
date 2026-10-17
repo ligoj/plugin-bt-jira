@@ -28,7 +28,7 @@ class JiraUpdateDaoTest {
 	private static DataSource datasource;
 
 	/**
-	 * Initialize data base with 'MDA' JIRA project.
+	 * Initialize database with 'MDA' JIRA project.
 	 */
 	@BeforeAll
 	static void initializeJiraDataBaseForImport() throws SQLException {
@@ -51,7 +51,7 @@ class JiraUpdateDaoTest {
 	}
 
 	/**
-	 * Clean data base with 'MDA' JIRA project.
+	 * Clean database with 'MDA' JIRA project.
 	 */
 	@AfterAll
 	static void cleanJiraDataBaseForImport() throws SQLException {

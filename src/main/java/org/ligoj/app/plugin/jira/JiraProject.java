@@ -23,7 +23,7 @@ public class JiraProject extends DescribedBean<Integer> {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Count for each statuses. K is the status name. V is the
+	 * Count for each status. K is the status name. V is the
 	 */
 	private Map<String, Integer> statuses;
 	private Map<String, Integer> priorities;

@@ -89,7 +89,7 @@ public class CsvStreamingOutput extends AbstractCsvOutput {
 	}
 
 	/**
-	 * Write a SLA header.
+	 * Write an SLA header.
 	 *
 	 * @param writer
 	 *            Target output.

@@ -65,7 +65,7 @@ public class JiraDao {
 	private static final String SELECT_CHANGES = SELECT_CHANGES_PART1 + SELECT_CHANGES_PART2;
 	private static final String SELECT_CHANGES_AUTHORING = SELECT_CHANGES_PART1 + ", cg.AUTHOR as author" + SELECT_CHANGES_PART2;
 	/**
-	 * Fail safe editor, non blocking export.
+	 * Failsafe editor, non-blocking export.
 	 */
 	public static final AbstractEditor FAILSAFE_TYPE = new FailsafeEditor();
 
@@ -246,16 +246,16 @@ public class JiraDao {
 		query.append("SELECT pkey, ID, pname"); // NOPMD - capacity well defined
 
 		// Fetch priorities count
-		priorities.forEach((id, name) -> query.append(',').append(newSelectCount("PRIORITY", id, "p")));
+		priorities.forEach((id, _) -> query.append(',').append(newSelectCount("PRIORITY", id, "p")));
 
 		// Fetch statuses count
-		statuses.forEach((id, name) -> query.append(',').append(newSelectCount("issuestatus", id, "s")));
+		statuses.forEach((id, _) -> query.append(',').append(newSelectCount("issuestatus", id, "s")));
 
 		// Execute the query for maximal 1 project
 		query.append(" FROM project WHERE ID = ? GROUP BY ID");
 		final Object[] dummyProjet = new Object[priorities.size() + statuses.size() + 1];
 		Arrays.fill(dummyProjet, jira);
-		return jdbcTemplate.query(query.toString(), (rs, rowNum) -> {
+		return jdbcTemplate.query(query.toString(), (rs, _) -> {
 			final JiraProject project = new JiraProject();
 			project.setName(rs.getString("pkey"));
 			project.setId(rs.getInt("ID"));
@@ -292,7 +292,7 @@ public class JiraDao {
 	/**
 	 * Return a map where an entry is <code>entry.key=reverseMap.value</code>
 	 * and <code>entry.value=rs[resulsetPrefix+reverseMap.key]</code> if
-	 * <code>entry.value</code> is superior than 0.
+	 * <code>entry.value</code> is superior to 0.
 	 * 
 	 * @param reverseMap
 	 *            the set of results to read from the {@link ResultSet}. K of
@@ -301,7 +301,7 @@ public class JiraDao {
 	 *            the current {@link ResultSet}
 	 * @param resulsetPrefix
 	 *            Prefix of column name of result set.
-	 * @return K is the value of given reverse map. V is the non zero result
+	 * @return K is the value of given reverse map. V is the non-zero result
 	 *         column named with the following form : prefix+K of given reverse
 	 *         map.
 	 */
@@ -309,7 +309,7 @@ public class JiraDao {
 			throws SQLException {
 		final Map<String, Integer> result = new LinkedHashMap<>();
 		for (final Entry<Integer, String> entry : reverseMap.entrySet()) {
-			// Add only non zero values
+			// Add only non-zero values
 			final int count = rs.getInt(resulsetPrefix + entry.getKey());
 			if (count > 0) {
 				result.put(entry.getValue(), count);
@@ -336,7 +336,7 @@ public class JiraDao {
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
-	 * @return all priorities labels.
+	 * @return all priority labels.
 	 */
 	public Map<Integer, String> getPriorities(final DataSource dataSource) {
 		return AbstractEditor.getMap(dataSource, "SELECT p.ID AS id, p.pname AS pname FROM priority p ORDER BY id");
@@ -347,7 +347,7 @@ public class JiraDao {
 	 * 
 	 * @param dataSource
 	 *            The data source of JIRA database.
-	 * @return all resolutions labels.
+	 * @return all resolution labels.
 	 */
 	public Map<Integer, String> getResolutions(final DataSource dataSource) {
 		return AbstractEditor.getMap(dataSource, "SELECT p.ID AS id, p.pname AS pname FROM resolution p ORDER BY SEQUENCE");
@@ -408,7 +408,7 @@ public class JiraDao {
 	 * 
 	 * @param items
 	 *            The items. Only count is used.
-	 * @return The prepare statement parameters string for a SQl "IN"
+	 * @return The prepare statement parameters string for a SQL "IN"
 	 */
 	protected String newIn(final Collection<?> items) {
 		if (items.isEmpty()) {
@@ -468,13 +468,13 @@ public class JiraDao {
 	 *            the expected custom fields identifiers.
 	 * @param project
 	 *            Jira project identifier. Required to filter custom field
-	 *            agains contexts.
+	 *            against contexts.
 	 * @return ordered custom fields by their identifier.
 	 */
 	public Map<Integer, CustomFieldEditor> getCustomFieldsById(final DataSource dataSource, final Set<Integer> customFields,
 			final int project) {
 		if (customFields.isEmpty()) {
-			// No custom field, we save an useless query
+			// No custom field, we save a useless query
 			return new HashMap<>();
 		}
 
@@ -655,7 +655,7 @@ public class JiraDao {
 			// Implicit 'jira' workflow case
 			return null;
 		}
-		return workflows.get(0);
+		return workflows.getFirst();
 	}
 
 	/**
@@ -676,7 +676,7 @@ public class JiraDao {
 				"SELECT n.SOURCE_NODE_ID AS issue, n.SINK_NODE_ID AS c"
 						+ " FROM nodeassociation AS n INNER JOIN jiraissue AS i ON (i.ID = n.SOURCE_NODE_ID AND i.PROJECT = ?)"
 						+ " WHERE n.SOURCE_NODE_ENTITY=? AND n.SINK_NODE_ENTITY=? AND n.ASSOCIATION_TYPE=?",
-				(RowCallbackHandler) rs -> result.computeIfAbsent(rs.getInt("issue"), k -> new ArrayList<>()).add(rs.getInt("c")), jira,
+				(RowCallbackHandler) rs -> result.computeIfAbsent(rs.getInt("issue"), _ -> new ArrayList<>()).add(rs.getInt("c")), jira,
 				"Issue", "Component", "IssueComponent");
 		return result;
 	}
@@ -776,12 +776,12 @@ public class JiraDao {
 		// Reset the CAPTCHA only for Jira 6+
 		if (getJiraVersion(dataSource).compareTo("6.0.0") >= 0) {
 			final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			final List<Integer> ids = jdbcTemplate.query("SELECT ID FROM cwd_user WHERE lower_user_name = ?", (rs, n) -> rs.getInt("ID"),
+			final List<Integer> ids = jdbcTemplate.query("SELECT ID FROM cwd_user WHERE lower_user_name = ?", (rs, _) -> rs.getInt("ID"),
 					login.toLowerCase(Locale.ENGLISH));
 			if (!ids.isEmpty()) {
 				jdbcTemplate.update(
 						"UPDATE cwd_user_attributes SET attribute_value=0, lower_attribute_value=0 WHERE attribute_name=? AND user_id=?",
-						"login.currentFailedCount", ids.get(0));
+						"login.currentFailedCount", ids.getFirst());
 			}
 		}
 	}

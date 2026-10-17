@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * A issue change for Jira
+ * An issue change for Jira
  */
 @Getter
 @Setter
